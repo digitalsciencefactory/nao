@@ -16,7 +16,7 @@ class FrontController extends Controller
     public function contactAction(Request $request)
     {
         $contact = new Contact;
-        $form = $this->createForm(AdvertType::class, $contact);
+        $form = $this->createForm(ContactType::class, $contact);
         
          if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
              // gestion de l'envoi par mail
