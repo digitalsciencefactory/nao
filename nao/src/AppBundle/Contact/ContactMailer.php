@@ -1,9 +1,9 @@
 <?php
 // src/OC/PlatformBundle/Email/ApplicationMailer.php
 
-namespace AppBundle\Email;
+namespace AppBundle\Contact;
 
-use AppBundle\Object\Contact;
+use AppBundle\Contact\Contact;
 
 class ContactMailer
 {
@@ -25,7 +25,7 @@ class ContactMailer
   */
   public function sendFeedBack(Contact $contact)
   {
-    $message = new \Swift_Message(
+    /*$message = new \Swift_Message(
       'Nouvelle candidature',
       'Vous avez reçu une nouvelle candidature.'
     );
@@ -35,7 +35,7 @@ class ContactMailer
       ->addFrom('admin@votresite.com')
     ;
 
-    $this->mailer->send($message);
+    $this->mailer->send($message);*/
   }
   
   /**

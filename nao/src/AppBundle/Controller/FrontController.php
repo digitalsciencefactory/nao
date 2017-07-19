@@ -3,7 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Form\ContactType;
-use AppBundle\Object\Contact;
+use AppBundle\Contact\Contact;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,12 +18,14 @@ class FrontController extends Controller
         $contact = new Contact;
         $form = $this->createForm(ContactType::class, $contact);
         
-         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+        $form->handleRequest($request);
+        
+         if ($form->isSubmitted() && $form->isValid()) {
              // gestion de l'envoi par mail
              // TODO
          }
         
-        return $this->render('AppBundle:Front:contact.html.twig', array(
+        return $this->render('Front/contact.html.twig', array(
             'form' => $form->createView(),
         ));
     }

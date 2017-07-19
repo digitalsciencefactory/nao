@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Object;
+namespace AppBundle\Contact;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -14,19 +14,16 @@ class Contact {
     /**
      * @Assert\NotBlank()
      * @Assert\Length(min=3,"Le nom doit faire au moins 3 caractères.",max=255)
-     * 
      */
     protected $nom;
     
     /**
      * @Assert\NotBlank()
      * @Assert\Length(min=3,"Le prénom doit faire au moins 3 caractères.",max=255)
-     * 
      */
     protected $prenom;
     
     /**
-     *
      * @Assert\NotBlank()
      * @Assert\Email(checkMX=true)
      */
@@ -35,14 +32,12 @@ class Contact {
     /**
      * @Assert\NotBlank()
      * @Assert\Length(min=3,"Le titre doit faire au moins 3 caractères.",max=255)
-     * 
      */
     protected $titre;
     
     /**
      * @Assert\NotBlank()
      * @Assert\Length(min=250,"Le message doit faire au moins 250 caractères.",max=1500)
-     * 
      */
     protected $message;
     
