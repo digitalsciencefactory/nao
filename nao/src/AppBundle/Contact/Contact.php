@@ -13,13 +13,13 @@ class Contact {
     
     /**
      * @Assert\NotBlank()
-     * @Assert\Length(min=3,"Le nom doit faire au moins 3 caractères.",max=255)
+     * @Assert\Length(min=3,minMessage="Le nom doit faire au moins {{ limit }} caractères.",max=255)
      */
     protected $nom;
     
     /**
      * @Assert\NotBlank()
-     * @Assert\Length(min=3,"Le prénom doit faire au moins 3 caractères.",max=255)
+     * @Assert\Length(min=3,minMessage="Le prénom doit faire au moins {{ limit }} caractères.",max=255)
      */
     protected $prenom;
     
@@ -31,18 +31,17 @@ class Contact {
     
     /**
      * @Assert\NotBlank()
-     * @Assert\Length(min=3,"Le titre doit faire au moins 3 caractères.",max=255)
+     * @Assert\Length(min=3,minMessage="Le titre doit faire au moins {{ limit }} caractères.",max=255)
      */
     protected $titre;
     
     /**
      * @Assert\NotBlank()
-     * @Assert\Length(min=250,"Le message doit faire au moins 250 caractères.",max=1500)
+     * @Assert\Length(min=250,minMessage="Le message doit faire au moins {{ limit }} caractères.",max=2500, maxMessage="Le message ne peut excéder {{ limit }} caractères.")
      */
     protected $message;
     
     /**
-     * @Assert\NotBlank()
      * @Assert\DateTime()
      */
     protected $date;
@@ -103,9 +102,6 @@ class Contact {
         $this->date = $date;
     }
 
-    
-    
     /* METHODES */
-
 }
 

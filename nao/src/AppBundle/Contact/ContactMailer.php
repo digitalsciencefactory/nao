@@ -25,17 +25,14 @@ class ContactMailer
   */
   public function sendFeedBack(Contact $contact)
   {
-    /*$message = new \Swift_Message(
-      'Nouvelle candidature',
-      'Vous avez reçu une nouvelle candidature.'
+    $message = new \Swift_Message(
+        "[FlashNature - Contact] Confirmation de prise de contact : " .$contact->getTitre(),
+        "Bonjour " .$contact->getPrenom() . " " . $contact->getNom().",\n\nNous avons bien reçu votre demande, et nous vous contacterons dans les plus brefs délais.\n\nVoici un récapitulatif de votre demande :\n\ntitre : " .$contact->getTitre(). "\nMessage: \n\n" .$contact->getMessage(). "\n\n-----\nCordialement,\nFlash Nature\nhttps://flashnature.digitalsciencefactory.com"
     );
+    $message->addTo($contact->getMail());
+    $message->addFrom("contact-fnat@digitalsciencefactory.com");
 
-    $message
-      ->addTo($application->getAdvert()->getAuthor()) // Ici bien sûr il faudrait un attribut "email", j'utilise "author" à la place
-      ->addFrom('admin@votresite.com')
-    ;
-
-    $this->mailer->send($message);*/
+    $this->mailer->send($message);
   }
   
   /**
@@ -45,7 +42,16 @@ class ContactMailer
    * @param Contact $contact
    */
   public function sendNotification(Contact $contact){
-      
+      $message = new \Swift_Message(
+          '[Flash Nature - Contact] ' . $contact->getTitre(),
+          "Bonjour, \n" . $contact->getPrenom() . " "  . $contact->getNom() . "(". $contact->getMail(). ") vient d'envoyer cette demande de contact: \n\nTitre: " .$contact->getTitre(). "\nMessage: \n" .$contact->getMessage()
+      );
+
+      $message->addTo('contact-fnat@digitalsciencefactory.com');
+      $message->addFrom('contact-fnat@digitalsciencefactory.com');
+      $message->addReplyTo($contact->getMail());
+
+      $this->mailer->send($message);
   }
   
   
