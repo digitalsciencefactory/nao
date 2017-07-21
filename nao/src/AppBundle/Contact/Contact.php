@@ -45,7 +45,7 @@ class Contact {
      * @Assert\DateTime()
      */
     protected $date;
-    
+
     /* CONSTRUCTEUR */
     
     function __construct() {

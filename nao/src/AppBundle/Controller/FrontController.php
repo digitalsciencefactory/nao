@@ -20,9 +20,9 @@ class FrontController extends Controller
         $form = $this->createForm(ContactType::class, $contact);
         
         $form->handleRequest($request);
-        
-         if ($form->isSubmitted() && $form->isValid()) {
 
+
+         if ($form->isSubmitted() && $form->isValid()) {
             $mailer = $this->container->get('mailer');
 
             $contactMail = new ContactMailer($mailer);
