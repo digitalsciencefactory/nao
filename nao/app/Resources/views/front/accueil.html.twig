@@ -1,0 +1,27 @@
+{# app/Resources/views/front/accueil.html.twig #}
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Accueil - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+{# double bloc "en savoir +" #}
+<div class="container-fluid"  id="ensavoirplusblock">
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <img id="illuensavoirplus"  class="float-right" alt="illustration famille dans une prairie" src="{{ asset('bundles/AppBundle/images/famille_fnat_480x480.jpg') }}" />
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 ensavoirplus">
+        <h2>Vous êtes sensible à lʼenvironnement et vous souhaitez participer  à sa préservation ?</h2>
+        <p>Inscrivez-vous à Flash Nature  pour contribuer à lʼétude des modifications climatiques en rejoignant une action solidaire.</p>
+        <div class="rect-button float-right">
+            <a class="txt-blue" href="#">En savoir +</a>
+        </div>
+    </div>
+</div>
+    <br />&nbsp;
+    <br />&nbsp;
+    <br />&nbsp;
+    <br />&nbsp;
+{# fin double bloc "en savoir +" #}
+{% endblock body %}

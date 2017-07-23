@@ -12,6 +12,13 @@ use Symfony\Component\HttpFoundation\Request;
 class FrontController extends Controller
 {
     /**
+     * @Route("/", name="fn_front_home")
+     * @Route("/accueil")
+     */
+    public function indexAction(Request $request){
+        return $this->render('Front/accueil.html.twig');
+    }
+    /**
      * @Route("/contact", name="fn_front_contact")
      */
     public function contactAction(Request $request)
