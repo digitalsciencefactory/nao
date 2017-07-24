@@ -24,14 +24,14 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(name="mail", type="text", unique=true)
+     * @ORM\Column(name="mail", type="text", unique=true, length=120)
      */
     private $mail;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="mdp", type="text")
+     * @ORM\Column(name="mdp", type="text", length=255)
      */
     private $mdp;
 
@@ -45,21 +45,21 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(name="nom", type="text", nullable=true)
+     * @ORM\Column(name="nom", type="text", nullable=true, length=45)
      */
     private $nom;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="prenom", type="text", nullable=true)
+     * @ORM\Column(name="prenom", type="text", nullable=true, length=45)
      */
     private $prenom;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="pseudo", type="text", nullable=true)
+     * @ORM\Column(name="pseudo", type="text", nullable=true, length=25)
      */
     private $pseudo;
 
@@ -94,14 +94,14 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(name="codepostal", type="text", nullable=true)
+     * @ORM\Column(name="codepostal", type="text", nullable=true, length=5)
      */
     private $codepostal;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="avatar", type="text", nullable=true)
+     * @ORM\Column(name="avatar", type="text", nullable=true, length=255)
      */
     private $avatar;
 
