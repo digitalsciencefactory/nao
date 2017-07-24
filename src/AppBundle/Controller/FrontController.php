@@ -24,7 +24,7 @@ class FrontController extends Controller
     public function contactAction(Request $request)
     {
         $contact = new Contact;
-        $form = $this->createForm(ContactType::class, $contact);
+        $form = $this->createForm(ContactType::class, $contact, array());
         
         $form->handleRequest($request);
 

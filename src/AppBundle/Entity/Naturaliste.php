@@ -5,33 +5,30 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * naturaliste
+ * Naturaliste
  *
- * @ORM\Table(name="naturaliste")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\naturalisteRepository")
+ * @ORM\Table(name="fnat_naturaliste")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\NaturalisteRepository")
  */
-class naturaliste
+class Naturaliste
 {
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="id", type="bigint")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="user", type="bigint", unique=true)
+     * @@ORM\OneToOne(targetEntity="AppBundle\Entity\User", mappedBt="naturaliste")
      */
     private $user;
-
     /**
      * @var string
      *
-     * @ORM\Column(name="carte", type="text", unique=true)
+     * @ORM\Column(name="carte", type="string", length=255, nullable=true)
      */
     private $carte;
 
@@ -43,12 +40,12 @@ class naturaliste
     private $dcree;
 
     /**
-     * @var \DateTime
+     *  @var \DateTime
      *
      * @ORM\Column(name="dmod", type="datetime")
+     *
      */
     private $dmod;
-
 
     /**
      * Get id
@@ -61,23 +58,7 @@ class naturaliste
     }
 
     /**
-     * Set user
-     *
-     * @param integer $user
-     *
-     * @return naturaliste
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return int
+     * @return mixed
      */
     public function getUser()
     {
@@ -85,11 +66,19 @@ class naturaliste
     }
 
     /**
+     * @param mixed $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+
+    /**
      * Set carte
      *
      * @param string $carte
      *
-     * @return naturaliste
+     * @return Naturaliste
      */
     public function setCarte($carte)
     {
@@ -113,7 +102,7 @@ class naturaliste
      *
      * @param \DateTime $dcree
      *
-     * @return naturaliste
+     * @return Naturaliste
      */
     public function setDcree($dcree)
     {
@@ -133,27 +122,21 @@ class naturaliste
     }
 
     /**
-     * Set dmod
-     *
-     * @param \DateTime $dmod
-     *
-     * @return naturaliste
-     */
-    public function setDmod($dmod)
-    {
-        $this->dmod = $dmod;
-
-        return $this;
-    }
-
-    /**
-     * Get dmod
-     *
      * @return \DateTime
      */
     public function getDmod()
     {
         return $this->dmod;
     }
+
+    /**
+     * @param \DateTime $dmod
+     */
+    public function setDmod($dmod)
+    {
+        $this->dmod = $dmod;
+    }
+
+
 }
 
