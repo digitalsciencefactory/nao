@@ -930,6 +930,11 @@ h6,
 #menu-13 .close-icon::after {
   background-color: #69b0ab;
 }
+#extForm3-1q H2 {
+  font-size: 32px;
+  text-align: left;
+  color: #69b0ab;
+}
 #menu-16 .hide-buttons .nav-btn {
   display: none !important;
 }
@@ -997,6 +1002,14 @@ h6,
 #menu-16 .close-icon::after {
   background-color: #69b0ab;
 }
+
+#extHeader9-1f H3 {
+  font-size: 32px;
+  font-family: 'Montserrat', sans-serif;
+}
+#extHeader9-1f H4 {
+  font-size: 25px;
+}
 #menu-y .hide-buttons .nav-btn {
   display: none !important;
 }
@@ -1063,6 +1076,10 @@ h6,
 #menu-y .close-icon::before,
 #menu-y .close-icon::after {
   background-color: #69b0ab;
+}
+#extFeatures2-1o H2 {
+  color: #69b0ab;
+  font-size: 32px;
 }
 #menu-19 .hide-buttons .nav-btn {
   display: none !important;

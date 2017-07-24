@@ -8,6 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="{{ asset('/assets/images/logo-rectangle-185x128.png') }}" type="image/x-icon">
+    <meta name="description" content="">
 
     <title>{% block title %}Flash Nature !{% endblock %}</title>
 
@@ -17,25 +18,26 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
 
         <link rel="stylesheet" href="{{ asset('assets/bootstrap-material-design-font/css/material.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/et-line-font-plugin/style.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/tether/tether.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/dropdown/css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/animate.css/animate.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/socicon/css/styles.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/theme/css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/mobirise3-blocks-plugin/css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/mobirise/css/mbr-additional.css') }}" type="text/css">
     {% endblock stylesheets %}
+
 </head>
 
 {{ include("::menu.html.twig") }}
 
 {% block body %}
 
-    {{ include("::footer.html.twig") }}
-
 {% endblock body %}
 
-
+{{ include("::footer.html.twig") }}
 
 {% block javascripts %}
     <script src="{{ asset('assets/web/assets/jquery/jquery.min.js') }}"></script>
@@ -46,6 +48,8 @@
     <script src="{{ asset('assets/touch-swipe/jquery.touch-swipe.min.js') }}"></script>
     <script src="{{ asset('assets/viewport-checker/jquery.viewportchecker.js') }}"></script>
     <script src="{{ asset('assets/theme/js/script.js') }}"></script>
+    <script src="{{ asset('assets/mobirise3-blocks-plugin/js/script.js') }}"></script>
+    <script src="{{ asset('assets/formoid/formoid.min.js') }}"></script>
 {% endblock %}
 
 </html>
