@@ -69,13 +69,24 @@
                                         </div>
 
                                         <div class="col-xs-12">
-                                            {{ form_errors(form.message) }}
+                                            {{ form_errors(form.titre) }}
+                                            {{ form_widget(form.titre, {'attr': {'class': 'form-control', 'placeholder': 'Sujet du message'}}) }}
+                                        </div>
+
+                                        <div class="col-xs-12">
+                                            <div class="bg-error">{{ form_errors(form.message) }}</div>
                                             {{ form_widget(form.message, {'attr': {'class': 'form-control', 'placeholder': 'Votre message', 'rows':'3', 'style':'resize:none'}}) }}
+                                        </div>
+                                        <div class="col-xs-12">
+                                            Minimum 250 caractères. <span id="contact_charcount">0</span>/250
                                         </div>
 
                                         <div class="col-xs-12 buttons_wrap" style="margin-top: 10px;">
                                             {{ form_widget(form.envoyer, {'attr': {'class': 'btn btn-secondary'}}) }}
                                         </div>
+
+                                        {{ form_rest(form) }}
+                                        {{ form_end(form) }}
                                     </form>
                                 </div>
                             </div>

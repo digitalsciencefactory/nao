@@ -15,7 +15,7 @@ class User
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="id", type="bigint")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
@@ -24,14 +24,14 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(name="mail", type="text", unique=true, length=120)
+     * @ORM\Column(name="mail", type="string", length=120, unique=true)
      */
     private $mail;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="mdp", type="text", length=255)
+     * @ORM\Column(name="mdp", type="string", length=255)
      */
     private $mdp;
 
@@ -45,21 +45,21 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(name="nom", type="text", nullable=true, length=45)
+     * @ORM\Column(name="nom", type="string", length=45, nullable=true)
      */
     private $nom;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="prenom", type="text", nullable=true, length=45)
+     * @ORM\Column(name="prenom", type="string", length=45, nullable=true)
      */
     private $prenom;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="pseudo", type="text", nullable=true, length=25)
+     * @ORM\Column(name="pseudo", type="string", length=25, nullable=true)
      */
     private $pseudo;
 
@@ -80,28 +80,33 @@ class User
     /**
      * @var bool
      *
-     * @ORM\Column(name="newsletter", type="boolean", nullable=true)
+     * @ORM\Column(name="newsletter", type="boolean")
      */
     private $newsletter;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="statut", type="smallint")
+     * @ORM\Column(name="statut", type="smallint", nullable=true)
      */
     private $statut;
 
     /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Naturaliste", mappedBy="user")
+     */
+    private $naturaliste;
+
+    /**
      * @var string
      *
-     * @ORM\Column(name="codepostal", type="text", nullable=true, length=5)
+     * @ORM\Column(name="codepostal", type="string", length=5, nullable=true)
      */
     private $codepostal;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="avatar", type="text", nullable=true, length=255)
+     * @ORM\Column(name="avatar", type="string", length=255, nullable=true)
      */
     private $avatar;
 
@@ -112,13 +117,17 @@ class User
      */
     private $dcree;
 
+    /**
+     * User constructor.
+     */
     public function __construct()
     {
-        $this->setStatut(0); // en cours de création
-        $this->setGenre(0); // indefini
-        $this->dcree = new \Datetime();
-
+        $this->dcree = new \DateTime();
+        $this->statut = 0;
+        $this->genre = 0;
+        $this->newsletter = false;
     }
+
 
     /**
      * Get id
@@ -368,6 +377,22 @@ class User
     public function getStatut()
     {
         return $this->statut;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNaturaliste()
+    {
+        return $this->naturaliste;
+    }
+
+    /**
+     * @param mixed $naturaliste
+     */
+    public function setNaturaliste($naturaliste)
+    {
+        $this->naturaliste = $naturaliste;
     }
 
     /**
