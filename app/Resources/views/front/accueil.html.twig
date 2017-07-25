@@ -1,4 +1,5 @@
 {# app/Resources/views/front/accueil.html.twig #}
+
 {% extends "base.html.twig" %}
 
 {% block title %}
@@ -6,220 +7,18 @@
 {% endblock %}
 
 {% block body %}
-    <!-- Block 2 Banner -->
-    <div class="block-2-container green-background">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-6 block-2-box block-2-left block-2-media wow fadeInLeft">
-                    <div class="block-2-img-container">
-                        <img src="{{ asset('assets/img/homepage/famille_fnat_480x480.jpg')}}" alt="Flash Nature" data-at2x="{{ asset('assets/img/homepage/famille_fnat_480x480.jpg')}}">
-                    </div>
-                </div>
-                <div class="col-sm-6 block-2-box block-2-right wow fadeInUp">
-                    <h4 class="white-text">Vous êtes sensible à l'environnement et vous souhaitez participer à sa préservation ?</h4>
-                    <br>
-                    <p class="white-text">
-                        Inscrivez-vous à Flash Nature pour contribuer à lʼétude des modifications climatiques en rejoignant une action solidaire.
-                    </p>
-                    <br>
-                    <div class="pricing-2-table-button">
-                        <a class="big-link-1 btn" href="#">En savoir +</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Séparation-->
-    <div class="container">
-        <br>
-    </div>
 
-    <!-- Block 3 Naturaliste -->
-    <div class="block-3-container section-container gradient-background " >
-        <div class="container" >
-            <div class="row" >
-                <div class="col-sm-12 block-3 section-description wow fadeIn">
-                    <h2 class="brown-text">Naturaliste ?</h2>
-                    <p class="brown-text text-center">
-                        Accédez à votre espace réservé.
-                    </p>
-                    <div class="pricing-2-table-button">
-                        <a class="big-link-1 btn white-background brown-text" href="#">Espace Naturaliste</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {{ include('front/banners/_banner1.html.twig') }}
 
-    <!-- Séparation -->
-    <div class="container white-background">
-        <br>
-    </div>
+    {{ include('front/blocks/_kit.html.twig') }}
 
-    <!-- Block 2 Actualités -->
-    <div class="block-2-container white-background">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-6 block-2-box block-2-left wow fadeInLeft">
-                    <div>
-                        <h3 class="green-text">Dernières observations publiées</h3>
-                    </div>
-                    <div class="shadow green-text">
-                        <p>observation à insérer</p>
-                        <hr>
-                        <p>observation à insérer</p>
-                        <hr>
-                        <p>observation à insérer</p>
-                        <hr>
-                        <p>observation à insérer</p>
-                        <hr>
-                    </div>
-                    <div class="pricing-2-table-button">
-                        <a class="big-link-1 btn" href="#">Connectez-vous pour voir plus de détails</a>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <h3 class="green-text">Actualités</h3>
-                    <br>
-                    <div class="shadow green-text">
-                        <h4>Dernières publications Facebook</h4>
-                        <p>
-                            Jeu concours<br>
-                            Tentez de remporter un appareil photo Canon ! Pour participer ..
-                        </p>
-                        <div class="pricing-2-table-button">
-                            <a class="big-link-1 btn" href="#">Lire la suite</a>
-                        </div>
-                    </div>
 
-                    <h3 class="green-text">Suivez notre actualité</h3>
-                    <a href=""><img src="{{ asset('assets/ico/logog%20fb.jpeg')}}" alt="Flash Nature sur Facebook"></a>
-                    <a href=""><img src="{{ asset('assets/ico/instagram.jpeg')}}" alt="Flash Nature sur Instagram"></a>
-                </div>
-            </div>
-        </div>
-    </div>
+    {{ include('front/blocks/_observations.html.twig') }}
 
-    <!-- Séparation -->
-    <div class="container white-background">
-        <br>
-    </div>
 
-    <!-- Block 2 Kit observations -->
-    <div class="block-2-container green-background">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-6 block-2-box block-2-left block-2-media wow fadeInLeft">
-                    <div class="block-2-img-container">
-                        <img src="{{ asset('img/homepage/kit_observation.png') }}" alt="Kit Observation Flash Nature" data-at2x="assets/img/homepage/kit_observation.png">
-                    </div>
-                </div>
-                <!-- Contact us (block 2) -->
-                <div class="col-sm-6 block-2-box block-2-right wow fadeInUp">
-                    <div class="block-2-container section-container contact-container">
-                        <h3 class="white-text text-center">KIT Observation</h3>
-                        <div class="container text-center">
+    {{ include('front/blocks/_nao.html.twig') }}
 
-                            <div class="row brown-text">
-                                <div class="col-sm-4 block-2-box block-2-left contact-form wow fadeInLeft">
-                                    <form role="form" action="" method="post">
-                                        <p>
-                                            Téléchargez le Kit complet et gratuit pour obtenir les fiches conseils et pratiques.
-                                        </p>
-                                        <div class="form-group centered">
-                                            <div class="form-group">
-                                                <label for="first-name">Votre nom (*)</label>
-                                                <input type="text" name="first-name" class="contact-subject form-control" id="first-name">
-                                            </div>
+    {{ include('front/blocks/_follow.html.twig') }}
 
-                                            <div class="form-group">
-                                                <label for="last-name">Votre prénom (*)</label>
-                                                <input type="text" name="last-name" class="contact-subject form-control" id="last-name">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="postcode">Votre code postal (*)</label>
-                                                <input type="text" name="postcode" class="contact-subject form-control" id="postcode">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="email">Votre e-mail (*)</label>
-                                                <input type="text" name="email" class="contact-email form-control" id="email">
-                                            </div>
-
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" value=""> Je m'inscris à la newsletter
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <p>
-                                            (*) informations obligatoires
-                                        </p>
-                                        <button type="submit" class="big-link-1 brown-background white-text">Télécharger le kit</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Séparation -->
-    <div class="container white-background">
-        <br>
-    </div>
-
-    <!-- Block 3 NAO -->
-    <div class="block-3-container section-container" >
-        <div class="container" >
-            <div class="row" >
-                <div class="col-sm-12 block-3 section-description wow fadeIn green-text text-center">
-                    <h2  class="green-text">Association «Nos Amis les Oiseaux» (NAO) </h2>
-                    <p>
-                        Flash Nature est une plateforme collaborative créée par l’association NAO (Nos Amis les Oiseaux).
-                    </p>
-                    <p>
-                        NAO est une association loi 1901 créée en 2014 par Monsieur Dujardin, pasionné d’ornithologie.
-                    </p>
-                </div>
-                <div class="pricing-2-table-button">
-                    <a class="big-link-1 btn green-background white-text" href="#">En savoir +</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <hr>
-
-    <!-- Block 2 partenaires -->
-    <div class="block-2-container white-background">
-        <div class="container centered">
-            <div class="row centered">
-                <div class="col-sm-6 block-2-box block-2-left block-2-media wow fadeInLeft">
-                    <img src="{{ asset('assets/img/homepage/MNHN2_logo.png') }}" alt="MNHN" data-at2x="{{ asset('assets/img/homepage/MNHN2_logo.png') }}">
-                </div>
-                <div class="col-sm-6 block-2-box block-2-right block-2-media wow fadeInLeft">
-                    <img src="{{ asset('assets/img/homepage/union_européenne_drapeau.png') }}" alt="UE" data-at2x="{{ asset('assets/img/homepage/union_européenne_drapeau.png') }}">
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="block-3-container section-container" >
-        <div class="container" >
-            <div class="row" >
-                <div class="col-sm-12 block-3 section-description wow fadeIn text-center">
-                    <h3  class="brown-text">
-                        L’application Flash Nature est réalisée en étroite collaboration avec le Muséum National d’Histoire Naturelle et l’Union Européenne. </h3>
-                </div>
-
-            </div>
-        </div>
-    </div>
 {% endblock body %}
