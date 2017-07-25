@@ -26,7 +26,7 @@ class FrontController extends Controller
     {
         $contact = new Contact;
 
-        $form = $this->createForm(ContactType::class, $contact, array());
+        $form = $this->createForm(ContactType::class, $contact);
 
         $form->handleRequest($request);
 
