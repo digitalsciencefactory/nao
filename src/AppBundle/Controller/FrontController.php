@@ -18,6 +18,7 @@ class FrontController extends Controller
     public function indexAction(Request $request){
         return $this->render('Front/accueil.html.twig');
     }
+
     /**
      * @Route("/contact", name="fn_front_contact")
      */
@@ -49,4 +50,5 @@ class FrontController extends Controller
             'form' => $form->createView(),
         ));
     }
+
 }
