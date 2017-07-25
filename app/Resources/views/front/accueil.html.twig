@@ -1,4 +1,5 @@
 {# app/Resources/views/front/accueil.html.twig #}
+
 {% extends "base.html.twig" %}
 
 {% block title %}
@@ -7,159 +8,14 @@
 
 {% block body %}
 
-<section class="mbr-section mbr-after-navbar" id="msg-box5-6" style="background-color: rgb(255, 255, 255); padding-top: 80px; padding-bottom: 40px;">
+    {{ include('front/banners/_banner1.html.twig') }}
 
-    <div class="container">
-        <div class="row">
-            <div class="mbr-table-md-up">
+    {{ include('front/blocks/_kit.html.twig') }}
 
-                <div class="mbr-table-cell col-md-5 text-xs-center text-md-right content-size">
+    {{ include('front/blocks/_observations.html.twig') }}
 
-                    <h3 class="mbr-section-title display-2">
-                        Découvrez Flash Nature
-                    </h3>
+    {{ include('front/blocks/_nao.html.twig') }}
 
-                    <div class="lead">
-                        <p>Une application au service de la préservation des oiseaux</p>
-                    </div>
-
-                    <div>
-                        <a class="btn btn-info" href="/inscription-naturaliste">
-                            Je suis Naturaliste
-                        </a>
-                        <a class="btn btn-info" href="inscription-observateur">
-                            Je suis un particulier
-                        </a>
-                    </div>
-
-                </div>
-
-                <div class="mbr-table-cell mbr-left-padding-md-up mbr-valign-top col-md-7 image-size" style="width: 70%;">
-                    <div class="mbr-figure">
-                        <img src="{{ asset('assets/images/06-oiseaux-bis-1400x965.jpg') }}">
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="mbr-section article" id="msg-box3-t" style="background-color: rgb(61, 185, 176); padding-top: 80px; padding-bottom: 80px;">
-
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 text-xs-center">
-                <h3 class="mbr-section-title display-2">
-                    Kit observation
-                </h3>
-
-                <div class="lead">
-                    <p>
-                        <span style="font-size: 1.07rem; line-height: 1.5;">
-                            Obtenez le kit complet et gratuit composé de fiches conseils sur l'univers des oiseaux
-                        </span>
-                    </p>
-                </div>
-
-                <div>
-                    <a class="btn btn-white" href="/kit-observation">
-                        En savoir +
-                    </a>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="mbr-section" id="msg-box5-8" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 40px;">
-
-    <div class="container">
-        <div class="row">
-            <div class="mbr-table-md-up">
-
-                <div class="mbr-table-cell col-md-5 text-xs-center text-md-right content-size">
-                    <h3 class="mbr-section-title display-2">
-                        Les dernières observations publiées
-                    </h3>
-
-                    <div class="lead">
-                        <p> A REMPLIR </p>
-                    </div>
-
-                    <div>
-                        <a class="btn btn-info" href="/carte-des-observations">
-                            Voir
-                        </a>
-                    </div>
-
-                </div>
-
-                <div class="mbr-table-cell mbr-left-padding-md-up mbr-valign-top col-md-7 image-size" style="width: 51%;">
-                    <div class="mbr-figure">
-                        <img src="{{ asset('assets/images/naturaliste-jumelle-visuel-1400x1400.png') }}">
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="mbr-section article" id="msg-box3-7" style="background-color: rgb(105, 176, 171); padding-top: 80px; padding-bottom: 80px;">
-
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 text-xs-center">
-
-                <h3 class="mbr-section-title display-2">
-                    Association <br>
-                    « Nos Amis les Oiseaux » <br>
-                    (NAO)
-                    <p></p>
-                </h3>
-
-                <div class="lead">
-                    <span style="color: rgb(255, 255, 255); font-size: 1.07rem; line-height: 1.5;">
-                        NAO est une association loi 1901 créée en 2014 par Monsieur Dujardin, pasionné d’ornithologie.
-                    </span>
-                </div>
-
-                <div>
-                    <a class="btn btn-white" href="/a-propos">
-                        En savoir +
-                    </a>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="mbr-section mbr-section-md-padding" id="social-buttons2-s" style="background-color: rgb(255, 255, 255); padding-top: 90px; padding-bottom: 90px;">
-
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 text-xs-center">
-
-                <h3 class="mbr-section-title display-2">
-                    Suivez-nous
-                </h3>
-
-                <div>
-                    <a class="btn btn-social" title="Facebook" target="_blank" href="https://www.facebook.com/FlashNatureNAO/ ">
-                        <i class="socicon socicon-facebook"></i>
-                    </a>
-
-                    <a class="btn btn-social" title="Instagram" target="_blank" href="https://www.instagram.com/Flash_Nature_par_NAO/">
-                        <i class="socicon socicon-instagram"></i>
-                    </a>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</section>
+    {{ include('front/blocks/_follow.html.twig') }}
 
 {% endblock body %}

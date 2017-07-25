@@ -1,8 +1,8 @@
 {# app/Resources/views/layout.html.twig #}
 
 <!DOCTYPE html>
-
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,13 +31,23 @@
 
 </head>
 
-{{ include("::menu.html.twig") }}
+<body>
+
+    {{ include('menu.html.twig') }}
+
+    <section class="engine">
+        <a rel="external" href="https://digitalsciencefactory.com">
+            Digital Science Factory
+        </a>
+    </section>
+
+</body>
 
 {% block body %}
 
 {% endblock body %}
 
-{{ include("::footer.html.twig") }}
+{{ include('footer.html.twig') }}
 
 {% block javascripts %}
     <script src="{{ asset('assets/web/assets/jquery/jquery.min.js') }}"></script>
