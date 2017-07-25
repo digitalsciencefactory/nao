@@ -19,6 +19,3 @@
 !var/SymfonyRequirements.php
 /vendor/
 /web/bundles/
-composer.lock
-.DS_Store
-composer.phar
