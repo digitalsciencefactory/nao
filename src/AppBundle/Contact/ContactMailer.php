@@ -4,6 +4,7 @@
 namespace AppBundle\Contact;
 
 use AppBundle\Contact\Contact;
+use Twig\Environment;
 
 class ContactMailer
 {
@@ -12,8 +13,15 @@ class ContactMailer
    */
   private $mailer;
 
-  public function __construct(\Swift_Mailer $mailer)
+    /**
+     * @var Environment
+     */
+  private $twig;
+
+  public function __construct(\Swift_Mailer $mailer, Environment $twig)
   {
+      $this->twig = $twig;
+
     $this->mailer = $mailer;
   }
 
@@ -25,6 +33,8 @@ class ContactMailer
   */
   public function sendFeedBack(Contact $contact)
   {
+      $body = $this->twig->render('::message.html.twig', array('contact' => $contact));
+
     $message = new \Swift_Message(
         "[FlashNature - Contact] Confirmation de prise de contact : " .$contact->getTitre(),
         "Bonjour " .$contact->getPrenom() . " " . $contact->getNom().",\n\nNous avons bien reçu votre demande, et nous vous contacterons dans les plus brefs délais.\n\nVoici un récapitulatif de votre demande :\n\ntitre : " .$contact->getTitre(). "\nMessage: \n\n" .$contact->getMessage(). "\n\n-----\nCordialement,\nFlash Nature\nhttps://flashnature.digitalsciencefactory.com"

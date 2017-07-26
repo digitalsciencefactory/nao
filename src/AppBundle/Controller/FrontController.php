@@ -25,7 +25,9 @@ class FrontController extends Controller
     public function contactAction(Request $request)
     {
         $contact = new Contact;
+
         $form = $this->createForm(ContactType::class, $contact);
+
         $form->handleRequest($request);
 
          if ($form->isSubmitted() && $form->isValid()) {
@@ -124,4 +126,5 @@ class FrontController extends Controller
         /* todo:Compléter la méthode */
         return $this->render('Front/envoi-observation.html.twig');
     }
+
 }
