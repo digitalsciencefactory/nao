@@ -127,4 +127,13 @@ class FrontController extends Controller
         return $this->render('Front/envoi-observation.html.twig');
     }
 
+    /**
+     * @Route("/nom-compte", name="fn_front_profil")
+     */
+    public function profilAction (Request $request)
+    {
+        /* todo:Compléter la méthode */
+        return $this->render('Front/mon-compte.html.twig');
+    }
+
 }
