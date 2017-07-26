@@ -91,5 +91,18 @@ class TaxrefRang
     {
         return $this->lbRang;
     }
-}
 
+    /**
+     * Set id
+     *
+     * @param integer $id
+     *
+     * @return TaxrefRang
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+}

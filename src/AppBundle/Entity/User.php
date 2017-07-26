@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * User
@@ -10,12 +11,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="fnat_user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  */
-class User
+class User implements UserInterface
 {
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="bigint")
+     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
@@ -24,51 +25,44 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(name="mail", type="string", length=120, unique=true)
+     * @ORM\Column(name="mail", type="string", length=255, unique=true)
      */
     private $mail;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="mdp", type="string", length=255)
+     * @ORM\Column(name="mdp", type="string", length=65)
      */
     private $mdp;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="titre", type="smallint", nullable=true)
-     */
-    private $titre;
-
-    /**
      * @var string
      *
-     * @ORM\Column(name="nom", type="string", length=45, nullable=true)
+     * @ORM\Column(name="nom", type="string", length=45)
      */
     private $nom;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="prenom", type="string", length=45, nullable=true)
+     * @ORM\Column(name="prenom", type="string", length=45)
      */
     private $prenom;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="pseudo", type="string", length=25, nullable=true)
+     * @ORM\Column(name="sexe", type="string", length=1, nullable=true)
      */
-    private $pseudo;
+    private $sexe;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="genre", type="smallint", nullable=true)
+     * @ORM\Column(name="code_postal", type="string", length=5)
      */
-    private $genre;
+    private $codePostal;
 
     /**
      * @var \DateTime
@@ -78,37 +72,44 @@ class User
     private $ddn;
 
     /**
-     * @var bool
+     * @var string
      *
-     * @ORM\Column(name="newsletter", type="boolean")
+     * @ORM\Column(name="photo", type="string", length=255, nullable=true)
      */
-    private $newsletter;
+    private $photo;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="statut", type="smallint", nullable=true)
+     * @ORM\Column(name="carte", type="string", length=255, nullable=true, unique=true)
+     */
+    private $carte;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Observation", mappedBy="observateur")
+     */
+    private $observations;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="statut", type="string", length=14)
      */
     private $statut;
 
     /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Naturaliste", mappedBy="user")
+     * @var array
+     *
+     * @ORM\Column(name="roles", type="array")
      */
-    private $naturaliste;
+    private $roles;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="codepostal", type="string", length=5, nullable=true)
+     * @ORM\Column(name="token", type="string", length=65, nullable=true)
      */
-    private $codepostal;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="avatar", type="string", length=255, nullable=true)
-     */
-    private $avatar;
+    private $token;
 
     /**
      * @var \DateTime
@@ -117,17 +118,19 @@ class User
      */
     private $dcree;
 
+    /* *** CONSTRUCTEUR *** */
+
     /**
      * User constructor.
      */
     public function __construct()
     {
         $this->dcree = new \DateTime();
-        $this->statut = 0;
-        $this->genre = 0;
-        $this->newsletter = false;
+        $this->statut = "STATUT_INACTIF";
+        $this->roles = "ROLE_OBSERVATEUR";
     }
 
+    /* *** METHODES *** */
 
     /**
      * Get id
@@ -188,30 +191,6 @@ class User
     }
 
     /**
-     * Set titre
-     *
-     * @param integer $titre
-     *
-     * @return User
-     */
-    public function setTitre($titre)
-    {
-        $this->titre = $titre;
-
-        return $this;
-    }
-
-    /**
-     * Get titre
-     *
-     * @return int
-     */
-    public function getTitre()
-    {
-        return $this->titre;
-    }
-
-    /**
      * Set nom
      *
      * @param string $nom
@@ -260,51 +239,51 @@ class User
     }
 
     /**
-     * Set pseudo
+     * Set sexe
      *
-     * @param string $pseudo
+     * @param string $sexe
      *
      * @return User
      */
-    public function setPseudo($pseudo)
+    public function setSexe($sexe)
     {
-        $this->pseudo = $pseudo;
+        $this->sexe = $sexe;
 
         return $this;
     }
 
     /**
-     * Get pseudo
+     * Get sexe
      *
      * @return string
      */
-    public function getPseudo()
+    public function getSexe()
     {
-        return $this->pseudo;
+        return $this->sexe;
     }
 
     /**
-     * Set genre
+     * Set codePostal
      *
-     * @param integer $genre
+     * @param string $codePostal
      *
      * @return User
      */
-    public function setGenre($genre)
+    public function setCodePostal($codePostal)
     {
-        $this->genre = $genre;
+        $this->codePostal = $codePostal;
 
         return $this;
     }
 
     /**
-     * Get genre
+     * Get codePostal
      *
-     * @return int
+     * @return string
      */
-    public function getGenre()
+    public function getCodePostal()
     {
-        return $this->genre;
+        return $this->codePostal;
     }
 
     /**
@@ -332,33 +311,59 @@ class User
     }
 
     /**
-     * Set newsletter
+     * Set photo
      *
-     * @param boolean $newsletter
+     * @param string $photo
      *
      * @return User
      */
-    public function setNewsletter($newsletter)
+    public function setPhoto($photo)
     {
-        $this->newsletter = $newsletter;
+        $this->photo = $photo;
 
         return $this;
     }
 
     /**
-     * Get newsletter
+     * Get photo
      *
-     * @return bool
+     * @return string
      */
-    public function getNewsletter()
+    public function getPhoto()
     {
-        return $this->newsletter;
+        return $this->photo;
     }
+
+    /**
+     * Set carte
+     *
+     * @param string $carte
+     *
+     * @return User
+     */
+    public function setCarte($carte)
+    {
+        $this->carte = $carte;
+
+        return $this;
+    }
+
+    /**
+     * Get carte
+     *
+     * @return string
+     */
+    public function getCarte()
+    {
+        return $this->carte;
+    }
+
+
 
     /**
      * Set statut
      *
-     * @param integer $statut
+     * @param string $statut
      *
      * @return User
      */
@@ -372,7 +377,7 @@ class User
     /**
      * Get statut
      *
-     * @return int
+     * @return string
      */
     public function getStatut()
     {
@@ -380,67 +385,51 @@ class User
     }
 
     /**
-     * @return mixed
-     */
-    public function getNaturaliste()
-    {
-        return $this->naturaliste;
-    }
-
-    /**
-     * @param mixed $naturaliste
-     */
-    public function setNaturaliste($naturaliste)
-    {
-        $this->naturaliste = $naturaliste;
-    }
-
-    /**
-     * Set codepostal
+     * Set roles
      *
-     * @param string $codepostal
+     * @param array $roles
      *
      * @return User
      */
-    public function setCodepostal($codepostal)
+    public function setRoles($roles)
     {
-        $this->codepostal = $codepostal;
+        $this->roles = $roles;
 
         return $this;
     }
 
     /**
-     * Get codepostal
+     * Get roles
      *
-     * @return string
+     * @return array
      */
-    public function getCodepostal()
+    public function getRoles()
     {
-        return $this->codepostal;
+        return $this->roles;
     }
 
     /**
-     * Set avatar
+     * Set token
      *
-     * @param string $avatar
+     * @param string $token
      *
      * @return User
      */
-    public function setAvatar($avatar)
+    public function setToken($token)
     {
-        $this->avatar = $avatar;
+        $this->token = $token;
 
         return $this;
     }
 
     /**
-     * Get avatar
+     * Get token
      *
      * @return string
      */
-    public function getAvatar()
+    public function getToken()
     {
-        return $this->avatar;
+        return $this->token;
     }
 
     /**
@@ -466,5 +455,84 @@ class User
     {
         return $this->dcree;
     }
-}
 
+    /**
+     * Add observation
+     *
+     * @param \AppBundle\Entity\Observation $observation
+     *
+     * @return User
+     */
+    public function addObservation(\AppBundle\Entity\Observation $observation)
+    {
+        $this->observations[] = $observation;
+
+        return $this;
+    }
+
+    /**
+     * Remove observation
+     *
+     * @param \AppBundle\Entity\Observation $observation
+     */
+    public function removeObservation(\AppBundle\Entity\Observation $observation)
+    {
+        $this->observations->removeElement($observation);
+    }
+
+    /**
+     * Get observations
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getObservations()
+    {
+        return $this->observations;
+    }
+
+    /**
+     * Returns the password used to authenticate the user.
+     *
+     * This should be the encoded password. On authentication, a plain-text
+     * password will be salted, encoded, and then compared to this value.
+     *
+     * @return string The password
+     */
+    public function getPassword()
+    {
+        // TODO: Implement getPassword() method.
+    }
+
+    /**
+     * Returns the salt that was originally used to encode the password.
+     *
+     * This can return null if the password was not encoded using a salt.
+     *
+     * @return string|null The salt
+     */
+    public function getSalt()
+    {
+        // TODO: Implement getSalt() method.
+    }
+
+    /**
+     * Returns the username used to authenticate the user.
+     *
+     * @return string The username
+     */
+    public function getUsername()
+    {
+        // TODO: Implement getUsername() method.
+    }
+
+    /**
+     * Removes sensitive data from the user.
+     *
+     * This is important if, at any given point, sensitive information like
+     * the plain-text password is stored on this object.
+     */
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+}

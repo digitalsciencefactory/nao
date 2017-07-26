@@ -15,17 +15,11 @@ class Observation
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="bigint")
+     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Taxref")
@@ -34,10 +28,58 @@ class Observation
     private $espece;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Naturaliste")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $observateur;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinColumn(nullable=true)
      */
     private $naturaliste;
+
+    /**
+     * @var decimal
+     *
+     * @ORM\Column(name="latitude", type="decimal", precision=16, scale=6)
+     */
+    private $latitude;
+
+    /**
+     * @var decimal
+     *
+     * @ORM\Column(name="longitude",type="decimal", precision=16, scale=6)
+     */
+    private $longitude;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="photo", type="string", length=255, nullable=true)
+     */
+    private $photo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="comm_obs", type="text", nullable=true)
+     */
+    private $commObs;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="comm_nat", type="text", nullable=true)
+     */
+    private $commNat;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dobs", type="datetime")
+     */
+    private $dobs;
 
     /**
      * @var \DateTime
@@ -47,51 +89,28 @@ class Observation
     private $dcree;
 
     /**
-     * @var float
+     * @var \DateTime
      *
-     * @ORM\Column(name="latitude", type="float")
+     * @ORM\Column(name="dvalid", type="datetime", nullable=true)
      */
-    private $latitude;
+    private $dvalid;
 
     /**
-     * @var float
+     * @var string
      *
-     * @ORM\Column(name="longitude", type="float")
-     */
-    private $longitude;
-
-    /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Photo", cascade={"persist"})
-     */
-    private $image;
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="statut", type="smallint")
+     * @ORM\Column(name="statut", type="string", length=17)
      */
     private $statut;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="commobservateur", type="text", nullable=true)
-     */
-    private $commobservateur;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="commnaturaliste", type="text", nullable=true)
+     * Observation constructor.
      */
-    private $commnaturaliste;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="dmod", type="datetime", nullable=true)
-     */
-    private $dmod;
-
+    public function __construct()
+    {
+        $this->dcree = new \DateTime();
+        $this->statut = "STATUT_EN_ATTENTE";
+    }
 
     /**
      * Get id
@@ -104,33 +123,9 @@ class Observation
     }
 
     /**
-     * Set user
-     *
-     * @param integer $user
-     *
-     * @return Observation
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return int
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
      * Set espece
      *
-     * @param integer $espece
+     * @param \stdClass $espece
      *
      * @return Observation
      */
@@ -144,7 +139,7 @@ class Observation
     /**
      * Get espece
      *
-     * @return int
+     * @return \stdClass
      */
     public function getEspece()
     {
@@ -152,9 +147,33 @@ class Observation
     }
 
     /**
+     * Set observateur
+     *
+     * @param \stdClass $observateur
+     *
+     * @return Observation
+     */
+    public function setObservateur($observateur)
+    {
+        $this->observateur = $observateur;
+
+        return $this;
+    }
+
+    /**
+     * Get observateur
+     *
+     * @return \stdClass
+     */
+    public function getObservateur()
+    {
+        return $this->observateur;
+    }
+
+    /**
      * Set naturaliste
      *
-     * @param integer $naturaliste
+     * @param \stdClass $naturaliste
      *
      * @return Observation
      */
@@ -168,7 +187,7 @@ class Observation
     /**
      * Get naturaliste
      *
-     * @return int
+     * @return \stdClass
      */
     public function getNaturaliste()
     {
@@ -176,33 +195,9 @@ class Observation
     }
 
     /**
-     * Set dcree
+     * Set latitude
      *
-     * @param \DateTime $dcree
-     *
-     * @return Observation
-     */
-    public function setDcree($dcree)
-    {
-        $this->dcree = $dcree;
-
-        return $this;
-    }
-
-    /**
-     * Get dcree
-     *
-     * @return \DateTime
-     */
-    public function getDcree()
-    {
-        return $this->dcree;
-    }
-
-    /**
-     * Set laltitude
-     *
-     * @param float $laltitude
+     * @param float $latitude
      *
      * @return Observation
      */
@@ -214,7 +209,7 @@ class Observation
     }
 
     /**
-     * Get laltitude
+     * Get latitude
      *
      * @return float
      */
@@ -248,9 +243,153 @@ class Observation
     }
 
     /**
+     * Set photo
+     *
+     * @param string $photo
+     *
+     * @return Observation
+     */
+    public function setPhoto($photo)
+    {
+        $this->photo = $photo;
+
+        return $this;
+    }
+
+    /**
+     * Get photo
+     *
+     * @return string
+     */
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
+    /**
+     * Set commObs
+     *
+     * @param string $commObs
+     *
+     * @return Observation
+     */
+    public function setCommObs($commObs)
+    {
+        $this->commObs = $commObs;
+
+        return $this;
+    }
+
+    /**
+     * Get commObs
+     *
+     * @return string
+     */
+    public function getCommObs()
+    {
+        return $this->commObs;
+    }
+
+    /**
+     * Set commNat
+     *
+     * @param string $commNat
+     *
+     * @return Observation
+     */
+    public function setCommNat($commNat)
+    {
+        $this->commNat = $commNat;
+
+        return $this;
+    }
+
+    /**
+     * Get commNat
+     *
+     * @return string
+     */
+    public function getCommNat()
+    {
+        return $this->commNat;
+    }
+
+    /**
+     * Set dobs
+     *
+     * @param \DateTime $dobs
+     *
+     * @return Observation
+     */
+    public function setDobs($dobs)
+    {
+        $this->dobs = $dobs;
+
+        return $this;
+    }
+
+    /**
+     * Get dobs
+     *
+     * @return \DateTime
+     */
+    public function getDobs()
+    {
+        return $this->dobs;
+    }
+
+    /**
+     * Set dcree
+     *
+     * @param \DateTime $dcree
+     *
+     * @return Observation
+     */
+    public function setDcree($dcree)
+    {
+        $this->dcree = $dcree;
+
+        return $this;
+    }
+
+    /**
+     * Get dcree
+     *
+     * @return \DateTime
+     */
+    public function getDcree()
+    {
+        return $this->dcree;
+    }
+
+    /**
+     * Set dvalid
+     *
+     * @param \DateTime $dvalid
+     *
+     * @return Observation
+     */
+    public function setDvalid($dvalid)
+    {
+        $this->dvalid = $dvalid;
+
+        return $this;
+    }
+
+    /**
+     * Get dvalid
+     *
+     * @return \DateTime
+     */
+    public function getDvalid()
+    {
+        return $this->dvalid;
+    }
+
+    /**
      * Set statut
      *
-     * @param integer $statut
+     * @param string $statut
      *
      * @return Observation
      */
@@ -264,83 +403,10 @@ class Observation
     /**
      * Get statut
      *
-     * @return int
+     * @return string
      */
     public function getStatut()
     {
         return $this->statut;
     }
-
-    /**
-     * Set commobservateur
-     *
-     * @param string $commobservateur
-     *
-     * @return Observation
-     */
-    public function setCommobservateur($commobservateur)
-    {
-        $this->commobservateur = $commobservateur;
-
-        return $this;
-    }
-
-    /**
-     * Get commobservateur
-     *
-     * @return string
-     */
-    public function getCommobservateur()
-    {
-        return $this->commobservateur;
-    }
-
-    /**
-     * Set commnaturaliste
-     *
-     * @param string $commnaturaliste
-     *
-     * @return Observation
-     */
-    public function setCommnaturaliste($commnaturaliste)
-    {
-        $this->commnaturaliste = $commnaturaliste;
-
-        return $this;
-    }
-
-    /**
-     * Get commnaturaliste
-     *
-     * @return string
-     */
-    public function getCommnaturaliste()
-    {
-        return $this->commnaturaliste;
-    }
-
-    /**
-     * Set dmod
-     *
-     * @param \DateTime $dmod
-     *
-     * @return Observation
-     */
-    public function setDmod($dmod)
-    {
-        $this->dmod = $dmod;
-
-        return $this;
-    }
-
-    /**
-     * Get dmod
-     *
-     * @return \DateTime
-     */
-    public function getDmod()
-    {
-        return $this->dmod;
-    }
 }
-

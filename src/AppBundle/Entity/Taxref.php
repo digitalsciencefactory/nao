@@ -339,4 +339,3 @@ class Taxref
         return $this->lbAuteur;
     }
 }
-
