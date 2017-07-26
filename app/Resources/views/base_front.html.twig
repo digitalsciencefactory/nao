@@ -1,0 +1,165 @@
+{# app/Resources/views/base.html.twig #}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="{{ asset('/assets/images/logo-carr-1400x1400.png') }}" type="image/x-icon">
+    <meta name="description" content="">
+
+    <title>{% block title %}Flash Nature !{% endblock %}</title>
+
+    {% block stylesheets %}
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic&amp;subset=latin">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
+
+        <link rel="stylesheet" href="{{ asset('assets/bootstrap-material-design-font/css/material.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/et-line-font-plugin/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/web/assets/mobirise-icons/mobirise-icons.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/tether/tether.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/animate.css/animate.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/dataTables/dataTables.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/socicon/css/styles.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/dropdown/css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/theme/css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/mobirise3-blocks-plugin/css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/mobirise/css/mbr-additional.css') }}">
+    {% endblock stylesheets %}
+
+</head>
+
+<body>
+
+<!--  menu -->
+{% block navbar %}
+    <div id="menu-3f">
+        <nav class="navbar navbar-dropdown navbar-fixed-top">
+            <div class="container">
+
+                <div class="mbr-table">
+                    <div class="mbr-table-cell">
+                        <div class="navbar-brand">
+                            <a href="/" class="navbar-logo">
+                                <img src="{{ asset('assets/images/logo-rectangle-185x128.png')}}" alt="Mobirise"/>
+                            </a>
+                            <a class="navbar-caption" href="/"></a>
+                        </div>
+                    </div>
+
+                    <div class="mbr-table-cell">
+
+                        <div class="navbar-toggler pull-xs-right hidden-md-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
+                            <div class="hamburger-icon"></div>
+                        </div>
+
+                        <ul class="nav-dropdown collapse pull-xs-right nav navbar-nav navbar-toggleable-sm" id="exCollapsingNavbar">
+
+                            <li class="nav-item">
+                                <a class="nav-link link" href="/">
+                                    Accueil
+                                </a>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link link" href="/inscription">
+                                    L'application
+                                </a>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link link dropdown-toggle" href="" data-toggle="dropdown-submenu" aria-expanded="false">
+                                    Participer
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="/envoi-observation">
+                                        Envoi d'observation
+                                    </a>
+                                    <a class="dropdown-item" href="/carte-des-observations">
+                                        Carte des observations
+                                    </a>
+                                </div>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link link" href="/espace-naturaliste">
+                                    Espace Naturaliste
+                                </a>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link link dropdown-toggle" href="" data-toggle="dropdown-submenu" aria-expanded="false">
+                                    Infos pratiques
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="/kit-observation">
+                                        Kit Observation</a>
+                                    <a class="dropdown-item" href="/qui-sommes-nous">
+                                        Qui sommes nous ?
+                                    </a>
+                                    <a class="dropdown-item" href="/contact">
+                                        Contact
+                                    </a>
+                                </div>
+                            </li>
+
+                            <li class="nav-item nav-btn">
+                                <a class="nav-link btn btn-secondary-outline btn-secondary" href="/inscription">
+                                    S'inscrire
+                                </a>
+                            </li>
+
+                        </ul>
+
+                        <div hidden="" class="navbar-toggler navbar-close" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
+                            <div class="close-icon"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+    </div>
+
+{% endblock %}
+
+</body>
+
+{% block body %}
+
+{% endblock body %}
+
+{% block footer %}
+    <footer>
+        <div class="mbr-small-footer mbr-section mbr-section-nopadding" id="footer1-2" style="background-color: rgb(50, 50, 50); padding-top: 1.75rem; padding-bottom: 1.75rem;">
+
+            <div class="container">
+                <p class="text-xs-center">Copyright (c) 2016 Flash Nature - Nao</p>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('assets/web/assets/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/tether/tether.min.js') }}"></script>
+    <script src="{{ asset('assets/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('assets/smooth-scroll/smooth-scroll.js') }}"></script>
+    <script src="{{ asset('assets/viewport-checker/jquery.viewportchecker.js') }}"></script>
+    <script src="{{ asset('assets/jarallax/jarallax.js') }}"></script>
+    <script src="{{ asset('assets/bootstrap-carousel-swipe/bootstrap-carousel-swipe.js') }}"></script>
+    <script src="{{ asset('assets/dataTables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('assets/dropdown/js/script.min.js') }}"></script>
+    <script src="{{ asset('assets/touch-swipe/jquery.touch-swipe.min.js') }}"></script>
+    <script src="{{ asset('assets/theme/js/script.js') }}"></script>
+    <script src="{{ asset('assets/mobirise3-blocks-plugin/js/script.js') }}"></script>
+
+{% endblock %}
+
+</html>

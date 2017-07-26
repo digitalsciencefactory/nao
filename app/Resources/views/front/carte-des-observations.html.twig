@@ -1,0 +1,16 @@
+{# app/Resources/views/front/carte-des-observations.html.twig #}
+
+{% extends "base_front.html.twig" %}
+
+{% block title %}
+    Carte des observations - {{ parent() }}
+{% endblock %}
+
+
+{% block body %}
+
+    {{ include('front/blocks/_observations.html.twig') }}
+
+    {{ include('front/blocks/_follow.html.twig') }}
+
+{% endblock body %}

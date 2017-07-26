@@ -1,34 +1,64 @@
-{# app/Resources/views/front/blocks/_observations.html.twig #}
-
-<!--  observations  -->
-<section class="mbr-section" id="msg-box5-8" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 40px;">
+<!--  Titre  -->
+    <section class="mbr-section mbr-after-navbar" id="content5-2w" style="background-color: rgb(105, 176, 171); padding-top: 120px; padding-bottom: 0px;">
     <div class="container">
-        <div class="row">
-            <div class="mbr-table-md-up">
-                <div class="mbr-table-cell col-md-5 text-xs-center text-md-right content-size">
-                    <h3 class="mbr-section-title display-2">
-                        Les dernières observations publiées
-                    </h3>
+        <h3 class="mbr-section-title display-2">Carte des observations validées</h3>
+    </div>
+</section>
 
-                    <div class="lead">
-                        <p> A REMPLIR </p>
-                    </div>
-
-                    <div>
-                        <a class="btn btn-info" href="/carte-des-observations">
-                            Voir
-                        </a>
-                    </div>
-
+<!--  Zone de recherche  -->
+<section class="mbr-section" id="form2-55" style="background-color: rgb(105, 176, 171); padding-top: 0px; padding-bottom: 40px;">
+    <div class="mbr-section mbr-section__container mbr-section__container--middle">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 text-xs-center">
                 </div>
-
-                <div class="mbr-table-cell mbr-left-padding-md-up mbr-valign-top col-md-7 image-size" style="width: 51%;">
-                    <div class="mbr-figure">
-                        <img src="{{ asset('assets/images/naturaliste-jumelle-visuel-1400x1400.png') }}">
-                    </div>
-                </div>
-
             </div>
         </div>
+    </div>
+    <div class="mbr-section mbr-section-nopadding">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-lg-10 col-lg-offset-1" data-form-type="formoid">
+                    <form class="mbr-form" action="" method="post">
+                        <div class="mbr-subscribe mbr-subscribe-dark input-group">
+                            <input type="search" class="form-control"  placeholder="Saisir le nom d'une espèce " id="form2-55-email">
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-white">Rechercher</button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--  Carte -->
+<section class="mbr-section mbr-section__container" id="map2-2x" style="background-color: rgb(105, 176, 171); padding-top: 60px; padding-bottom: 60px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="mbr-map">
+                    <iframe frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA0Dx_boXQiwvdz8sJHoYeZNVTdoWONYkU&amp;q=place_id:ChIJSZ296Zx_6EcRVNaCoS8yigk" allowfullscreen="">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--  Résultat de recherche -->
+<section class="mbr-section" id="content5-56" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 0px;">
+    <div class="container">
+        <h3 class="mbr-section-title display-2">
+            Résultat(s) de recherche
+        </h3>
+    </div>
+</section>
+
+
+<section class="mbr-section extTable1" id="extTable1-57" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 120px;">
+    <div class="container table-wrapper" >
+        Colonnes = Date / Observations prise par / Validée par
     </div>
 </section>

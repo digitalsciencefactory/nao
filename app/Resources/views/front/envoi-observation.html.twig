@@ -1,0 +1,18 @@
+{# app/Resources/views/front/accueil.html.twig #}
+
+{% extends "base_front.html.twig" %}
+
+{% block title %}
+    Envoi Observation - {{ parent() }}
+{% endblock %}
+
+
+{% block body %}
+
+    <p>Formulaire envoi observation</p>
+
+    {{ include('front/blocks/_follow.html.twig') }}
+
+    {{ include ('front/blocks/_adresse.html.twig') }}
+
+{% endblock body %}

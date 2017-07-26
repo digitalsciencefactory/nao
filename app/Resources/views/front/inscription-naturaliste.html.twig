@@ -1,0 +1,344 @@
+{# app/Resources/views/front/inscription-naturaliste.html.twig #}
+
+{% extends "base_front.html.twig" %}
+
+{% block title %}
+    Inscription Naturaliste - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+<!--  Formulaire inscription  -->
+    <section class="mbr-section mbr-section-hero mbr-section-full extHeader9 mbr-after-navbar" id="extHeader9-1f" style="background-image: url({{ asset('assets/images/mbr-1-2000x1328.jpg') }});">
+
+        <div class="mbr-overlay" style="opacity: 0.4; background-color: rgb(0, 0, 0);"></div>
+
+        <div class="mbr-table mbr-table-full">
+            <div class="mbr-table-cell">
+                <div class="container">
+                    <div class="mbr-section row">
+                        <div class="mbr-table-md-up">
+
+                            <div class="mbr-table-cell mbr-right-padding-md-up col-md-7 text-xs-center text-md-right">
+
+                                <h3 class="mbr-section-title display-2">
+                                    Vous souhaitez participer à une étude participative ?
+                                </h3>
+
+                                <div class="mbr-section-text lead">
+                                    <p>
+                                        Inscrivez-vous à Flash Nature et contribuer grâce à votre expertise, à lʼétude des mécanismes environnementaux et leurs impacts sur la biodiversité.                                </p>
+                                </div>
+
+                            </div>
+
+                            <div class="form-table mbr-valign-top col-md-12  formblock" data-form-type="formoid">
+                                <h4 class="mbr-section-title display-2 form-title">
+                                    Inscrivez-vous !
+                                </h4>
+
+                                {{ include('front/forms/_naturaliste_form.html.twig') }}
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mbr-arrow mbr-arrow-floating hidden-sm-down" aria-hidden="true">
+            <a href="#extFeatures2-1o">
+                <i class="mbr-arrow-icon"></i>
+            </a>
+        </div>
+    </section>
+
+<!-- Application -->
+    <section class="mbr-section mbr-section-hero mbr-section-full extFeatures2" id="extFeatures2-1o" style="background-color: rgb(255, 255, 255);">
+        <div class="mbr-table mbr-table-full">
+            <div class="mbr-table-cell">
+                <div class="container">
+                    <div class="mbr-section row">
+                        <div class="mbr-table-md-up">
+
+                            <div class="mbr-table mbr-valign-top col-md-5">
+                                <div class="mbr-figure">
+                                    <img src="{{ asset('assets/images/2480x480-tel-visuels-636x900.png') }}" class="central-image"></div>
+                            </div>
+                            <div class="mbr-table-cell mbr-left-padding-md-up col-md-7 text-xs-center text-md-right">
+                                <h2 class="display-2 h-black">
+                                    Flash Nature,une application aux services des oiseaux
+                                </h2>
+
+                                <div class="row">
+                                    <div class="col-md-10 col-md-offset-2 parentInverse">
+                                        <div class="intro-box right iconBackgroundBottomLineInverse" style="display: block;">
+                                            <span class="iconBackgroundInverse">
+                                                <span class="icon">
+                                                    <span class="etl-icon icon-key mbr-iconfont-extFeatures2" style="color: #333333"></span>
+                                                </span>
+                                            </span>
+
+                                            <div>
+                                                <h4 class="h-black text-right">
+                                                    Inscription sécurisée
+                                                </h4>
+
+                                                <p class="mbr-section-text-gray lead h-black">
+                                                    Contrôle du statut de naturaliste pour veiller à ce que les données ne soient pas exploitées à des fins de braconage
+                                                </p>
+                                            </div>
+
+                                        </div>
+                                        <div class="intro-box right iconBackgroundBottomLineInverse" style="display: block;">
+                                            <span class="iconBackgroundInverse">
+                                                <span class="icon">
+                                                    <span class="etl-icon icon-layers mbr-iconfont-features6" style="color: #333333"></span>
+                                                </span>
+                                            </span>
+
+                                            <div>
+                                                <h4 class="h-black text-right">
+                                                    Base de données de qualité
+                                                </h4>
+
+                                                <p class="mbr-section-text-gray lead h-black">
+                                                    Accès aux données collectées pour vos recherches scientifiques (accès réservé)
+                                                </p>
+                                            </div>
+
+                                        </div>
+                                        <div class="intro-box right" style="display: block;">
+                                            <span class="iconBackgroundInverse">
+                                                <span class="icon">
+                                                    <span class="etl-icon icon-piechart mbr-iconfont-features6" style="color: #333333"></span>
+                                                </span>
+                                            </span>
+
+                                            <div>
+                                                <h4 class="h-black text-right">
+                                                    Etude certifiée
+                                                </h4>
+
+                                                <p class="mbr-section-text-gray lead h-black">
+                                                    Projet encadré par lʼassociation NAO (Nos Amis les Oiseaux) mandatée par le MNHN et lʼUnion Européenne.                                         </p>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+<!--  Mot du president -->
+    <section class="mbr-slider mbr-section mbr-section-nopadding carousel slide extTestimonials1" data-ride="carousel" data-keyboard="false" data-wrap="true" data-pause="false" data-interval="false" id="extTestimonials1-1t" style="background-color: rgb(105, 176, 171); padding-top: 80px; padding-bottom: 40px;">
+        <div class="mbr-section__container mbr-section__container--middle">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 text-xs-center">
+                        <h3 class="mbr-section-title display-2">
+                            Le mot du Président
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container boxed-slider">
+            <div class="carousel-inner" role="listbox">
+                <div class="carousel-item active">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="mbr-testimonial card mbr-testimonial-lg">
+                                <div class="card-block">
+                                    <p>
+                                        « Notre mission pour Flash Nature est d’assurer la qualité des données en intégrant les naturalistes au centre du dispositif de validation des données. <br>
+                                        Leur expertise garantie la constitution d’une base de données fiable permettant d’établir une étude efficace et qualitative.»
+                                    </p>
+                                </div>
+
+                                <div class="mbr-author card-footer">
+                                    <div class="mbr-author-img">
+                                        <a href="">
+                                            <img src="{{ asset('assets/images/mr-dujardin-nao-portrait-160x137.png') }}" class="img-circle">
+                                        </a>
+                                    </div>
+
+                                    <div class="mbr-author-name">
+                                        Monsieur Dujardin
+                                    </div>
+
+                                    <small class="mbr-author-desc">
+                                        Président de l'association NAO
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!--  Processus  -->
+    <section class="mbr-section extFeatures13" id="extFeatures13-1u" style="background-color: rgb(255, 255, 255); padding-top: 100px; padding-bottom: 100px;">
+        <div class="elements-content">
+            <div class="container titleBlock">
+                <div class="col-xs-12 text-xs-center">
+                    <div class="title_wrapper">
+                        <h3 class="mbr-section-title display-2">
+                            Le processus
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container timelineHeight">
+                <ul class="timeline">
+                    <li class="timeline-normal separline" style="display: block;">
+                        <div class="date date-normal">
+                            <p class="mbr-section-text-gray lead h-black">
+                                Etape 1
+                            </p>
+                        </div>
+
+                        <span class="iconBackground first_span">
+                        <span class="icon">
+                            <span class="etl-icon icon-envelope mbr-iconfont-extFeatures2" style="color: #666666"></span>
+                        </span>
+                    </span>
+
+                        <div class="timeline-panel">
+                            <h4 class="h-black text-right">
+                                Réception
+                            </h4>
+
+                            <p class="mbr-section-text-gray lead h-black">
+                                Recéption dans l'espace privé "Naturaliste", dʼune observation effectuée par un particulier(nom de lʼoiseau, lieu et date de lʼobservation, photo), lieu et date de lʼobservation, photo)
+                            </p>
+                        </div>
+                    </li>
+
+                    <li class="timeline-inverted separline" style="display: block;">
+                        <div class="date date-inverted">
+                            <p class="mbr-section-text-gray lead h-black">
+                                Etape 2
+                            </p>
+                        </div>
+
+                        <div class="timeline-panel">
+                            <h4 class="h-black">
+                                Contrôle
+                            </h4>
+
+                            <p class="mbr-section-text-gray lead h-black">
+                                Recéption dans l'espace privé "Naturaliste", dʼune observation effectuée par un particulier(nom de lʼoiseau, lieu et date de lʼobservation, photo)                            <a href="participer.html">
+                                </a>
+                            </p>
+                        </div>
+
+                        <span class="iconBackgroundInverse">
+                          <span class="icon">
+                            <span class="etl-icon icon-search mbri-touch mbr-iconfont-features6" style="color: #666666"></span>
+                        </span>
+                    </span>
+
+                    </li>
+
+                    <li class="timeline-normal separline" style="display: block;">
+                        <div class="date date-normal">
+                            <p class="mbr-section-text-gray lead h-black">
+                                Etape 3
+                            </p>
+                        </div>
+
+                        <span class="iconBackground">
+                        <span class="icon">
+                            <span class="etl-icon icon-heart mbr-iconfont-features6" style="color: #666666"></span>
+                        </span>
+                    </span>
+
+                        <div class="timeline-panel">
+                            <h4 class="h-black text-right">
+                                Validation
+                            </h4>
+
+                            <p class="mbr-section-text-gray lead h-black">
+                                Validation (ou refus) de la donnée
+                            </p>
+                        </div>
+                    </li>
+
+                    <li class="timeline-inverted separline" style="display: block;">
+                        <div class="date date-inverted">
+                            <p class="mbr-section-text-gray lead h-black">
+                                Etape 4
+                            </p>
+                        </div>
+
+                        <div class="timeline-panel">
+                            <h4 class="h-black">
+                                Base de données
+                            </h4>
+
+                            <p class="mbr-section-text-gray lead h-black">
+                                Si la donnée est validée, intégration automatique dans la base de données
+                            </p>
+                        </div>
+
+                        <span class="iconBackgroundInverse">
+                        <span class="icon">
+                            <span class="etl-icon icon-layers mbr-iconfont-features6" style="color: #666666"></span>
+                        </span>
+                    </span>
+                    </li>
+
+                    <li class="timeline-normal separline" style="display: block;">
+                        <div class="date date-normal">
+                            <p class="mbr-section-text-gray lead h-black">
+                                Etape 5
+                            </p>
+                        </div>
+
+                        <span class="iconBackground">
+                        <span class="icon">
+                            <span class="etl-icon icon-documents mbr-iconfont-features6" style="color: #666666"></span>
+                        </span>
+                    </span>
+
+                        <div class="timeline-panel">
+                            <h4 class="h-black text-right">
+                                Consultation
+                            </h4>
+
+                            <p class="mbr-section-text-gray lead h-black">
+                                Consultation et exportation de la base de données
+                            </p>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="title_wrapper bottom_title_wrapper">
+                    <h3 class="mbr-section-title display-2">&nbsp;&nbsp;</h3>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    {{ include('front/blocks/_about.html.twig') }}
+
+    {{ include('front/forms/_newsletter_form.html.twig') }}
+
+    {{ include('front/blocks/_partenaires.html.twig') }}
+
+    {{ include('front/blocks/_follow.html.twig') }}
+
+{% endblock body %}

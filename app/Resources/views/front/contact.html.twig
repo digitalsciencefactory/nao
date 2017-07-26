@@ -1,6 +1,6 @@
 {# app/Resources/views/front/contact.html.twig #}
 
-{% extends "base.html.twig" %}
+{% extends "base_front.html.twig" %}
 
 {% block title %}
     Contact - {{ parent() }}
@@ -8,7 +8,56 @@
 
 {% block body %}
 
-    {{ include('front/forms/_contact_form.html.twig') }}
+<!--  formulaire contact -->
+    <section class="mbr-section extForm3 mbr-after-navbar" id="extForm3-1q" style="background-color: rgb(255, 255, 255); padding-top: 150px; padding-bottom: 50px;">
+        <div class="mbr-table">
+            <div class="mbr-table-cell">
+
+                <div class="container">
+                    <div class="row">
+                        <div class="mbr-table-md-up">
+
+                            <div class="mbr-table mbr-valign-top col-md-6">
+                                <div class="mbr-map">
+                                    <iframe frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA0Dx_boXQiwvdz8sJHoYeZNVTdoWONYkU&amp;q=place_id:ChIJxfB-lhRu5kcRfK7MP5oTfH8" allowfullscreen="">
+                                    </iframe>
+                                </div>
+                            </div>
+
+                            <div class="mbr-table-cell col-md-6 text-md-left">
+                                <h2 class="display-2 h-black">
+                                    Laissez-nous votre message
+                                </h2>
+
+                                <div class="row">
+                                    <div class="col-md-12 parentInverse">
+                                        <div class="col-md-12 col-lg-12 inverse-content" style="padding-left: 0px;">
+                                            <div class="intro-box right">
+                                                <div class="contentInverse" style="padding-left: 0px;">
+                                                    <p class="mbr-section-text-gray lead h-black">
+                                                        Phone: +1 (0) 000 0000 001 <br>
+                                                        Email: youremail@mail.com
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;" data-form-type="formoid">
+
+                                    {{ include('front/forms/_contact_form.html.twig') }}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{ include ('front/blocks/_adresse.html.twig') }}
 
 {% endblock body %}
 

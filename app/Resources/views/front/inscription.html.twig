@@ -1,6 +1,6 @@
 {# app/Resources/views/front/accueil.html.twig #}
 
-{% extends "base.html.twig" %}
+{% extends "base_front.html.twig" %}
 
 {% block title %}
     Inscription - {{ parent() }}
@@ -8,6 +8,43 @@
 
 {% block body %}
 
-    {{ include('front/banners/_banner2.html.twig') }}
+<!--  banner   -->
+    <section class="mbr-section mbr-section-hero mbr-section-full mbr-parallax-background mbr-section-with-arrow mbr-after-navbar" id="header1-b" style="background-image: url('assets/images/soleil-dans-la-foret-visuel-large-1-2000x1499.jpg');">
+
+        <div class="mbr-overlay" style="opacity: 0.5; background-color: rgb(0, 0, 0);"></div>
+
+        <div class="mbr-table-cell">
+            <div class="container">
+                <div class="row">
+                    <div class="mbr-section col-md-10 col-md-offset-1 text-xs-center">
+
+                        <h1 class="mbr-section-title display-1">
+                            Grâce à Flash&nbsp;Nature <br>
+                            préservons ensemble les oiseaux
+                        </h1>
+
+                        <div class="mbr-section-btn">
+
+                            <p class="mbr-section-lead lead">
+                                Déjà inscrit ?
+                                <a href="/connexion">
+                                    Cliquer ici
+                                </a>
+                            </p>
+
+                            <a class="btn btn-lg btn-primary" href="/inscription-observateur">
+                                Je suis un particulier
+                            </a>
+
+                            <a class="btn btn-lg btn-white btn-white-outline" href="/inscription-naturaliste">
+                                Je suis un naturaliste
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
 {% endblock body %}
