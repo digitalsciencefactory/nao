@@ -4,8 +4,12 @@ namespace AppBundle\Controller;
 
 use AppBundle\Contact\ContactMailer;
 use AppBundle\Form\ContactType;
+use AppBundle\Form\LoginType;
 use AppBundle\Contact\Contact;
+use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -74,27 +78,35 @@ class FrontController extends Controller
     }
 
     /**
-     * @Route("/login", name="fn_front_connexion")
+     * @Route("/connexion", name="fn_front_connexion")
      *
      * Affiche la page de connexion
      */
-    public function loginAction (Request $request)
+    public function loginAction (Request $request, UserPasswordEncoderInterface $passwordEncoder, AuthenticationUtils $authUtils)
     {
-        //TODO: compléter la méthode d'affichage du formulaire de connexion
-        // Si le visiteur est déjà identifié, on le redirige vers l'accueil
-        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            return $this->redirectToRoute('fn_front_index');
+
+        $user = new User();
+        $form = $this->createForm(LoginType::class, $user);
+
+        // get the login error if there is one
+        $error = $authUtils->getLastAuthenticationError();
+
+        // last username entered by the user
+        $lastUsername = $authUtils->getLastUsername();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
         }
 
-        // Le service authentication_utils permet de récupérer le nom d'utilisateur
-        // et l'erreur dans le cas où le formulaire a déjà été soumis mais était invalide
-        // (mauvais mot de passe par exemple)
-        $authenticationUtils = $this->get('security.authentication_utils');
+        return $this->render(
+            'Front/connexion.html.twig',
+            array('form' => $form->createView(),
+                'last_username' => $lastUsername,
+                'error'         => $error,
+                )
+        );
 
-        return $this->render('Front/connexion.html.twig', array(
-        'last_username' => $authenticationUtils->getLastUsername(),
-            'error'         => $authenticationUtils->getLastAuthenticationError(),
-        ));
     }
 
     /**
