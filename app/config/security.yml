@@ -7,12 +7,15 @@ security:
 
     role_hierarchy:
          ROLE_NATURALISTE: ROLE_OBSERVATEUR
-         ROLE_ADMIN: [ROLE_NATURALISTE, ROLE_OBSERVATEUR]
+         ROLE_ADMIN: [ROLE_OBSERVATEUR, ROLE_NATURALISTE ]
 
     # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
         in_memory:
-            memory: ~
+            memory:
+              users:
+                user: { password: userpass, roles: ['ROLE_OBSERVATEUR']}
+                naturaliste: { password: natpass, roles: ['ROLE_NATURALISTE']}
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -30,3 +33,6 @@ security:
 
             # https://symfony.com/doc/current/security/form_login_setup.html
             #form_login: ~
+    access_control:
+        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+

@@ -35,6 +35,21 @@ class Newsletter
      */
     private $token;
 
+    /**
+     * @var datetime
+     *
+     * @ORM\Column(name="dcree", type="datetime")
+     */
+    private $dcree;
+
+    /**
+     * Newsletter constructor.
+     */
+    public function __construct()
+    {
+        $this->dcree = new \DateTime();
+    }
+
 
     /**
      * Get id
@@ -92,5 +107,29 @@ class Newsletter
     public function getToken()
     {
         return $this->token;
+    }
+
+    /**
+     * Set dcree
+     *
+     * @param \DateTime $dcree
+     *
+     * @return Newsletter
+     */
+    public function setDcree($dcree)
+    {
+        $this->dcree = $dcree;
+
+        return $this;
+    }
+
+    /**
+     * Get dcree
+     *
+     * @return \DateTime
+     */
+    public function getDcree()
+    {
+        return $this->dcree;
     }
 }
