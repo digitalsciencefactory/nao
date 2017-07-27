@@ -1,0 +1,70 @@
+{# app/Resources/views/front/connexion.html.twig #}
+
+{% extends "base_front.html.twig" %}
+
+{% block title %}
+    Connexion- {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+<section class="mbr-section mbr-section-hero mbr-section-full extHeader10 mbr-after-navbar" id="extHeader10-39" style="background-image: url({{ asset('assets/images/mbr-2000x1294.jpg') }});">
+
+    <div class="mbr-overlay" style="opacity: 0.3; background-color: rgb(0, 0, 0);"></div>
+
+    <div class="mbr-table mbr-table-full">
+        <div class="mbr-table-cell">
+
+            <div class="container">
+                <div class="mbr-section row">
+                    <div class="mbr-table-md-up">
+
+                        <div class="mbr-table-cell mbr-right-padding-md-up col-md-7 text-xs-center text-md-right">
+
+                            <h3 class="mbr-section-title display-2">
+                                Connectez-vous
+                            </h3>
+
+                            <div class="mbr-section-text lead">
+                                <p class="text-white">
+                                    Pas de compte ?
+                                    <br>
+                                    <a href="/inscription" class="text-white">Cliquer ici pour vous inscrire.</a>
+                                </p>
+
+                                <a href="" class="text-white">Mot de passe oublié</a>
+
+                            </div>
+
+
+                        </div>
+
+                        <div class="form-table mbr-valign-top col-md-9  formblock" data-form-type="formoid">
+
+                            <form action="" method="post">
+
+                                <div class="col-xs-12">
+                                    <input type="text" class="form-control" name="pseudo" required="" data-form-field="Name" placeholder="Pseudo">
+                                </div>
+
+                                <div class="col-xs-12">
+                                    <input type="password" class="form-control" name="mdp" required="" data-form-field="Email" placeholder="Mot de passe ">
+                                </div>
+
+                                <div class="col-xs-12" style="margin-top: 10px; text-align: center">
+                                    <button type="submit" class="btn btn-info">
+                                        Se connecter
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock body %}

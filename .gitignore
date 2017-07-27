@@ -19,3 +19,5 @@
 !var/SymfonyRequirements.php
 /vendor/
 /web/bundles/
+.DS_Store
+var/logs/dev.log

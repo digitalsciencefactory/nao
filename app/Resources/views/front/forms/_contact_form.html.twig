@@ -1,99 +1,50 @@
-{# app/Resources/views/forms/_contact_form.html.twig #}
-
-<!--  formulaire contact -->
-<section class="mbr-section extForm3 mbr-after-navbar" id="extForm3-1q" style="background-color: rgb(255, 255, 255); padding-top: 150px; padding-bottom: 50px;">
-
-    <div class="mbr-table">
-        <div class="mbr-table-cell">
-
-            <div class="container">
-                <div class="row">
-                    <div class="mbr-table-md-up">
-
-                        <div class="mbr-table mbr-valign-top col-md-6">
-                            <div class="mbr-map">
-                                <iframe frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA0Dx_boXQiwvdz8sJHoYeZNVTdoWONYkU&amp;q=place_id:ChIJxfB-lhRu5kcRfK7MP5oTfH8" allowfullscreen="">
-                                </iframe>
-                            </div>
-                        </div>
-
-                        <div class="mbr-table-cell col-md-6 text-md-left">
-                            <h2 class="display-2 h-black">
-                                Laissez-nous votre message
-                                <h2 style="color:red"> A Vérifier </h2>
-                            </h2>
-
-                            <div class="row">
-                                <div class="col-md-12 parentInverse">
-                                    <div class="col-md-12 col-lg-12 inverse-content" style="padding-left: 0px;">
-                                        <div class="intro-box right">
-                                            <div class="contentInverse" style="padding-left: 0px;">
-                                                <p class="mbr-section-text-gray lead h-black">
-                                                    Phone: +1 (0) 000 0000 001 <br>
-                                                    Email: youremail@mail.com
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;" data-form-type="formoid">
-                                <div class="well">
-                                    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
-                                    {% for message in app.flashes('notice') %}
-                                        <div class="btn-success">
-                                            {{ message }}
-                                        </div>
-                                    {% endfor %}
-                                    <div class="error">
-                                        {{ form_errors(form) }}
-                                    </div>
-
-                                    {# Formulaire de contact #}
-                                    <form action="" method="post" data-form-title="Laisser nous votre message">
-
-                                        <div class="col-xs-6">
-                                            {{ form_errors(form.prenom) }}
-                                            {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'placeholder': 'Votre prénom'}}) }}
-                                        </div>
-
-                                        <div class="col-xs-6" style="padding-left: 15px">
-                                            {{ form_errors(form.nom) }}
-                                            {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Votre nom'}}) }}
-                                        </div>
-
-                                        <div class="col-xs-12">
-                                            {{ form_errors(form.mail) }}
-                                            {{ form_widget(form.mail, {'attr': {'class': 'form-control', 'placeholder': 'Votre email'}}) }}
-                                        </div>
-
-                                        <div class="col-xs-12">
-                                            {{ form_errors(form.titre) }}
-                                            {{ form_widget(form.titre, {'attr': {'class': 'form-control', 'placeholder': 'Sujet du message'}}) }}
-                                        </div>
-
-                                        <div class="col-xs-12">
-                                            <div class="bg-error">{{ form_errors(form.message) }}</div>
-                                            {{ form_widget(form.message, {'attr': {'class': 'form-control', 'placeholder': 'Votre message', 'rows':'3', 'style':'resize:none'}}) }}
-                                        </div>
-                                        <div class="col-xs-12">
-                                            Minimum 250 caractères. <span id="contact_charcount">0</span>/250
-                                        </div>
-
-                                        <div class="col-xs-12 buttons_wrap" style="margin-top: 10px;">
-                                            {{ form_widget(form.envoyer, {'attr': {'class': 'btn btn-secondary'}}) }}
-                                        </div>
-
-                                        {{ form_rest(form) }}
-                                        {{ form_end(form) }}
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="well">
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    {% for message in app.flashes('notice') %}
+        <div class="btn-success">
+            {{ message }}
         </div>
+    {% endfor %}
+    <div class="error">
+        {{ form_errors(form) }}
     </div>
-</section>
+
+    {# Formulaire de contact #}
+    <form action="" method="post" data-form-title="Laisser nous votre message">
+
+        <div class="col-xs-6">
+            {{ form_errors(form.prenom) }}
+            {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'placeholder': 'Votre prénom'}}) }}
+        </div>
+
+        <div class="col-xs-6" style="padding-left: 15px">
+            {{ form_errors(form.nom) }}
+            {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Votre nom'}}) }}
+        </div>
+
+        <div class="col-xs-12">
+            {{ form_errors(form.mail) }}
+            {{ form_widget(form.mail, {'attr': {'class': 'form-control', 'placeholder': 'Votre email'}}) }}
+        </div>
+
+        <div class="col-xs-12">
+            {{ form_errors(form.titre) }}
+            {{ form_widget(form.titre, {'attr': {'class': 'form-control', 'placeholder': 'Sujet du message'}}) }}
+        </div>
+
+        <div class="col-xs-12">
+            <div class="bg-error">{{ form_errors(form.message) }}</div>
+            {{ form_widget(form.message, {'attr': {'class': 'form-control', 'placeholder': 'Votre message', 'rows':'3', 'style':'resize:none'}}) }}
+        </div>
+        <div class="col-xs-12">
+            Minimum 250 caractères. <span id="contact_charcount">0</span>/250
+        </div>
+
+        <div class="col-xs-12 buttons_wrap" style="margin-top: 10px;">
+            {{ form_widget(form.envoyer, {'attr': {'class': 'btn btn-secondary'}}) }}
+        </div>
+
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
+    </form>
+</div>

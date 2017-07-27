@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 class FrontController extends Controller
 {
     /**
-     * @Route("/", name="fn_front_home")
+     * @Route("/", name="fn_front_index")
      * @Route("/accueil")
      */
     public function indexAction(Request $request){
@@ -56,21 +56,84 @@ class FrontController extends Controller
 
 
     /**
-     * @Route("/inscription/particulier", name="fn_front_inscription_par")
+     * @Route("/inscription-observateur", name="fn_front_inscription_obs")
      */
-    public function inscriptionParAction (Request $request)
+    public function inscriptionObsAction (Request $request)
     {
         /* todo:Compléter la méthode */
-        return $this->render('Front/inscriptionPar.html.twig');
+        return $this->render('Front/inscription-observateur.html.twig');
     }
 
     /**
-     * @Route("/inscription/naturaliste", name="fn_front_inscription_obs")
+     * @Route("/inscription-naturaliste", name="fn_front_inscription_nat")
      */
     public function inscriptionNatAction (Request $request)
     {
         /* todo:Compléter la méthode */
-        return $this->render('Front/inscriptionNat.html.twig');
+        return $this->render('Front/inscription-naturaliste.html.twig');
+    }
+
+    /**
+     * @Route("/connexion", name="fn_front_connexion")
+     */
+    public function connexionAction (Request $request)
+    {
+        /* todo:Compléter la méthode */
+        return $this->render('Front/connexion.html.twig');
+    }
+
+    /**
+     * @Route("/kit-observation", name="fn_front_kit")
+     */
+    public function kitObservationAction (Request $request)
+    {
+        /* todo:Compléter la méthode */
+        return $this->render('Front/kit_observation.html.twig');
+    }
+
+    /**
+     * @Route("/qui-sommes-nous", name="fn_front_about")
+     */
+    public function aboutAction (Request $request)
+    {
+        /* todo:Compléter la méthode */
+        return $this->render('Front/qui-sommes-nous.html.twig');
+    }
+
+    /**
+ * @Route("/carte-des-observations", name="fn_front_map")
+ */
+    public function mapAction (Request $request)
+    {
+        /* todo:Compléter la méthode */
+        return $this->render('Front/carte-des-observations.html.twig');
+    }
+
+    /**
+     * @Route("/espace-naturaliste", name="fn_front_espace_nat")
+     */
+    public function espaceNatAction (Request $request)
+    {
+        /* todo:Compléter la méthode */
+        return $this->render('Front/espace-naturaliste.html.twig');
+    }
+
+    /**
+     * @Route("/envoi-observation", name="fn_front_envoi_obs")
+     */
+    public function envoiObsAction (Request $request)
+    {
+        /* todo:Compléter la méthode */
+        return $this->render('Front/envoi-observation.html.twig');
+    }
+
+    /**
+     * @Route("/nom-compte", name="fn_front_profil")
+     */
+    public function profilAction (Request $request)
+    {
+        /* todo:Compléter la méthode */
+        return $this->render('Front/mon-compte.html.twig');
     }
 
 }

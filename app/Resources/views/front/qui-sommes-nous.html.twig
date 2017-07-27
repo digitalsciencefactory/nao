@@ -1,0 +1,143 @@
+{# app/Resources/views/front/a_propos.html.twig #}
+
+{% extends "base_front.html.twig" %}
+
+{% block title %}
+    Qui sommes-nous ? - {{ parent() }}
+{% endblock %}
+
+
+{% block body %}
+
+<!--  Qui sommes-nous ? -->
+    <section class="mbr-section mbr-section-hero mbr-section-full extHeader12 tab-content mbr-after-navbar" id="extHeader12-29" style="background-color: rgb(255, 255, 255);">
+        <div class="mbr-table mbr-table-full">
+            <div class="bgText">
+                <div class="wrapper-absolute">
+                    <p class="bgTextP" style="color: rgb(239, 239, 239); font-size: 250px; font-family: Montserrat;"></p>
+                </div>
+            </div>
+
+            <div class="mbr-table-cell">
+                <div class="container">
+                    <div class="mbr-section row">
+                        <div class="mbr-table-md-up">
+                            <div class="mbr-table-cell mbr-right-padding-md-up mbr-valign-top col-md-6 image-size">
+                                <div class="mbr-figure">
+                                    <img src="{{ ('assets/images/mbr-1400x933.jpg') }}">
+                                </div>
+                            </div>
+
+                            <div class="mbr-table-cell col-md-6 text-xs-center text-md-left content-size">
+                                <h3 class="mbr-section-title display-2">
+                                    Qui somme-nous ?
+                                </h3>
+
+                                <div class="mbr-section-text lead">
+                                    <p>Flash Nature est une plateforme<br>collaborative créée par l’association NAO<br>(Nos Amis les Oiseaux).<br>
+                                        NAO est une association loi 1901 créée en 2014 par Monsieur Dujardin, pasionné d’ornithologie.<br><br>
+                                        Tout au long de l’année, NAO met en place un programme d’actions et animations visant à sensibiliser le public à la préservation des oiseaux.<br><br>
+                                        NAO tient également un rôle important de centralisation des connaissance en organisant régulièrement des conférences au sein de ses locaux parisiens.<br>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+<!--  Besoin de banner -->
+    <section class="mbr-section article mbr-parallax-background" id="msg-box8-2f" style="background-image: url({{ asset('assets/images/mbr-3-2000x1333.jpg') }}); padding-top: 80px; padding-bottom: 80px;">
+        <div class="mbr-overlay" style="opacity: 0.5; background-color: rgb(34, 34, 34);">
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 text-xs-center">
+                    <h3 class="mbr-section-title display-2">
+                        NAO a besoin de vous
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!--  Besoin message -->
+    <section class="mbr-section article mbr-section__container" id="content1-2g" style="background-color: rgb(105, 176, 171); padding-top: 20px; padding-bottom: 60px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 lead">
+                    <p>
+                        Les oiseaux sont des espèces menacées par les modifications climatiques.
+                    </p>
+                    <p>
+                        Pour lutter contre ce fléau, NAO a besoin de vous.
+                    </p>
+                    <p>
+                        En rejoignant l’équipe NAO, vous bénéficiez :</p>
+                    <ul class="text-white list-inline-item">
+                        <li>
+                            20% sur vos entrées dans les musées rattachés au Muséum National d’Histoire Naturelle
+                        </li>
+                    </ul>
+
+                    <ul class="text-white list-inline-item">
+                        <li>
+                            Accès gratuit à toutes les conférences NAO
+                        </li>
+                    </ul>
+                    <p>Pour plus d’information, n’hésitez pas à nous contacter en suivant ce lien :
+                        </span>
+                        <a href="/contact" class="text-black" style="font-size: 1.07rem; background-color: rgb(105, 176, 171); line-height: 1.5;">
+                            CONTACT
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!--  Protéger les oiseaux -->
+    <section class="mbr-section" id="msg-box5-2a" style="background-color: rgb(255, 255, 255); padding-top: 80px; padding-bottom: 40px;">
+        <div class="container">
+            <div class="row">
+                <div class="mbr-table-md-up">
+                    <div class="mbr-table-cell mbr-right-padding-md-up mbr-valign-top col-md-7 image-size" style="width: 50%;">
+                        <div class="mbr-figure">
+                            <img src="{{ asset('assets/images/mbr-1400x1000.jpg') }}">
+                        </div>
+                    </div>
+
+                    <div class="mbr-table-cell col-md-5 text-xs-center text-md-left content-size">
+                        <h3 class="mbr-section-title display-2">
+                            Protéger les oiseaux<br>en soutenant NAO
+                        </h3>
+
+                        <div class="lead">
+                            <p>
+                                Télécharger et remplissez<br>le formulaire dʼinscription pour devenir adhérent à l'association
+                            </p>
+
+                        </div>
+
+                        <div>
+                            <a class="btn btn-info" href="">
+                                Télécharger
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{ include('front/forms/_newsletter_form.html.twig') }}
+
+    {{ include('front/blocks/_follow.html.twig') }}
+
+    {{ include ('front/blocks/_adresse.html.twig') }}
+
+{% endblock body %}
