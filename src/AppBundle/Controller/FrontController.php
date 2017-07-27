@@ -74,12 +74,27 @@ class FrontController extends Controller
     }
 
     /**
-     * @Route("/connexion", name="fn_front_connexion")
+     * @Route("/login", name="fn_front_connexion")
+     *
+     * Affiche la page de connexion
      */
-    public function connexionAction (Request $request)
+    public function loginAction (Request $request)
     {
-        /* todo:Compléter la méthode */
-        return $this->render('Front/connexion.html.twig');
+        //TODO: compléter la méthode d'affichage du formulaire de connexion
+        // Si le visiteur est déjà identifié, on le redirige vers l'accueil
+        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirectToRoute('fn_front_index');
+        }
+
+        // Le service authentication_utils permet de récupérer le nom d'utilisateur
+        // et l'erreur dans le cas où le formulaire a déjà été soumis mais était invalide
+        // (mauvais mot de passe par exemple)
+        $authenticationUtils = $this->get('security.authentication_utils');
+
+        return $this->render('Front/connexion.html.twig', array(
+        'last_username' => $authenticationUtils->getLastUsername(),
+            'error'         => $authenticationUtils->getLastAuthenticationError(),
+        ));
     }
 
     /**

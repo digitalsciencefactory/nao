@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="fnat_user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  */
-class User implements UserInterface
+class User implements UserInterface, \Serializable
 {
     /**
      * @var int
@@ -534,5 +534,64 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+    /**
+     * String representation of object
+     * @link http://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     * @since 5.1.0
+     */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->mail,
+            $this->mdp,
+            $this->nom,
+            $this->prenom,
+            $this->sexe,
+            $this->codePostal,
+            $this->ddn,
+            $this->photo,
+            $this->carte,
+            $this->token,
+            $this->roles,
+            $this->statut,
+            $this->dcree
+            // see section on salt below
+            // $this->salt,
+        ));
+    }
+
+    /**
+     * Constructs the object
+     * @link http://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized <p>
+     * The string representation of the object.
+     * </p>
+     * @return void
+     * @since 5.1.0
+     */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->mail,
+            $this->mdp,
+            $this->nom,
+            $this->prenom,
+            $this->sexe,
+            $this->codePostal,
+            $this->ddn,
+            $this->photo,
+            $this->carte,
+            $this->token,
+            $this->roles,
+            $this->statut,
+            $this->dcree
+            // see section on salt below
+            // $this->salt
+            ) = unserialize($serialized);
     }
 }

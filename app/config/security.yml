@@ -11,6 +11,10 @@ security:
 
     # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
+        user_provider:
+            entity: AppBundle:User
+            property: mail
+
         in_memory:
             memory:
               users:
@@ -26,6 +30,9 @@ security:
         main:
             pattern: ^/
             anonymous: true
+            provider: user_provider
+
+
             # activate different ways to authenticate
 
             # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
