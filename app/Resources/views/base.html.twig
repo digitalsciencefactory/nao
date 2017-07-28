@@ -29,6 +29,7 @@
         <link rel="stylesheet" href="{{ asset('assets/theme/css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/mobirise3-blocks-plugin/css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/mobirise/css/mbr-additional.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/fnat/css/fnat.css') }}">
     {% endblock stylesheets %}
 
 </head>
@@ -107,17 +108,35 @@
                                 </div>
                             </li>
 
-                            <li class="nav-item">
-                                <a class="nav-link link" href="/participer/nom-compte">
-                                    Mon compte
-                                </a>
-                            </li>
+                            {% if app.user == null %}
+                                <li class="nav-item nav-btn">
+                                    <a class="nav-link btn btn-secondary-outline btn-secondary" href="/login">
+                                        Se connecter
+                                    </a>
+                                </li>
+                                <li class="nav-item nav-btn">
+                                    <a class="nav-link btn btn-secondary-outline btn-secondary" href="/inscription">
+                                        S'inscrire
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="nav-item">
 
-                            <li class="nav-item nav-btn">
-                                <a class="nav-link btn btn-secondary-outline btn-secondary" href="/inscription">
-                                    S'inscrire
-                                </a>
-                            </li>
+                                    <a class="nav-link link" href="/participer/nom-compte">
+                                        Mon compte
+                                    </a>
+                                </li>
+                                <li class="nav-item nav-btn">
+                                    <span>{{ app.user.prenom }} {{ app.user.nom }} </span>
+                                    <a class="nav-link link boutonlogout" href="/logout">
+                                        <img src=" {{ asset('assets/fnat/icon/bouton_deconnexion.png') }}" id="boutonLogOut" />
+                                    </a>
+                                </li>
+                            {% endif %}
+
+
+
+
 
                         </ul>
 

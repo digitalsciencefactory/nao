@@ -1,0 +1,9 @@
+#boutonLogOut{
+    display: inline-block;
+    max-width: 15px;
+    max-height: 15px;
+
+}
+.boutonlogout{
+    display: inline-block !important;
+}
