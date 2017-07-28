@@ -1,6 +1,6 @@
 {# app/Resources/views/front/connexion.html.twig #}
 
-{% extends "base_front.html.twig" %}
+{% extends "base.html.twig" %}
 
 {% block title %}
     Connexion- {{ parent() }}
@@ -39,26 +39,7 @@
 
                         </div>
 
-                        <div class="form-table mbr-valign-top col-md-9  formblock" data-form-type="formoid">
-
-                            <form action="" method="post">
-
-                                <div class="col-xs-12">
-                                    <input type="text" class="form-control" name="pseudo" required="" data-form-field="Name" placeholder="Pseudo">
-                                </div>
-
-                                <div class="col-xs-12">
-                                    <input type="password" class="form-control" name="mdp" required="" data-form-field="Email" placeholder="Mot de passe ">
-                                </div>
-
-                                <div class="col-xs-12" style="margin-top: 10px; text-align: center">
-                                    <button type="submit" class="btn btn-info">
-                                        Se connecter
-                                    </button>
-                                </div>
-
-                            </form>
-                        </div>
+                        {{ include('front/forms/_login_form.html.twig') }}
 
                     </div>
                 </div>

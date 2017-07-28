@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -26,6 +28,8 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="mail", type="string", length=255, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Email
      */
     private $mail;
 
@@ -33,13 +37,21 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="mdp", type="string", length=65)
+     *
      */
     private $mdp;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
+     */
+    private $plainPassword;
 
     /**
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=45)
+     * @Assert\Length(max=45)
      */
     private $nom;
 
@@ -47,6 +59,7 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="prenom", type="string", length=45)
+     * @Assert\Length(max=45)
      */
     private $prenom;
 
@@ -54,6 +67,7 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="sexe", type="string", length=1, nullable=true)
+     * @Assert\Length(max=1)
      */
     private $sexe;
 
@@ -102,7 +116,7 @@ class User implements UserInterface, \Serializable
      *
      * @ORM\Column(name="roles", type="array")
      */
-    private $roles;
+    private $roles = array();
 
     /**
      * @var string
@@ -188,6 +202,16 @@ class User implements UserInterface, \Serializable
     public function getMdp()
     {
         return $this->mdp;
+    }
+
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword($password)
+    {
+        $this->plainPassword = $password;
     }
 
     /**
@@ -500,29 +524,27 @@ class User implements UserInterface, \Serializable
      */
     public function getPassword()
     {
-        // TODO: Implement getPassword() method.
+        return $this->mdp;
     }
 
     /**
-     * Returns the salt that was originally used to encode the password.
+     * bcrypt used so return null
      *
-     * This can return null if the password was not encoded using a salt.
-     *
-     * @return string|null The salt
+     * @return null
      */
     public function getSalt()
     {
-        // TODO: Implement getSalt() method.
+        return null;
     }
 
     /**
-     * Returns the username used to authenticate the user.
-     *
      * @return string The username
+     * Retourne l'email en lieu et place de l'username,
+     * utile pour berner l'implémentation de UserInterface
      */
     public function getUsername()
     {
-        // TODO: Implement getUsername() method.
+        return $this->mail;
     }
 
     /**

@@ -4,8 +4,12 @@ namespace AppBundle\Controller;
 
 use AppBundle\Contact\ContactMailer;
 use AppBundle\Form\ContactType;
+use AppBundle\Form\LoginType;
 use AppBundle\Contact\Contact;
+use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -80,7 +84,7 @@ class FrontController extends Controller
      */
     public function loginAction (Request $request)
     {
-        //TODO: compléter la méthode d'affichage du formulaire de connexion
+
         // Si le visiteur est déjà identifié, on le redirige vers l'accueil
         if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirectToRoute('fn_front_index');
@@ -92,10 +96,21 @@ class FrontController extends Controller
         $authenticationUtils = $this->get('security.authentication_utils');
 
         return $this->render('Front/connexion.html.twig', array(
-        'last_username' => $authenticationUtils->getLastUsername(),
+            'last_username' => $authenticationUtils->getLastUsername(),
             'error'         => $authenticationUtils->getLastAuthenticationError(),
         ));
+
     }
+    /**
+     * @Route("/login_check", name="login_check")
+     */
+    public function loginCheckAction()
+    {
+        // this controller will not be executed,
+        // as the route is handled by the Security system
+        throw new \Exception('Symfony devrait intercepter cette route !');
+    }
+
 
     /**
      * @Route("/kit-observation", name="fn_front_kit")
@@ -115,32 +130,11 @@ class FrontController extends Controller
         return $this->render('Front/qui-sommes-nous.html.twig');
     }
 
-    /**
- * @Route("/carte-des-observations", name="fn_front_map")
- */
-    public function mapAction (Request $request)
-    {
-        /* todo:Compléter la méthode */
-        return $this->render('Front/carte-des-observations.html.twig');
-    }
 
-    /**
-     * @Route("/espace-naturaliste", name="fn_front_espace_nat")
-     */
-    public function espaceNatAction (Request $request)
-    {
-        /* todo:Compléter la méthode */
-        return $this->render('Front/espace-naturaliste.html.twig');
-    }
 
-    /**
-     * @Route("/envoi-observation", name="fn_front_envoi_obs")
-     */
-    public function envoiObsAction (Request $request)
-    {
-        /* todo:Compléter la méthode */
-        return $this->render('Front/envoi-observation.html.twig');
-    }
+
+
+
 
     /**
      * @Route("/nom-compte", name="fn_front_profil")
