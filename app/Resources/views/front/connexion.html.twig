@@ -1,6 +1,6 @@
 {# app/Resources/views/front/connexion.html.twig #}
 
-{% extends "base_front.html.twig" %}
+{% extends "base.html.twig" %}
 
 {% block title %}
     Connexion- {{ parent() }}
@@ -39,28 +39,7 @@
 
                         </div>
 
-                        <div class="form-table mbr-valign-top col-md-9  formblock" data-form-type="formoid">
-
-                            {{ form_start(form) }}
-                            {% if error %}
-                                <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                            {% endif %}
-                                <div class="col-xs-12">
-                                    {{ form_row(form.mail) }}
-                                </div>
-
-                                <div class="col-xs-12">
-                                    {{ form_row(form.plainPassword) }}
-                                </div>
-
-                                <div class="col-xs-12" style="margin-top: 10px; text-align: center">
-                                    <button type="submit" class="btn btn-info">
-                                        Se connecter
-                                    </button>
-                                </div>
-
-                            {{ form_end(form) }}
-                        </div>
+                        {{ include('front/forms/_login_form.html.twig') }}
 
                     </div>
                 </div>

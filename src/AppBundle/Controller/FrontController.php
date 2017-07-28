@@ -78,36 +78,39 @@ class FrontController extends Controller
     }
 
     /**
-     * @Route("/connexion", name="fn_front_connexion")
+     * @Route("/login", name="fn_front_connexion")
      *
      * Affiche la page de connexion
      */
-    public function loginAction (Request $request, UserPasswordEncoderInterface $passwordEncoder, AuthenticationUtils $authUtils)
+    public function loginAction (Request $request)
     {
 
-        $user = new User();
-        $form = $this->createForm(LoginType::class, $user);
-
-        // get the login error if there is one
-        $error = $authUtils->getLastAuthenticationError();
-
-        // last username entered by the user
-        $lastUsername = $authUtils->getLastUsername();
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-
+        // Si le visiteur est déjà identifié, on le redirige vers l'accueil
+        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirectToRoute('fn_front_index');
         }
 
-        return $this->render(
-            'Front/connexion.html.twig',
-            array('form' => $form->createView(),
-                'last_username' => $lastUsername,
-                'error'         => $error,
-                )
-        );
+        // Le service authentication_utils permet de récupérer le nom d'utilisateur
+        // et l'erreur dans le cas où le formulaire a déjà été soumis mais était invalide
+        // (mauvais mot de passe par exemple)
+        $authenticationUtils = $this->get('security.authentication_utils');
+
+        return $this->render('Front/connexion.html.twig', array(
+            'last_username' => $authenticationUtils->getLastUsername(),
+            'error'         => $authenticationUtils->getLastAuthenticationError(),
+        ));
 
     }
+    /**
+     * @Route("/login_check", name="login_check")
+     */
+    public function loginCheckAction()
+    {
+        // this controller will not be executed,
+        // as the route is handled by the Security system
+        throw new \Exception('Symfony devrait intercepter cette route !');
+    }
+
 
     /**
      * @Route("/kit-observation", name="fn_front_kit")
@@ -127,32 +130,11 @@ class FrontController extends Controller
         return $this->render('Front/qui-sommes-nous.html.twig');
     }
 
-    /**
- * @Route("/carte-des-observations", name="fn_front_map")
- */
-    public function mapAction (Request $request)
-    {
-        /* todo:Compléter la méthode */
-        return $this->render('Front/carte-des-observations.html.twig');
-    }
 
-    /**
-     * @Route("/espace-naturaliste", name="fn_front_espace_nat")
-     */
-    public function espaceNatAction (Request $request)
-    {
-        /* todo:Compléter la méthode */
-        return $this->render('Front/espace-naturaliste.html.twig');
-    }
 
-    /**
-     * @Route("/envoi-observation", name="fn_front_envoi_obs")
-     */
-    public function envoiObsAction (Request $request)
-    {
-        /* todo:Compléter la méthode */
-        return $this->render('Front/envoi-observation.html.twig');
-    }
+
+
+
 
     /**
      * @Route("/nom-compte", name="fn_front_profil")
