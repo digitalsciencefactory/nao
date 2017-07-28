@@ -28,7 +28,7 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="mail", type="string", length=255, unique=true)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"registration"})
      * @Assert\Email
      */
     private $mail;
@@ -42,8 +42,8 @@ class User implements UserInterface, \Serializable
     private $mdp;
 
     /**
-     * @Assert\NotBlank()
-     * @Assert\Length(max=4096)
+     * @Assert\NotBlank(groups={"login"})
+     * @Assert\Length(max=4096, groups={"login"})
      */
     private $plainPassword;
 

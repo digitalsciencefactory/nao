@@ -102,15 +102,24 @@ class FrontController extends Controller
 
     }
     /**
-     * @Route("/login_check", name="login_check")
-     */
+ * @Route("/login_check", name="login_check")
+ */
     public function loginCheckAction()
     {
         // this controller will not be executed,
         // as the route is handled by the Security system
-        throw new \Exception('Symfony devrait intercepter cette route !');
+        throw new \Exception('Symfony devrait intercepter cette route login_check !');
     }
 
+    /**
+     * @Route("/logout", name="logout")
+     */
+    public function logoutAction()
+    {
+        // this controller will not be executed,
+        // as the route is handled by the Security system
+        throw new \Exception('Symfony devrait intercepter cette route logout !');
+    }
 
     /**
      * @Route("/kit-observation", name="fn_front_kit")

@@ -31,7 +31,9 @@ class LoginType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
+
         $resolver->setDefaults(array(
+            'validation_groups' => array('login'),
             'data_class' => User::class,
         ));
     }
