@@ -3,10 +3,15 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Contact\ContactMailer;
+use AppBundle\Entity\User;
 use AppBundle\Form\ContactType;
 use AppBundle\Form\LoginType;
 use AppBundle\Contact\Contact;
+<<<<<<< HEAD
 use AppBundle\Entity\User;
+=======
+use AppBundle\Form\UserType;
+>>>>>>> Sylvain
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -29,9 +34,7 @@ class FrontController extends Controller
     public function contactAction(Request $request)
     {
         $contact = new Contact;
-
         $form = $this->createForm(ContactType::class, $contact);
-
         $form->handleRequest($request);
 
          if ($form->isSubmitted() && $form->isValid()) {
@@ -64,8 +67,14 @@ class FrontController extends Controller
      */
     public function inscriptionObsAction (Request $request)
     {
-        /* todo:Compléter la méthode */
-        return $this->render('Front/inscription-observateur.html.twig');
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        return $this->render('Front/inscription-observateur.html.twig', array('form' => $form->createView(),));
+
+
+
     }
 
     /**

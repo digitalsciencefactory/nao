@@ -10,7 +10,7 @@
 {% block body %}
 
 <!--  Intro  -->
-    <section class="mbr-section mbr-after-navbar" id="content5-2o" style="background-color: rgb(255, 255, 255); padding-top: 120px; padding-bottom: 40px;">
+    <section class="mbr-section mbr-after-navbar" id="content5-2o" style="padding-top: 120px; padding-bottom: 40px;">
         <div class="container">
             <h3 class="mbr-section-title display-2">
                 Espace Naturaliste
@@ -20,12 +20,12 @@
                     Cet espace dédié et réservé aux naturalistes, vous permet de consulter :
                 </p>
 
-                <ul class="text-white list-inline-item">
+                <ul class="text-blacklist-inline-item">
                     <li>
                         La liste des observations en attente de validation
                     </li>
                 </ul>
-                <ul class="text-white list-inline-item">
+                <ul class="text-black list-inline-item">
                     <li>
                         La liste et carte des observations validées
                     </li>
@@ -66,10 +66,10 @@
         </div>
     </section>
 
-    {{ include('front/blocks/_observations.html.twig') }}
+    {{ include('front/common/_observations.html.twig') }}
 
-    {{ include('front/blocks/_follow.html.twig') }}
+    {{ include('front/common/_follow.html.twig') }}
 
-    {{ include ('front/blocks/_adresse.html.twig') }}
+    {{ include ('front/common/_adresse.html.twig') }}
 
 {% endblock body %}
