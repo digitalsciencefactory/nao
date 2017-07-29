@@ -3,8 +3,10 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Contact\ContactMailer;
+use AppBundle\Entity\User;
 use AppBundle\Form\ContactType;
 use AppBundle\Contact\Contact;
+use AppBundle\Form\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,9 +27,7 @@ class FrontController extends Controller
     public function contactAction(Request $request)
     {
         $contact = new Contact;
-
         $form = $this->createForm(ContactType::class, $contact);
-
         $form->handleRequest($request);
 
          if ($form->isSubmitted() && $form->isValid()) {
@@ -60,8 +60,14 @@ class FrontController extends Controller
      */
     public function inscriptionObsAction (Request $request)
     {
-        /* todo:Compléter la méthode */
-        return $this->render('Front/inscription-observateur.html.twig');
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        return $this->render('Front/inscription-observateur.html.twig', array('form' => $form->createView(),));
+
+
+
     }
 
     /**
