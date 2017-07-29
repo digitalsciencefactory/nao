@@ -7,7 +7,9 @@ use AppBundle\Form\ContactType;
 use AppBundle\Form\LoginType;
 use AppBundle\Contact\Contact;
 use AppBundle\Entity\User;
+use AppBundle\Form\ObsSignType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -58,14 +60,45 @@ class FrontController extends Controller
         return $this->render('Front/inscription.html.twig');
     }
 
-
+    /**
+     * @Route("/monmail")
+     */
+    public function monmailAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $res = $em->getRepository('AppBundle:User')->findByMail("simon@lhoir.me");
+        if($res){
+            throw new \Exception('Mon mail existe déjà');
+        }else {
+            throw new \Exception('Mon mail n\'existe pas');
+        }
+    }
     /**
      * @Route("/inscription-observateur", name="fn_front_inscription_obs")
      */
     public function inscriptionObsAction (Request $request)
     {
-        /* todo:Compléter la méthode */
-        return $this->render('Front/inscription-observateur.html.twig');
+        $user = new User();
+        $form = $this->createForm(ObsSignType::class, $user);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $user->setStatut('STATUT_INACTIF');
+            $user->setRoles(('ROLE_OBSERVATEUR'));
+            $user->setDcree(new \DateTime());
+
+            // TODO chiffrer le mot de passe
+
+            // TODO créer un token
+
+            // TODO essayer d'insérer en base
+
+            // TODO envoyer un mail de confirmation d'inscription
+        }
+
+        return $this->render('Front/inscription-observateur.html.twig', array(
+            'form' => $form->createView(),
+            ));
     }
 
     /**
