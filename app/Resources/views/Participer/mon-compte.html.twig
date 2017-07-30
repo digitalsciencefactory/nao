@@ -1,0 +1,122 @@
+{% extends "base_front.html.twig" %}
+
+{% block title %}
+    Mon compte - {{ parent() }}
+{% endblock %}
+
+
+{% block body %}
+
+<!--  Infos perso -->
+    <section class="mbr-section mbr-after-navbar" id="msg-box6-5o" style="background-color: rgb(105, 176, 171); padding-top: 160px; padding-bottom: 0;">
+        <div class="container">
+            <div class="row">
+                <div class="mbr-table-md-up">
+
+                    <div class="mbr-table-cell mbr-right-padding-md-up mbr-valign-top col-md-7 image-size" style="width: 36%;">
+                        <div class="mbr-figure">
+                            <img src="{{ asset('assets/images/logo-carr-1400x140022.png') }}">
+                        </div>
+                    </div>
+
+                    <div class="mbr-table-cell col-md-5 text-xs-center text-md-left content-size">
+                        <h3 class="mbr-section-title display-2">
+                            Votre profil
+                        </h3>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mbr-section" id="content5-5w" style="background-color: rgb(105, 176, 171); padding-top: 40px; padding-bottom: 0;">
+        <div class="container">
+            <h3 class="mbr-section-title display-2">
+                Vos infomations personnelles
+            </h3>
+        </div>
+    </section>
+
+    <section class="mbr-section article mbr-section__container" id="content1-5q" style="background-color: rgb(105, 176, 171); padding-top: 20px; padding-bottom: 20px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 lead">
+                    <p>Date d'inscription</p>
+                    <p>Prénom : John</p>
+                    <p>Nom : </p>
+                    <p>Statut :</p>
+                    <p><br></p>
+                    <p>Adresse mail : </p>
+                    <p><br></p>
+                    <p>Mot de Passe :</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mbr-section mbr-section__container" id="buttons1-5p" style="background-color: rgb(105, 176, 171); padding-top: 0; padding-bottom: 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="text-xs-center">
+                        <a class="btn btn-white" href="">
+                            Reinitialiser mon mot de passe
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mbr-section article mbr-section__container" id="content1-5s" style="background-color: rgb(105, 176, 171); padding-top: 20px; padding-bottom: 20px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 lead">
+                    <p>En complétant votre profil, vous permettez à NAO de mieux connaître ses utilisateurs et améliorer l'expérience d'utilisation de l'application Flash Nature.</p>
+                    <p><br></p>
+                    <p>Code postal : (Modifier)</p>
+                    <p>Date de naissance: (Modifier)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+<!--  Observations  -->
+    <section class="mbr-section" id="content5-5v" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 0;">
+        <div class="container">
+            <h3 class="mbr-section-title display-2 text-black ">
+                Vos observations
+            </h3>
+        </div>
+    </section>
+
+    <section class="mbr-section extTable1" id="extTable1-5u" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 40px;">
+        <div class="container table-wrapper" data-search="false" >
+            <table class="table" cellspacing="0" width="100%">
+                Date Espèce User Localisation Photo Votre commentaire	Statut
+            </table>
+        </div>
+    </section>
+
+    <section class="mbr-section mbr-section__container" id="buttons1-5x" style="background-color: rgb(255, 255, 255); padding-top: 20px; padding-bottom: 80px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="text-xs-center">
+                        <a class="btn btn-info" href="/participer/envoi-observation">
+                            Envoyer une observation
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    {{ include('front/blocks/_follow.html.twig') }}
+
+    {{ include ('front/blocks/_adresse.html.twig') }}
+
+{% endblock body %}

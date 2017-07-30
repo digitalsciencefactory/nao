@@ -1,0 +1,22 @@
+<div class="form-table mbr-valign-top col-md-9  formblock" data-form-type="formoid">
+
+    <form action="{{ path('login_check') }}" method="post">
+        {% if error %}
+            <div class="alert alert-danger">{{ error.message }}</div>
+        {% endif %}
+        <div class="col-xs-12">
+            <input id="_mail" name="_username" required="required" placeholder="e-mail" class="form-control" type="text" value="{{ last_username }}" />
+        </div>
+
+        <div class="col-xs-12">
+            <input type="password" id="_mdp" name="_password" placeholder="mot de passe" class="form-control" required />
+        </div>
+
+        <div class="col-xs-12" style="margin-top: 10px; text-align: center">
+            <button type="submit" class="btn btn-info">
+                Se connecter
+            </button>
+        </div>
+
+    </form>
+</div>
