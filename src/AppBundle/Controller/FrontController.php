@@ -61,21 +61,9 @@ class FrontController extends Controller
     }
 
     /**
-     * @Route("/monmail")
-     */
-    public function monmailAction(Request $request){
-        $em = $this->getDoctrine()->getManager();
-        $res = $em->getRepository('AppBundle:User')->findByMail("simon@lhoir.me");
-        if($res){
-            throw new \Exception('Mon mail existe déjà');
-        }else {
-            throw new \Exception('Mon mail n\'existe pas');
-        }
-    }
-    /**
      * @Route("/inscription-observateur", name="fn_front_inscription_obs")
      */
-    public function inscriptionObsAction (Request $request)
+    public function inscriptionObsAction (Request $request,UserPasswordEncoderInterface $encoder)
     {
         $user = new User();
         $form = $this->createForm(ObsSignType::class, $user);
@@ -83,13 +71,17 @@ class FrontController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
+            // on complète l'entité
             $user->setStatut('STATUT_INACTIF');
             $user->setRoles(('ROLE_OBSERVATEUR'));
             $user->setDcree(new \DateTime());
 
-            // TODO chiffrer le mot de passe
+            // hash du mot de passe
+            $user->getMdp($encoder->encodePassword($user->getPlainPassword()));
 
-            // TODO créer un token
+            // création du token de vérifiction d'inscription
+            $length = 65;
+            $user->setToken(bin2hex(random_bytes($length)));
 
             // TODO essayer d'insérer en base
 
