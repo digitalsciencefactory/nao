@@ -77,17 +77,11 @@
                                     Participer
                                 </a>
                                 <div class="dropdown-menu">
-<<<<<<< HEAD:app/Resources/views/base.html.twig
                                     <a class="dropdown-item" href="/participer/envoi-observation">
                                         Envoi d'observation
                                     </a>
                                     <a class="dropdown-item" href="/participer/carte-des-observations">
-=======
-                                    <a class="dropdown-item" href="participer/envoi-observation">
-                                        Envoi d'observation
-                                    </a>
-                                    <a class="dropdown-item" href="participer/carte-des-observations">
->>>>>>> Sylvain:app/Resources/views/base_front.html.twig
+
                                         Carte des observations
                                     </a>
                                 </div>
@@ -115,7 +109,6 @@
                                 </div>
                             </li>
 
-<<<<<<< HEAD:app/Resources/views/base.html.twig
                             {% if app.user == null %}
                                 <li class="nav-item nav-btn">
                                     <a class="nav-link btn btn-secondary-outline btn-secondary" href="/login">
@@ -135,23 +128,12 @@
                                     </a>
                                 </li>
                                 <li class="nav-item nav-btn">
-                                    <span>{{ app.user.prenom }} {{ app.user.nom }} </span>
+                                    <span>{{ app.user.mail }} </span>
                                     <a class="nav-link link boutonlogout" href="/logout">
                                         <img src=" {{ asset('assets/fnat/icon/bouton_deconnexion.png') }}" id="boutonLogOut" />
                                     </a>
                                 </li>
                             {% endif %}
-
-
-
-=======
-                            <li class="nav-item">
-                                <a class="nav-link link" href="/participer/nom-compte">
-                                    Mon compte
-                                </a>
-                            </li>
->>>>>>> Sylvain:app/Resources/views/base_front.html.twig
-
 
                         </ul>
 

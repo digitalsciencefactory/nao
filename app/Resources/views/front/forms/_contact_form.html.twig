@@ -5,9 +5,11 @@
             {{ message }}
         </div>
     {% endfor %}
-    <div class="error">
+    <div class="alert alert-danger">
         {{ form_errors(form) }}
     </div>
+
+
 
     {# Formulaire de contact #}
     <form action="" method="post" data-form-title="Laisser nous votre message">

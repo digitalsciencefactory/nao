@@ -29,13 +29,9 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="mail", type="string", length=255, unique=true)
-<<<<<<< HEAD
-     * @Assert\NotBlank(groups={"registration"})
-=======
      * @Assert\NotBlank(groups={"login"})
      * @Assert\NotBlank(groups={"nat"})
      * @Assert\NotBlank(groups={"obs"})
->>>>>>> Sylvain
      * @Assert\Email
      */
     private $mail;
@@ -51,11 +47,8 @@ class User implements UserInterface, \Serializable
     /**
      * @Assert\NotBlank(groups={"login"})
      * @Assert\Length(max=4096, groups={"login"})
-<<<<<<< HEAD
-=======
      * @Assert\Length(max=4096, groups={"nat"})
      * @Assert\Length(max=4096, groups={"obs"})
->>>>>>> Sylvain
      */
     private $plainPassword;
 
