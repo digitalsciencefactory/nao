@@ -77,7 +77,7 @@ class FrontController extends Controller
             $user->setDcree(new \DateTime());
 
             // hash du mot de passe
-            $user->getMdp($encoder->encodePassword($user->getPlainPassword()));
+            $user->getMdp($encoder->encodePassword($user, $user->getPlainPassword()));
 
             // création du token de vérifiction d'inscription
             $length = 65;
