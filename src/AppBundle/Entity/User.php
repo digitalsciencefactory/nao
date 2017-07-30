@@ -55,7 +55,7 @@ class User implements UserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="nom", type="string", length=45)
+     * @ORM\Column(name="nom", type="string", length=45, nullable=true)
      * @Assert\Length(max=45)
      */
     private $nom;
@@ -63,7 +63,7 @@ class User implements UserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="prenom", type="string", length=45)
+     * @ORM\Column(name="prenom", type="string", length=45, nullable=true)
      * @Assert\Length(max=45)
      */
     private $prenom;
@@ -79,7 +79,7 @@ class User implements UserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="code_postal", type="string", length=5)
+     * @ORM\Column(name="code_postal", type="string", length=5, nullable=true)
      */
     private $codePostal;
 
