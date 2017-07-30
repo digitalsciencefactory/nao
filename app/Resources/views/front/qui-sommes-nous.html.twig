@@ -1,14 +1,10 @@
-{# app/Resources/views/front/a_propos.html.twig #}
-
 {% extends "base_front.html.twig" %}
 
 {% block title %}
     Qui sommes-nous ? - {{ parent() }}
 {% endblock %}
 
-
 {% block body %}
-
 <!--  Qui sommes-nous ? -->
     <section class="mbr-section mbr-section-hero mbr-section-full extHeader12 tab-content mbr-after-navbar" id="extHeader12-29" style="background-color: rgb(255, 255, 255);">
         <div class="mbr-table mbr-table-full">
@@ -136,8 +132,8 @@
 
     {{ include('front/forms/_newsletter_form.html.twig') }}
 
-    {{ include('front/common/_follow.html.twig') }}
+    {{ include('front/blocks/_follow.html.twig') }}
 
-    {{ include ('front/common/_adresse.html.twig') }}
+    {{ include ('front/blocks/_adresse.html.twig') }}
 
 {% endblock body %}

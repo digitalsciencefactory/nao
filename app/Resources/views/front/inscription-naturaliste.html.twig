@@ -1,5 +1,3 @@
-{# app/Resources/views/front/inscription-naturaliste.html.twig #}
-
 {% extends "base_front.html.twig" %}
 
 {% block title %}
@@ -289,12 +287,12 @@
         </div>
     </section>
 
-    {{ include('front/common/_about.html.twig') }}
+    {{ include('front/blocks/_about.html.twig') }}
 
     {{ include('front/forms/_newsletter_form.html.twig') }}
 
-    {{ include('front/common/_partenaires.html.twig') }}
+    {{ include('front/blocks/_partenaires.html.twig') }}
 
-    {{ include('front/common/_follow.html.twig') }}
+    {{ include('front/blocks/_follow.html.twig') }}
 
 {% endblock body %}

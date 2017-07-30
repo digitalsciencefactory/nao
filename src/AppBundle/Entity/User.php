@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -10,8 +12,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @ORM\Table(name="fnat_user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
+ * @UniqueEntity(fields={"email"}, message="Cet e-mail est déjà utilisé.")
  */
-class User implements UserInterface
+class User implements UserInterface, \Serializable
 {
     /**
      * @var int
@@ -26,6 +29,10 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="mail", type="string", length=255, unique=true)
+     * @Assert\NotBlank(groups={"login"})
+     * @Assert\NotBlank(groups={"nat"})
+     * @Assert\NotBlank(groups={"obs"})
+     * @Assert\Email
      */
     private $mail;
 
@@ -33,13 +40,23 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="mdp", type="string", length=65)
+     *
      */
     private $mdp;
+
+    /**
+     * @Assert\NotBlank(groups={"login"})
+     * @Assert\Length(max=4096, groups={"login"})
+     * @Assert\Length(max=4096, groups={"nat"})
+     * @Assert\Length(max=4096, groups={"obs"})
+     */
+    private $plainPassword;
 
     /**
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=45)
+     * @Assert\Length(max=45)
      */
     private $nom;
 
@@ -47,6 +64,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="prenom", type="string", length=45)
+     * @Assert\Length(max=45)
      */
     private $prenom;
 
@@ -54,6 +72,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="sexe", type="string", length=1, nullable=true)
+     * @Assert\Length(max=1)
      */
     private $sexe;
 
@@ -82,9 +101,15 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="carte", type="string", length=255, nullable=true, unique=true)
+     *
+     * @Assert\Length(max=255)
      */
     private $carte;
 
+    /**
+     * @Assert\NotBlank(groups={"nat"})
+     */
+    private $carteImport;
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Observation", mappedBy="observateur")
      */
@@ -102,7 +127,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="roles", type="array")
      */
-    private $roles;
+    private $roles = array();
 
     /**
      * @var string
@@ -125,9 +150,7 @@ class User implements UserInterface
      */
     public function __construct()
     {
-        $this->dcree = new \DateTime();
-        $this->statut = "STATUT_INACTIF";
-        $this->roles = "ROLE_OBSERVATEUR";
+
     }
 
     /* *** METHODES *** */
@@ -188,6 +211,16 @@ class User implements UserInterface
     public function getMdp()
     {
         return $this->mdp;
+    }
+
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword($password)
+    {
+        $this->plainPassword = $password;
     }
 
     /**
@@ -500,29 +533,27 @@ class User implements UserInterface
      */
     public function getPassword()
     {
-        // TODO: Implement getPassword() method.
+        return $this->mdp;
     }
 
     /**
-     * Returns the salt that was originally used to encode the password.
+     * bcrypt used so return null
      *
-     * This can return null if the password was not encoded using a salt.
-     *
-     * @return string|null The salt
+     * @return null
      */
     public function getSalt()
     {
-        // TODO: Implement getSalt() method.
+        return null;
     }
 
     /**
-     * Returns the username used to authenticate the user.
-     *
      * @return string The username
+     * Retourne l'email en lieu et place de l'username,
+     * utile pour berner l'implémentation de UserInterface
      */
     public function getUsername()
     {
-        // TODO: Implement getUsername() method.
+        return $this->mail;
     }
 
     /**
@@ -534,5 +565,64 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+    /**
+     * String representation of object
+     * @link http://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     * @since 5.1.0
+     */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->mail,
+            $this->mdp,
+            $this->nom,
+            $this->prenom,
+            $this->sexe,
+            $this->codePostal,
+            $this->ddn,
+            $this->photo,
+            $this->carte,
+            $this->token,
+            $this->roles,
+            $this->statut,
+            $this->dcree
+            // see section on salt below
+            // $this->salt,
+        ));
+    }
+
+    /**
+     * Constructs the object
+     * @link http://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized <p>
+     * The string representation of the object.
+     * </p>
+     * @return void
+     * @since 5.1.0
+     */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->mail,
+            $this->mdp,
+            $this->nom,
+            $this->prenom,
+            $this->sexe,
+            $this->codePostal,
+            $this->ddn,
+            $this->photo,
+            $this->carte,
+            $this->token,
+            $this->roles,
+            $this->statut,
+            $this->dcree
+            // see section on salt below
+            // $this->salt
+            ) = unserialize($serialized);
     }
 }

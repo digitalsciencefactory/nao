@@ -3,7 +3,6 @@
 
 namespace AppBundle\Contact;
 
-use AppBundle\Contact\Contact;
 use Twig\Environment;
 
 class ContactMailer

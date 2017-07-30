@@ -3,10 +3,11 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Contact\ContactMailer;
-use AppBundle\Entity\User;
 use AppBundle\Form\ContactType;
 use AppBundle\Contact\Contact;
-use AppBundle\Form\UserType;
+use AppBundle\Entity\User;
+use AppBundle\Form\NatSignType;
+use AppBundle\Form\ObsSignType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +18,7 @@ class FrontController extends Controller
      * @Route("/", name="fn_front_index")
      * @Route("/accueil")
      */
-    public function indexAction(Request $request){
+    public function indexAction(){
         return $this->render('Front/accueil.html.twig');
     }
 
@@ -27,47 +28,74 @@ class FrontController extends Controller
     public function contactAction(Request $request)
     {
         $contact = new Contact;
+
         $form = $this->createForm(ContactType::class, $contact);
+
         $form->handleRequest($request);
 
-         if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $mailer = $this->container->get('mailer');
 
             $contactMail = new ContactMailer($mailer);
             $contactMail->sendFeedBack($contact);
             $contactMail->sendNotification($contact);
 
-             $contact = new Contact;
-             $form = $this->createForm(ContactType::class, $contact);
-             $request->getSession()->getFlashBag()->add('notice', 'Formulaire envoyé avec succès.');
+            $contact = new Contact;
+            $form = $this->createForm(ContactType::class, $contact);
+            $request->getSession()->getFlashBag()->add('notice', 'Formulaire envoyé avec succès.');
 
-             return $this->render('Front/contact.html.twig', array('form' => $form->createView(),));
-         }
-        
+            return $this->render('Front/contact.html.twig', array('form' => $form->createView(),));
+        }
+
         return $this->render('Front/contact.html.twig', array('form' => $form->createView(),));
     }
 
     /**
      * @Route("/inscription", name="fn_front_inscription")
      */
-    public function inscriptionAction (Request $request){
+    public function inscriptionAction (){
         return $this->render('Front/inscription.html.twig');
     }
 
-
+    /**
+     * @Route("/monmail")
+     */
+    public function monmailAction(){
+        $em = $this->getDoctrine()->getManager();
+        $res = $em->getRepository('AppBundle:User')->findByMail("simon@lhoir.me");
+        if($res){
+            throw new \Exception('Mon mail existe déjà');
+        }else {
+            throw new \Exception('Mon mail n\'existe pas');
+        }
+    }
     /**
      * @Route("/inscription-observateur", name="fn_front_inscription_obs")
      */
     public function inscriptionObsAction (Request $request)
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(ObsSignType::class, $user);
+
         $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
 
-        return $this->render('Front/inscription-observateur.html.twig', array('form' => $form->createView(),));
+            $user->setStatut('STATUT_INACTIF');
+            $user->setRoles('ROLE_OBSERVATEUR');
+            $user->setDcree(new \DateTime());
 
+            // TODO chiffrer le mot de passe
 
+            // TODO créer un token
 
+            // TODO essayer d'insérer en base
+
+            // TODO envoyer un mail de confirmation d'inscription
+        }
+
+        return $this->render('Front/inscription-observateur.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 
     /**
@@ -75,17 +103,71 @@ class FrontController extends Controller
      */
     public function inscriptionNatAction (Request $request)
     {
-        /* todo:Compléter la méthode */
-        return $this->render('Front/inscription-naturaliste.html.twig');
+        $user = new User();
+        $form = $this->createForm(NatSignType::class, $user);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $user->setStatut('STATUT_INACTIF');
+            $user->setRoles('ROLE_NATURALISTE');
+            $user->setDcree(new \DateTime());
+
+            // TODO chiffrer le mot de passe
+
+            // TODO créer un token
+
+            // TODO essayer d'insérer en base
+
+            // TODO envoyer un mail de confirmation d'inscription
+        }
+        return $this->render('Front/inscription-naturaliste.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 
     /**
-     * @Route("/connexion", name="fn_front_connexion")
+     * @Route("/login", name="fn_front_connexion")
+     *
+     * Affiche la page de connexion
      */
-    public function connexionAction (Request $request)
+    public function loginAction ()
     {
-        /* todo:Compléter la méthode */
-        return $this->render('Front/connexion.html.twig');
+
+        // Si le visiteur est déjà identifié, on le redirige vers l'accueil
+        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirectToRoute('fn_front_index');
+        }
+
+        // Le service authentication_utils permet de récupérer le nom d'utilisateur
+        // et l'erreur dans le cas où le formulaire a déjà été soumis mais était invalide
+        // (mauvais mot de passe par exemple)
+        $authenticationUtils = $this->get('security.authentication_utils');
+
+        return $this->render('Front/connexion.html.twig', array(
+            'last_username' => $authenticationUtils->getLastUsername(),
+            'error'         => $authenticationUtils->getLastAuthenticationError(),
+        ));
+
+    }
+    /**
+     * @Route("/login_check", name="login_check")
+     */
+    public function loginCheckAction()
+    {
+        // this controller will not be executed,
+        // as the route is handled by the Security system
+        throw new \Exception('Symfony devrait intercepter cette route login_check !');
+    }
+
+    /**
+     * @Route("/logout", name="logout")
+     */
+    public function logoutAction()
+    {
+        // this controller will not be executed,
+        // as the route is handled by the Security system
+        throw new \Exception('Symfony devrait intercepter cette route logout !');
     }
 
     /**
@@ -93,53 +175,36 @@ class FrontController extends Controller
      */
     public function kitObservationAction (Request $request)
     {
-        /* todo:Compléter la méthode */
-        return $this->render('Front/kit_observation.html.twig');
+        $user = new User();
+        $form = $this->createForm(ObsSignType::class, $user);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $user->setStatut('STATUT_INACTIF');
+            $user->setRoles('ROLE_OBSERVATEUR');
+            $user->setDcree(new \DateTime());
+
+            // TODO chiffrer le mot de passe
+
+            // TODO créer un token
+
+            // TODO essayer d'insérer en base
+
+            // TODO envoyer un mail de confirmation d'inscription
+        }
+
+        return $this->render('Front/kit_observation.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 
     /**
      * @Route("/qui-sommes-nous", name="fn_front_about")
      */
-    public function aboutAction (Request $request)
+    public function aboutAction ()
     {
-        /* todo:Compléter la méthode */
         return $this->render('Front/qui-sommes-nous.html.twig');
-    }
-
-    /**
- * @Route("/carte-des-observations", name="fn_front_map")
- */
-    public function mapAction (Request $request)
-    {
-        /* todo:Compléter la méthode */
-        return $this->render('Front/carte-des-observations.html.twig');
-    }
-
-    /**
-     * @Route("/espace-naturaliste", name="fn_front_espace_nat")
-     */
-    public function espaceNatAction (Request $request)
-    {
-        /* todo:Compléter la méthode */
-        return $this->render('Front/espace-naturaliste.html.twig');
-    }
-
-    /**
-     * @Route("/envoi-observation", name="fn_front_envoi_obs")
-     */
-    public function envoiObsAction (Request $request)
-    {
-        /* todo:Compléter la méthode */
-        return $this->render('Front/envoi-observation.html.twig');
-    }
-
-    /**
-     * @Route("/nom-compte", name="fn_front_profil")
-     */
-    public function profilAction (Request $request)
-    {
-        /* todo:Compléter la méthode */
-        return $this->render('Front/mon-compte.html.twig');
     }
 
 }
