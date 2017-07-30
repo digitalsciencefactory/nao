@@ -1,6 +1,10 @@
+<<<<<<< HEAD:app/Resources/views/Participer/espace-naturaliste.html.twig
 {# app/Resources/views/front/accueil.html.twig #}
 
 {% extends "base.html.twig" %}
+=======
+{% extends "base_front.html.twig" %}
+>>>>>>> Sylvain:app/Resources/views/Participer/espace-naturaliste.html.twig
 
 {% block title %}
    Espace Naturaliste - {{ parent() }}
@@ -66,10 +70,10 @@
         </div>
     </section>
 
-    {{ include('front/common/_observations.html.twig') }}
+    {{ include('front/blocks/_observations.html.twig') }}
 
-    {{ include('front/common/_follow.html.twig') }}
+    {{ include('front/blocks/_follow.html.twig') }}
 
-    {{ include ('front/common/_adresse.html.twig') }}
+    {{ include ('front/blocks/_adresse.html.twig') }}
 
 {% endblock body %}

@@ -1,6 +1,10 @@
+<<<<<<< HEAD:app/Resources/views/Participer/envoi-observation.html.twig
 {# app/Resources/views/front/accueil.html.twig #}
 
 {% extends "base.html.twig" %}
+=======
+{% extends "base_front.html.twig" %}
+>>>>>>> Sylvain:app/Resources/views/Participer/envoi-observation.html.twig
 
 {% block title %}
     Envoi Observation - {{ parent() }}
@@ -70,8 +74,8 @@
         </div>
     </section>
 
-    {{ include('front/common/_follow.html.twig') }}
+    {{ include('front/blocks/_follow.html.twig') }}
 
-    {{ include ('front/common/_adresse.html.twig') }}
+    {{ include('front/blocks/_adresse.html.twig') }}
 
 {% endblock body %}

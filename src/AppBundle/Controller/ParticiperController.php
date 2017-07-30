@@ -27,12 +27,29 @@ class ParticiperController extends Controller
     }
 
     /**
+<<<<<<< HEAD
      * @Route("/participercarte-des-observations", name="fn_participer_map")
+=======
+     * @Route("/participer/carte-des-observations", name="fn_participer_map")
+>>>>>>> Sylvain
      * @Route("/participer")
      */
     public function mapAction (Request $request)
     {
         /* todo:Compléter la méthode */
+<<<<<<< HEAD
         return $this->render('Front/carte-des-observations.html.twig');
+=======
+        return $this->render('Participer/carte-des-observations.html.twig');
+    }
+
+    /**
+     * @Route("/participer/nom-compte", name="fn_front_profil")
+     */
+    public function profilAction (Request $request)
+    {
+        /* todo:Compléter la méthode */
+        return $this->render('Participer/mon-compte.html.twig');
+>>>>>>> Sylvain
     }
 }

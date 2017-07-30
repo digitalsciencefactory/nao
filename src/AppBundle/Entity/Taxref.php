@@ -24,7 +24,7 @@ class Taxref
     /**
      * @var string
      *
-     * @ORM\Column(name="lb_nom", type="text")
+     * @ORM\Column(name="lb_nom", type="text", nullable=true)
      */
     private $lbNom;
 
@@ -45,32 +45,32 @@ class Taxref
     /**
      * @var string
      *
-     * @ORM\Column(name="ordre", type="string", length=50)
+     * @ORM\Column(name="ordre", type="string", length=50, nullable=true)
      */
     private $ordre;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="famille", type="string", length=50)
+     * @ORM\Column(name="famille", type="string", length=50, nullable=true)
      */
     private $famille;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\TaxrefRang")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $rang;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\TaxrefHabitats")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $habitat;
 
     /**
      *  @ORM\ManyToOne(targetEntity="AppBundle\Entity\TaxrefStatuts")
-     *  @ORM\JoinColumn(nullable=false)
+     *  @ORM\JoinColumn(nullable=true)
      */
     private $fr;
 

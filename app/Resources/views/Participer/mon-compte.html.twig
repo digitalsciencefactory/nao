@@ -1,9 +1,13 @@
+<<<<<<< HEAD:app/Resources/views/Participer/mon-compte.html.twig
 {# app/Resources/views/front/mon-compte.html.twig #}
 
 {% extends "base.html.twig" %}
+=======
+{% extends "base_front.html.twig" %}
+>>>>>>> Sylvain:app/Resources/views/Participer/mon-compte.html.twig
 
 {% block title %}
-    Accueil - {{ parent() }}
+    Mon compte - {{ parent() }}
 {% endblock %}
 
 
@@ -107,7 +111,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="text-xs-center">
-                        <a class="btn btn-info" href="/envoi-observation">
+                        <a class="btn btn-info" href="/participer/envoi-observation">
                             Envoyer une observation
                         </a>
                     </div>
@@ -117,8 +121,8 @@
 
     </section>
 
-    {{ include('front/common/_follow.html.twig') }}
+    {{ include('front/blocks/_follow.html.twig') }}
 
-    {{ include ('front/common/_adresse.html.twig') }}
+    {{ include ('front/blocks/_adresse.html.twig') }}
 
 {% endblock body %}

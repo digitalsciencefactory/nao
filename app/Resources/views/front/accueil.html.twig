@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 {# app/Resources/views/front/accueil.html.twig #}
 
 {% extends "base.html.twig" %}
+=======
+{% extends "base_front.html.twig" %}
+>>>>>>> Sylvain
 
 {% block title %}
     Accueil - {{ parent() }}
@@ -90,7 +94,7 @@
                         </div>
 
                         <div>
-                            <a class="btn btn-info" href="/carte-des-observations">
+                            <a class="btn btn-info" href="/participer/carte-des-observations">
                                 Voir
                             </a>
                         </div>
@@ -137,8 +141,8 @@
         </div>
     </section>
 
-    {{ include('front/common/_follow.html.twig') }}
+    {{ include('front/blocks/_follow.html.twig') }}
 
-    {{ include ('front/common/_adresse.html.twig') }}
+    {{ include ('front/blocks/_adresse.html.twig') }}
 
 {% endblock body %}
