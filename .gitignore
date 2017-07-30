@@ -21,3 +21,5 @@
 /web/bundles/
 .DS_Store
 var/logs/dev.log
+app/config/parameters.yml
+app/config/parameters.yml

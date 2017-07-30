@@ -5,7 +5,6 @@ namespace AppBundle\Controller;
 use AppBundle\Contact\ContactMailer;
 use AppBundle\Form\ContactType;
 use AppBundle\Form\LoginType;
-use AppBundle\Form\UserType;
 use AppBundle\Contact\Contact;
 use AppBundle\Entity\User;
 use AppBundle\Form\NatSignType;
@@ -99,7 +98,7 @@ class FrontController extends Controller
     /**
      * @Route("/inscription-naturaliste", name="fn_front_inscription_nat")
      */
-    public function inscriptionNatAction (Request $request)
+    public function inscriptionNatAction (Request $request, UserPasswordEncoderInterface $encoder)
     {
         $user = new User();
         $form = $this->createForm(NatSignType::class, $user);
@@ -175,21 +174,24 @@ class FrontController extends Controller
     /**
      * @Route("/kit-observation", name="fn_front_kit")
      */
-    public function kitObservationAction (Request $request)
+    public function kitObservationAction (Request $request, UserPasswordEncoderInterface $encoder)
     {
         $user = new User();
         $form = $this->createForm(ObsSignType::class, $user);
-
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
+            // on complète l'entité
             $user->setStatut('STATUT_INACTIF');
-            $user->setRoles('ROLE_OBSERVATEUR');
+            $user->setRoles(('ROLE_OBSERVATEUR'));
             $user->setDcree(new \DateTime());
 
-            // TODO chiffrer le mot de passe
+            // hash du mot de passe
+            $user->getMdp($encoder->encodePassword($user, $user->getPlainPassword()));
 
-            // TODO créer un token
+            // création du token de vérifiction d'inscription
+            $length = 65;
+            $user->setToken(bin2hex(random_bytes($length)));
+
 
             // TODO essayer d'insérer en base
 
