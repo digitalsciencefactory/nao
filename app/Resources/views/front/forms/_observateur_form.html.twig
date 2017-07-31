@@ -28,6 +28,12 @@
                             </h4>
 
                             {{ form_start(form) }}
+                            {% for message in app.flashes('notice') %}
+                                <div class="btn-success">
+                                    {{ message }}
+                                </div>
+                                <br />
+                            {% endfor %}
                                 {% if form_errors(form) %}
                                     <div class="alert alert-danger">
                                         {{ form_errors(form) }}

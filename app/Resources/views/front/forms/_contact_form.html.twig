@@ -4,10 +4,13 @@
         <div class="btn-success">
             {{ message }}
         </div>
+        <br />
     {% endfor %}
+    {% if form_errors(form) != null %}
     <div class="alert alert-danger">
         {{ form_errors(form) }}
     </div>
+    {% endif %}
 
 
 

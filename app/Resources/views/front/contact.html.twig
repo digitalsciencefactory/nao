@@ -62,4 +62,8 @@
 
 {% endblock body %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/fnat/js/contact.js') }}"></script>
+{% endblock javascripts %}
 

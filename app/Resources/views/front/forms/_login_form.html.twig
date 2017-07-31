@@ -1,6 +1,12 @@
 <div class="form-table mbr-valign-top col-md-9  formblock" data-form-type="formoid">
 
     <form action="{{ path('login_check') }}" method="post">
+        {% for message in app.flashes('notice') %}
+            <div class="btn-success">
+                {{ message }}
+            </div>
+            <br />
+        {% endfor %}
         {% if error %}
             <div class="alert alert-danger">{{ error.message }}</div>
         {% endif %}
@@ -11,7 +17,9 @@
         <div class="col-xs-12">
             <input type="password" id="_mdp" name="_password" placeholder="mot de passe" class="form-control" required />
         </div>
-
+        <input type="hidden" name="_csrf_token"
+               value="{{ csrf_token('authenticate') }}"
+        >
         <div class="col-xs-12" style="margin-top: 10px; text-align: center">
             <button type="submit" class="btn btn-info">
                 Se connecter
