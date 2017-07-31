@@ -72,7 +72,7 @@ class FrontController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             // on complète l'entité
-            $user->setRoles(('ROLE_INACTIF'));
+            $user->setRoles(array('ROLE_OBSERVATEUR'));
             $user->setDcree(new \DateTime());
 
             // hash du mot de passe
@@ -117,22 +117,39 @@ class FrontController extends Controller
         $form = $this->createForm(NatSignType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+
+            //$user->upload();
+
             // on complète l'entité
             $user->setStatut('STATUT_INACTIF');
-            $user->setRoles(('ROLE_OBSERVATEUR'));
+            $user->setRoles(array('ROLE_OBSERVATEUR'));
             $user->setDcree(new \DateTime());
 
             // hash du mot de passe
-            $user->getMdp($encoder->encodePassword($user, $user->getPlainPassword()));
+            $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
 
             // création du token de vérifiction d'inscription
             $length = 65;
-            $user->setToken(bin2hex(random_bytes($length)));
+            $user->setToken(substr(bin2hex(random_bytes($length)),0,65));
 
+// essayer d'insérer en base
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
 
-            // TODO essayer d'insérer en base
+            // mail de confirmation d'inscription
+            $mailer = $this->container->get('mailer');
+            $twig = $this->container->get('twig');
+            $mail = new FnatMailer($mailer,$twig);
+            $mail->insVerifNat($user);
 
-            // TODO envoyer un mail de confirmation d'inscription
+            // on affiche la page de connexion avec le flash bag
+            $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
+            $user = new User();
+            $form = $this->createForm(NatSignType::class, $user);
+            return $this->render('Front/inscription-naturaliste.html.twig', array(
+                'form' => $form->createView(),
+            ));
         }
 
         return $this->render('Front/inscription-naturaliste.html.twig', array(

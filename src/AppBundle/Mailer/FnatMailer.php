@@ -93,5 +93,22 @@ class FnatMailer
 
       $this->mailer->send($message);
   }
+
+    /**
+     * Envoie un mail au nouveau naturaliste pour vérifier son mail
+     *
+     * @param User $user
+     */
+    public function insVerifNat(User $user){
+        $body = $this->twig->render('mail\ins.confirmNat.html.twig', array('user' => $user));
+
+        $message = new \Swift_Message("Bienvenue sur Flash Nature, finalisez votre inscription.");
+        $message->setBody($body,'text/html');
+
+        $message->addTo($user->getMail());
+        $message->addFrom("contact-fnat@digitalsciencefactory.com");
+
+        $this->mailer->send($message);
+    }
 }
 

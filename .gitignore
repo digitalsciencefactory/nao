@@ -21,3 +21,6 @@
 /web/bundles/
 .DS_Store
 var/logs/dev.log
+web/assets/fnat/naturalistes/
+!web/assets/fnat/naturalistes
+!web/assets/fnat/naturalistes/.htaccess

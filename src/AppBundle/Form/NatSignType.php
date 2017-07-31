@@ -29,6 +29,7 @@ class NatSignType extends AbstractType
                 'first_options'  => array('label' => ''),
                 'second_options' => array('label' => ''),
             ))
+            ->add('file', FileType::class, array('label' => '',))
             ;
 
 
