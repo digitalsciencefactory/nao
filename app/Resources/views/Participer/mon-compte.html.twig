@@ -47,85 +47,80 @@
                     {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
 
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-sm-12 col-md-3">
                             <label for="p-mp-dcree" class="control-label lbl-modify">Date d'inscription :</label>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-12 col-md-9">
                             <input  id="p-mp-dcree" name="p-mp-dcree" type="text" class="form-control field-no-deco" value="{{ app.user.dcree|date("d/m/Y") }}"  disabled />
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-sm-12 col-md-3">
                             <label for="user_mail" class="control-label lbl-modify">Mail :</label>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-12 col-md-9">
                             <input id="user_mail" type="text" class="form-control field-no-deco" value="{{ app.user.mail }}" disabled />
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-sm-12 col-md-4 col-lg-3">
                             <label for="user_ddn" class="control-label lbl-modify">Date de naissance :</label>
                         </div>
                         {% if app.user.ddn != null %}
-                            <div class="col-sm-9">{{ form_widget(form.ddn, {'attr': {'class': 'field-no-deco', 'placeholder': app.user.ddn|date("d/m/Y") } } ) }}</div>
+                            <div class="col-sm-12 col-md-8 col-lg-9">{{ form_widget(form.ddn, {'attr': {'class': 'field-no-deco', 'placeholder': app.user.ddn|date("d/m/Y") } } ) }}</div>
                         {% else %}
-                            <div class="col-sm-9">{{ form_widget(form.ddn, {'attr': {'class': 'field-no-deco', 'placeholder': '' } } ) }}</div>
+                            <div class="col-sm-12 col-md-8 col-lg-9">{{ form_widget(form.ddn, {'attr': {'class': 'field-no-deco', 'placeholder': '' } } ) }}</div>
                         {% endif %}
                     </div>
 
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-sm-12 col-md-3">
                             <label for="user_prenom" class="control-label lbl-modify">Prénom :</label>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-12 col-md-9">
                             {{ form_widget(form.prenom, {'attr': {'class': 'field-no-deco', 'placeholder': app.user.prenom  }} ) }}
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-sm-12 col-md-3">
                             <label for="user_nom" class="control-label lbl-modify">Nom :</label>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-12 col-md-9">
                             {{ form_widget(form.nom, {'attr': {'class': 'field-no-deco', 'placeholder': app.user.nom  }}) }}
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-sm-12 col-md-3">
                             <label for="user_codePostal" class="control-label lbl-modify">Code Postal :</label>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-12 col-md-9">
                             {{ form_widget(form.codePostal, {'attr': {'class': 'field-no-deco', 'placeholder': app.user.codepostal  }}) }}
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-sm-12 col-md-3">
                             <label id="lblavatar" for="user_photo" class="control-label lbl-no-deco">Avatar :</label>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-12 col-md-9">
                             {{ form_widget(form.photo, {'attr': {'class': 'field-fnat-hidden', 'placeholder': app.user.photo, 'onchange': 'javascript:changeAvatar()'  }}) }}
                         </div>
                     </div>
 
-                    <br />
+                    <div class="form-group">&nbsp;</div>
 
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-sm-12 col-md-4 col-md-offset-2 ">
                             <input type="button"  id="maj_profil" class="btn btn-primary" onclick="switchForm()" value="Mettre à jour le profil" />
                         </div>
-                        <div class="col-sm-1">
-                            &nbsp;
-                        </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-12 col-md-4 col-md-offset-2 ">
                             {{ form_widget(form.update, {'attr': {'class': 'btn btn-default btn-no-deco', 'value': 'Sauvegarder', 'label': 'Sauvegarder'}}) }}
                         </div>
-                        <div class="col-sm-7">
-                            &nbsp;
-                        </div>
+
 
                     </div>
 
