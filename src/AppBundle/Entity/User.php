@@ -154,7 +154,7 @@ class User implements UserInterface, \Serializable
      */
     public function __construct()
     {
-
+    $this->photo = "avatar1.png";
     }
 
     /* *** METHODES *** */

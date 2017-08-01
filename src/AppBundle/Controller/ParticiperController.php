@@ -39,16 +39,16 @@ class ParticiperController extends Controller
     }
 
     /**
-     * @Route("/participer/nom-compte", name="fn_participer_profil")
+     * @Route("/participer/mon-compte", name="fn_participer_profil")
      */
     public function profilAction (Request $request)
     {
-        /* todo:Compléter la méthode */
         $user = $this->getUser();
         $form = $this->createForm(UserType::class, $user);
         return $this->render('Participer/mon-compte.html.twig',
             array(
                 'form' => $form->createView(),
+                'avatar' => $user->getPhoto(),
             ));
     }
 }
