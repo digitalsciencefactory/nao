@@ -28,6 +28,12 @@
                             </h4>
 
                             {{ form_start(form) }}
+                            {% for message in app.flashes('notice') %}
+                                <div class="btn-success">
+                                    {{ message }}
+                                </div>
+                                <br />
+                            {% endfor %}
                             {% if form_errors(form) %}
                                 <div class="alert alert-danger">
                                     {{ form_errors(form) }}
@@ -54,7 +60,15 @@
                                     <div class="alert alert-danger">{{ form_errors(form.plainPassword.second) }}</div>
                                 {% endif %}
                             </div>
-
+                            <div class="col-xs-12">
+                                {{ form_widget (form.file,{ 'attr': { 'class': 'form-control','placeholder': 'Carte professionnelle'} }) }}
+                                {% if form_errors(form.file)  %}
+                                    <div class="alert alert-danger">{{ form_errors(form.file) }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-xs-12">
+                                Pour obtenir le statut de naturaliste sur l'application, vous devez nous envoyer la photo de votre carte professionnelle au format jpg ou png (max 5Mo).
+                            </div>
                             <br>
 
                             <div class="col-xs-12" style="margin-top: 10px; text-align: center">

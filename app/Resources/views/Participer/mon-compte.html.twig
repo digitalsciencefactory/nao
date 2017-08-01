@@ -44,28 +44,21 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 lead">
-                    <p>Date d'inscription</p>
-                    <p>Prénom : John</p>
-                    <p>Nom : </p>
-                    <p>Statut :</p>
+                    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+                    <p>Date d'inscription : {{ app.user.dcree|date("d/m/Y") }}</p>
+                    <p>Date de naissance :
+                        {% if app.user.ddn != null %}
+                        {{ form_widget(form.ddn, {'attr': {'class': '', 'placeholder': app.user.ddn|date("d/m/Y") } } ) }}
+                            {% else %}
+                                {{ form_widget(form.ddn, {'attr': {'class': '', 'placeholder': '' } } ) }}
+                        {% endif %}</p>
+                    <p>Prénom : {{ form_widget(form.prenom, {'attr': {'class': '', 'placeholder': app.user.prenom  }} ) }}</p>
+                    <p>Nom : {{ form_widget(form.nom, {'attr': {'class': '', 'placeholder': app.user.nom  }}) }}</p>
                     <p><br></p>
-                    <p>Adresse mail : </p>
-                    <p><br></p>
-                    <p>Mot de Passe :</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="mbr-section mbr-section__container" id="buttons1-5p" style="background-color: rgb(105, 176, 171); padding-top: 0; padding-bottom: 0;">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="text-xs-center">
-                        <a class="btn btn-white" href="">
-                            Reinitialiser mon mot de passe
-                        </a>
-                    </div>
+                    <p>Adresse mail : {{ app.user.mail }}</p>
+                    <p>Code postal : {{ form_widget(form.nom, {'attr': {'class': '', 'placeholder':  app.user.codepostal  }}) }}</p>
+                    {{ form_rest(form) }}
+                    {{ form_end(form) }}
                 </div>
             </div>
         </div>
@@ -76,9 +69,6 @@
             <div class="row">
                 <div class="col-xs-12 lead">
                     <p>En complétant votre profil, vous permettez à NAO de mieux connaître ses utilisateurs et améliorer l'expérience d'utilisation de l'application Flash Nature.</p>
-                    <p><br></p>
-                    <p>Code postal : (Modifier)</p>
-                    <p>Date de naissance: (Modifier)</p>
                 </div>
             </div>
         </div>

@@ -4,9 +4,11 @@ security:
         secured_area:
             pattern:    ^/
             anonymous: true
-            form_login:
+            simple_form:
+                authenticator:  AppBundle\Security\UserAuthenticator
                 login_path:  /login
                 check_path:  /login_check
+                csrf_token_generator: security.csrf.token_manager
             logout:
                 path: /logout
                 target: /

@@ -6,13 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
-
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * User
  *
  * @ORM\Table(name="fnat_user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
- * @UniqueEntity(fields={"email"}, message="Cet e-mail est déjà utilisé.")
+ * @UniqueEntity(fields={"mail"}, message="Cet e-mail est déjà utilisé.", groups={"obs","nat"})
+ * @ORM\HasLifecycleCallbacks
  */
 class User implements UserInterface, \Serializable
 {
@@ -55,7 +56,7 @@ class User implements UserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="nom", type="string", length=45)
+     * @ORM\Column(name="nom", type="string", length=45, nullable=true)
      * @Assert\Length(max=45)
      */
     private $nom;
@@ -63,7 +64,7 @@ class User implements UserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="prenom", type="string", length=45)
+     * @ORM\Column(name="prenom", type="string", length=45, nullable=true)
      * @Assert\Length(max=45)
      */
     private $prenom;
@@ -79,7 +80,7 @@ class User implements UserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="code_postal", type="string", length=5)
+     * @ORM\Column(name="code_postal", type="string", length=5, nullable=true)
      */
     private $codePostal;
 
@@ -107,9 +108,12 @@ class User implements UserInterface, \Serializable
     private $carte;
 
     /**
+     * @var UploadedFile
      * @Assert\NotBlank(groups={"nat"})
+     * @Assert\File(maxSize="5M", maxSizeMessage="Le fichier est trop volumineux, la limite est {{ size }} {{suffix}}.", mimeTypes={"jpeg","png","image/png","image/jpeg","image/jpg"}, mimeTypesMessage="Seuls les fichiers de type {{ types }} sont autorisés. Votre fichier est de type {{ type }}",disallowEmptyMessage="Le fichier envoyé ne peut être vide.", notFoundMessage="Le fichier ne peut être trouvé.", notReadableMessage="Le fichier n'est pas lisible", groups={"nat"})
      */
-    private $carteImport;
+    private $file;
+
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Observation", mappedBy="observateur")
      */
@@ -391,6 +395,22 @@ class User implements UserInterface, \Serializable
         return $this->carte;
     }
 
+    /**
+     * @return UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param UploadedFile $file
+     */
+    public function setFile(UploadedFile $file)
+    {
+        $this->file = $file;
+    }
+
 
 
     /**
@@ -624,5 +644,36 @@ class User implements UserInterface, \Serializable
             // see section on salt below
             // $this->salt
             ) = unserialize($serialized);
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function upload()
+    {
+        // Si jamais il n'y a pas de fichier (champ facultatif pour les non naturalistes), on ne fait rien
+        if (null === $this->file) {
+            return;
+        }
+
+        $name = substr(bin2hex(random_bytes(30)),0,25) . "." . $this->file->getClientOriginalExtension();
+
+        // On déplace le fichier envoyé dans le répertoire de notre choix
+        $this->file->move($this->getUploadRootDir(), $name);
+
+        // On sauvegarde le nom de fichier dans notre attribut $url
+        $this->carte = $name;
+
+    }
+
+    public function getUploadDir()
+    {
+        return 'assets/fnat/naturalistes';
+    }
+
+    protected function getUploadRootDir()
+    {
+        return __DIR__.'/../../../web/'.$this->getUploadDir();
     }
 }
