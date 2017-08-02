@@ -10,4 +10,8 @@ namespace AppBundle\Repository;
  */
 class ObservationRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    public function EspeceList(){
+        //Todo : faire appel au script jquery pour autocompletion
+    }
 }

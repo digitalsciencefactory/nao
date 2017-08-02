@@ -2,6 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Observation;
+use AppBundle\Entity\User;
+use AppBundle\Form\NatSignType;
+use AppBundle\Form\ObservationType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,8 +27,38 @@ class ParticiperController extends Controller
      */
     public function envoiObsAction (Request $request)
     {
-        /* todo:Compléter la méthode */
-        return $this->render('Participer/envoi-observation.html.twig');
+        $observation = new Observation();
+        $form = $this->createForm(ObservationType::class, $observation);
+        $user = $this->getUser();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+        // On complète l'entité
+            $observation->setObservateur($user);
+
+
+        // on essaye d'insérer en base
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($observation);
+            $em->flush();
+
+
+        // on affiche la page de connexion avec le flash bag
+        $request->getSession()->getFlashBag()->add('notice', 'Votre observation a bien été transmise à un naturaliste.');
+        $observation = new Observation();
+        $form = $this->createForm(ObservationType::class, $observation);
+
+        return $this->render('Participer/envoi-observation.html.twig', array(
+            'form' => $form->createView(),
+        ));
+
+        }
+
+        return $this->render('Participer/envoi-observation.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 
     /**

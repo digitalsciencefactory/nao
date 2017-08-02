@@ -1,20 +1,56 @@
-<form action="https://mobirise.com/" method="post">
+{{ form_start(form) }}
+    {% for message in app.flashes('notice') %}
+        <div class="btn-success">
+            {{ message }}
+        </div>
+        <br />
+    {% endfor %}
+
+    {% if form_errors(form) %}
+        <div class="alert alert-danger">
+            {{ form_errors(form) }}
+        </div>
+    {% endif %}
+
+        <div class="col-xs-12">
+            {{ form_errors(form.espece) }}
+            {{ form_widget(form.espece, {'attr': {'class': 'form-control', 'placeholder': 'Nom de l espèce'}}) }}
+        </div>
+
+        <div class="col-xs-12">
+            {{ form_errors(form.latitude) }}
+            {{ form_widget(form.latitude, {'attr': {'class': 'form-control', 'placeholder': 'Latitude'}}) }}
+        </div>
+
+        <div class="col-xs-12">
+            {{ form_errors(form.longitude) }}
+            {{ form_widget(form.longitude, {'attr': {'class': 'form-control', 'placeholder': 'Longitude'}}) }}
+        </div>
+
+        <div class="col-xs-12">
+            {{ form_errors(form.dobs) }}
+            {{ form_widget(form.dobs, {'attr': {'class': 'form-control', 'placeholder': 'Date de l observation'}}) }}
+        </div>
+
+        <div class="col-xs-12">
+            {{ form_errors(form.comm_obs) }}
+            {{ form_widget(form.comm_obs, {'attr': {'class': 'form-control', 'placeholder': 'Informations complémentaires'}}) }}
+        </div>
 
 
-    <div class="col-xs-12">
-        <input type="text" class="form-control" name="name" required="" data-form-field="Name" placeholder="Nom de l'espèce">
-    </div>
+        <div class="col-xs-12">
+            {{ form_widget (form.file,{ 'attr': { 'class': 'form-control','placeholder': 'Carte professionnelle'} }) }}
+            {% if form_errors(form.file)  %}
+                <div class="alert alert-danger">{{ form_errors(form.file) }}</div>
+            {% endif %}
+        </div>
 
-    <div class="col-xs-12" style="padding-left: 15px">
-        <input type="text" class="form-control" name="email" required="" data-form-field="Email" placeholder="Lieu  (saisir l'adresse ou pointer sur la carte)">
-    </div>
+        <br>
 
-    <div class="col-xs-12">
-        <input type="text" class="form-control" name="phone" required="" data-form-field="Phone" placeholder="Date ">
-    </div>
-
-    <div class="col-xs-12">
-        <textarea class="form-control" name="message" rows="7" data-form-field="Message" style="resize:none" placeholder="Commentaire pour le naturaliste + ajouter bouton &quot;télécharger photo&quot;"></textarea>
-    </div>
-    <div class="col-xs-12 buttons_wrap"><button type="submit" class="btn btn-danger">Envoyer</button></div>
-</form>
+        <div class="col-xs-12" style="margin-top: 10px; text-align: center">
+            <button type="submit" class="btn btn-white">
+                Envoyer
+            </button>
+        </div>
+{{ form_rest(form) }}
+{{ form_end(form) }}
