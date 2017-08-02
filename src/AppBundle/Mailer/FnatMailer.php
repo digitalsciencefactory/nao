@@ -3,6 +3,7 @@
 
 namespace AppBundle\Mailer;
 
+use AppBundle\Entity\Newsletter;
 use AppBundle\Entity\User;
 use Twig\Environment;
 use AppBundle\Contact\Contact;
@@ -106,6 +107,36 @@ class FnatMailer
         $message->setBody($body,'text/html');
 
         $message->addTo($user->getMail());
+        $message->addFrom("contact-fnat@digitalsciencefactory.com");
+
+        $this->mailer->send($message);
+    }
+
+    /**
+     * @param Newsletter $newsletter
+     */
+    public function insVerifNews(Newsletter $newsletter){
+        $body = $this->twig->render('mail\news.confirmIns.html.twig', array('newsletter' => $newsletter));
+
+        $message = new \Swift_Message("Demande de confirmation d'inscription à la Newsletter Fash Nature ");
+        $message->setBody($body,'text/html');
+
+        $message->addTo($newsletter->getMail());
+        $message->addFrom("contact-fnat@digitalsciencefactory.com");
+
+        $this->mailer->send($message);
+    }
+
+    /**
+     * @param Newsletter $newsletter
+     */
+    public function insValidNews(Newsletter $newsletter){
+        $body = $this->twig->render('mail\news.validIns.html.twig', array('newsletter' => $newsletter));
+
+        $message = new \Swift_Message("Votre inscription à la Newsletter Flash Nature est confirmée.");
+        $message->setBody($body,'text/html');
+
+        $message->addTo($newsletter->getMail());
         $message->addFrom("contact-fnat@digitalsciencefactory.com");
 
         $this->mailer->send($message);

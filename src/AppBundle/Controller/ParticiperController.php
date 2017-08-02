@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,6 +46,26 @@ class ParticiperController extends Controller
     {
         $user = $this->getUser();
         $form = $this->createForm(UserType::class, $user);
+
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+
+            $request->getSession()->getFlashBag()->add('notice', 'Votre profil a été mis à jour.');
+
+            return $this->render('Participer/mon-compte.html.twig',
+                array(
+                    'form' => $form->createView(),
+                    'avatar' => $user->getPhoto(),
+                ));
+        }
+
+
         return $this->render('Participer/mon-compte.html.twig',
             array(
                 'form' => $form->createView(),

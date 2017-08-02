@@ -3,12 +3,16 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Newsletter
  *
  * @ORM\Table(name="fnat_newsletter")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\NewsletterRepository")
+ * @UniqueEntity(fields={"mail"}, message="Vous êtes déjà inscrit à la newsletter.")
+ * @ORM\HasLifecycleCallbacks
  */
 class Newsletter
 {
@@ -25,13 +29,14 @@ class Newsletter
      * @var string
      *
      * @ORM\Column(name="mail", type="string", length=255, unique=true)
+     * @Assert\Email
      */
     private $mail;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="token", type="string", length=65, nullable=true, unique=true)
+     * @ORM\Column(name="token", type="string", length=65, nullable=true)
      */
     private $token;
 
@@ -131,5 +136,23 @@ class Newsletter
     public function getDcree()
     {
         return $this->dcree;
+    }
+
+    /**
+    * @ORM\PostPersist()
+    * @ORM\PostUpdate()
+    */
+    private function sendToNewsList(){
+        if($this->token == null){
+
+            // TODO faire l'envoie vers mailchimp api
+        }
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    private function eraseFromNewsList(){
+        // TODO utiliser l'api de mailchimp pour supprimer l'adresse de la liste
     }
 }

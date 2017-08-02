@@ -57,6 +57,7 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=45, nullable=true)
+     * @Assert\Length(max=45, groups={"update"})
      * @Assert\Length(max=45)
      */
     private $nom;
@@ -65,6 +66,7 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="prenom", type="string", length=45, nullable=true)
+     * @Assert\Length(max=45, groups={"update"})
      * @Assert\Length(max=45)
      */
     private $prenom;
@@ -81,6 +83,7 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="code_postal", type="string", length=5, nullable=true)
+     * @Assert\Length(min=5, max=5, minMessage="Le code postal doit être composé de 5 chiffres", maxMessage="Le code postal doit être composé de 5 chiffres", groups={"update"})
      */
     private $codePostal;
 
@@ -88,6 +91,7 @@ class User implements UserInterface, \Serializable
      * @var \DateTime
      *
      * @ORM\Column(name="ddn", type="date", nullable=true)
+     * @Assert\Date(message="La date doit être au format JJ/MM/YYYY", groups={"update"})
      */
     private $ddn;
 
@@ -95,6 +99,7 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="photo", type="string", length=255, nullable=true)
+     * @Assert\Length(max=255, groups={"update"})
      */
     private $photo;
 
@@ -676,4 +681,8 @@ class User implements UserInterface, \Serializable
     {
         return __DIR__.'/../../../web/'.$this->getUploadDir();
     }
+
+
+
+
 }

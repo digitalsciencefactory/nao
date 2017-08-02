@@ -45,7 +45,12 @@
             <div class="row">
                 <div class="col-xs-12 lead">
                     {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
-
+                    {% for message in app.flashes('notice') %}
+                        <div class="btn-success">
+                            {{ message }}
+                        </div>
+                        <br />
+                    {% endfor %}
                     <div class="form-group">
                         <div class="col-sm-12 col-md-3">
                             <label for="p-mp-dcree" class="control-label lbl-modify">Date d'inscription :</label>
@@ -64,50 +69,84 @@
                         </div>
                     </div>
 
+                    {% if form_errors(form.ddn) != null %}
+                    <div class="form-group">
+                        <div class="col-sm-12 bg-danger">
+                    {{ form_errors(form.ddn) }}
+                        </div>
+                    </div>
+                    {% endif %}
                     <div class="form-group">
                         <div class="col-sm-12 col-md-4 col-lg-3">
                             <label for="user_ddn" class="control-label lbl-modify">Date de naissance :</label>
                         </div>
                         {% if app.user.ddn != null %}
-                            <div class="col-sm-12 col-md-8 col-lg-9">{{ form_widget(form.ddn, {'attr': {'class': 'field-no-deco', 'placeholder': app.user.ddn|date("d/m/Y") } } ) }}</div>
+                            <div class="col-sm-12 col-md-8 col-lg-9">{{ form_widget(form.ddn, {'attr': {'disabled':'disabled','class': 'field-no-deco', 'placeholder': app.user.ddn|date("d/m/Y") } } ) }}</div>
                         {% else %}
-                            <div class="col-sm-12 col-md-8 col-lg-9">{{ form_widget(form.ddn, {'attr': {'class': 'field-no-deco', 'placeholder': '' } } ) }}</div>
+                            <div class="col-sm-12 col-md-8 col-lg-9">{{ form_widget(form.ddn, {'attr': {'disabled':'disabled','class': 'field-no-deco', 'placeholder': '' } } ) }}</div>
                         {% endif %}
                     </div>
 
+                    {% if form_errors(form.prenom) != null %}
+                        <div class="form-group">
+                            <div class="col-sm-12 bg-danger">
+                            </div>
+                        </div>
+                    {% endif %}
                     <div class="form-group">
                         <div class="col-sm-12 col-md-3">
                             <label for="user_prenom" class="control-label lbl-modify">Prénom :</label>
                         </div>
                         <div class="col-sm-12 col-md-9">
-                            {{ form_widget(form.prenom, {'attr': {'class': 'field-no-deco', 'placeholder': app.user.prenom  }} ) }}
+                            {{ form_widget(form.prenom, {'attr': {'disabled':'disabled','class': 'field-no-deco', 'placeholder': app.user.prenom  }} ) }}
                         </div>
                     </div>
 
+                    {% if form_errors(form.nom) != null %}
+                        <div class="form-group">
+                            <div class="col-sm-12 bg-danger">
+                                {{ form_errors(form.nom) }}
+                            </div>
+                        </div>
+                    {% endif %}
                     <div class="form-group">
                         <div class="col-sm-12 col-md-3">
                             <label for="user_nom" class="control-label lbl-modify">Nom :</label>
                         </div>
                         <div class="col-sm-12 col-md-9">
-                            {{ form_widget(form.nom, {'attr': {'class': 'field-no-deco', 'placeholder': app.user.nom  }}) }}
+                            {{ form_widget(form.nom, {'attr': {'disabled':'disabled','class': 'field-no-deco', 'placeholder': app.user.nom  }}) }}
                         </div>
                     </div>
 
+                    {% if form_errors(form.codePostal) != null %}
+                        <div class="form-group">
+                            <div class="col-sm-12 bg-danger">
+                                {{ form_errors(form.codePostal) }}
+                            </div>
+                        </div>
+                    {% endif %}
                     <div class="form-group">
                         <div class="col-sm-12 col-md-3">
                             <label for="user_codePostal" class="control-label lbl-modify">Code Postal :</label>
                         </div>
                         <div class="col-sm-12 col-md-9">
-                            {{ form_widget(form.codePostal, {'attr': {'class': 'field-no-deco', 'placeholder': app.user.codepostal  }}) }}
+                            {{ form_widget(form.codePostal, {'attr': {'disabled':'disabled', 'class': 'field-no-deco', 'placeholder': app.user.codepostal  }}) }}
                         </div>
                     </div>
 
+                    {% if form_errors(form.photo) != null %}
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                {{ form_errors(form.photo) }}
+                            </div>
+                        </div>
+                    {% endif %}
                     <div class="form-group">
                         <div class="col-sm-12 col-md-3">
                             <label id="lblavatar" for="user_photo" class="control-label lbl-no-deco">Avatar :</label>
                         </div>
                         <div class="col-sm-12 col-md-9">
-                            {{ form_widget(form.photo, {'attr': {'class': 'field-fnat-hidden', 'placeholder': app.user.photo, 'onchange': 'javascript:changeAvatar()'  }}) }}
+                            {{ form_widget(form.photo, {'attr': {'data-url-asset':asset('assets/fnat/avatar/'),'class': 'field-fnat-hidden', 'placeholder': app.user.photo, 'onchange': 'javascript:changeAvatar()'  }}) }}
                         </div>
                     </div>
 
@@ -123,7 +162,7 @@
 
 
                     </div>
-
+                    {{ form_rest(form) }}
                     {{ form_end(form) }}
 
                 </div>
@@ -155,7 +194,7 @@
     <section class="mbr-section extTable1" id="extTable1-5u" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 40px;">
         <div class="container table-wrapper" data-search="false" >
             <table class="table" cellspacing="0" width="100%">
-                Date Espèce User Localisation Photo Votre commentaire	Statut
+                Date EspèceStatut
             </table>
         </div>
     </section>
@@ -255,7 +294,7 @@
         function changeAvatar() {
             var $imgavatar = document.getElementById("p-mp-img-avatar");
             var $avatar = document.getElementById("user_photo");
-            $imgavatar.src = "{{ asset('assets/fnat/avatar/') }}" + $avatar.value;
+            $imgavatar.src = $avatar.dataset.urlAsset  + $avatar.value;
 
         };
         </script>

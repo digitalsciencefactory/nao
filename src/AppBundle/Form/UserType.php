@@ -22,27 +22,26 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nom',      TextType::class, array('label' => ' ','required' => false, 'disabled' => 'disabled'))
-            ->add('prenom',     TextType::class, array('label' => ' ','required' => false, 'disabled' => 'disabled'))
-            ->add('codePostal',     TextType::class, array('label' => ' ','required' => false, 'disabled' => 'disabled'))
+            ->add('nom',      TextType::class, array('label' => ' ','required' => false))
+            ->add('prenom',     TextType::class, array('label' => ' ','required' => false))
+            ->add('codePostal',     TextType::class, array('label' => ' ','required' => false))
             ->add('ddn', DateType::class, array(
                 'label' => ' ',
                 'required' => false,
                 'widget' => 'single_text',
                 // do not render as type="date", to avoid HTML5 date pickers
                 'html5' => true,
-                'format' => 'dd/MM/yyyy',
-             'disabled' => 'disabled'
+                'format' => 'dd/MM/yyyy'
                 // add a class that can be selected in JavaScript
             ))
-            ->add('update',      SubmitType::class, array('disabled' => 'disabled'))
             ->add('photo', ChoiceType::class, array(
                 'choices'  => array(
                     'avatar 1' => 'avatar1.png',
                     'avatar 2' => 'avatar2.png',
                     'avatar 3' => 'avatar3.png',
-                ),
-                ))
+                )))
+            ->add('update',      SubmitType::class
+                )
             ;
 
     }
@@ -51,8 +50,8 @@ class UserType extends AbstractType
     {
 
         $resolver->setDefaults(array(
-            //'validation_groups' => array('obs'),
-            'data_class' => User::class,
+            'validation_groups' => array('update'),
+            'data_class' => 'AppBundle\Entity\User',
         ));
     }
 }
