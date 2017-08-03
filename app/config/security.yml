@@ -16,12 +16,15 @@ security:
 
 
     role_hierarchy:
-        ROLE_NATURALISTE: ROLE_OBSERVATEUR
-        ROLE_ADMIN: [ ROLE_NATURALISTE, ROLE_OBSERVATEUR ]
+        ROLE_NATURALISTE: [ ROLE_EXTRACT, ROLE_OBSERVATEUR ]
+        ROLE_ADMIN: [ ROLE_NATURALISTE ]
 
     access_control:
         - { path: ^/connexion, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/participer, roles: ROLE_OBSERVATEUR }
+        - { path: ^/participer/espace-naturaliste, roles: ROLE_NATURALISTE }
+        - { path: ^/dashboard$, roles: ROLE_NATURALISTE }
+        - { path: ^/dashboard/extraction-donnees, roles: ROLE_NATURALISTE }
         - { path: ^/dashboard, roles: ROLE_ADMIN }
 
     providers:

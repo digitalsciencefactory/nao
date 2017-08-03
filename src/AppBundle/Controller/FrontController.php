@@ -219,7 +219,7 @@ class FrontController extends Controller
     }
 
     /**
-     * @Route("/newsletter", name="fn_front_newsletter")
+     * @Route("/newsletter")
      */
     public function validerInscriptionNewsletterAction(Request $request){
 // récupérer les valeurs de l'url
@@ -277,13 +277,17 @@ class FrontController extends Controller
      *
      * Affiche la page de connexion
      */
-    public function loginAction ()
+    public function loginAction (Request $request)
     {
 
         // Si le visiteur est déjà identifié, on le redirige vers l'accueil
         if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirectToRoute('fn_front_index');
         }
+
+        $newsletter = new Newsletter();
+        $formn = $this->createForm(NewsletterType::class, $newsletter);
+        $formn->handleRequest($request);
 
         // Le service authentication_utils permet de récupérer le nom d'utilisateur
         // et l'erreur dans le cas où le formulaire a déjà été soumis mais était invalide
@@ -319,16 +323,53 @@ class FrontController extends Controller
     /**
      * @Route("/kit-observation", name="fn_front_kit")
      */
-    public function kitObservationAction (Request $request)
+    public function kitObservationAction (Request $request,UserPasswordEncoderInterface $encoder)
     {
         $user = new User();
         $form = $this->createForm(ObsSignType::class, $user);
+
         $form->handleRequest($request);
 
         $newsletter = new Newsletter();
         $formn = $this->createForm(NewsletterType::class, $newsletter);
         $formn->handleRequest($request);
 
+        // on gère le cas du formulaire d'inscription
+        if ($form->isSubmitted() && $form->isValid()) {
+            // on complète l'entité
+            $user->setRoles(array('ROLE_OBSERVATEUR'));
+            $user->setDcree(new \DateTime());
+            $user->setStatut('STATUT_INACTIF');
+
+            // hash du mot de passe
+            $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
+
+            // création du token de vérifiction d'inscription
+            $length = 65;
+            $user->setToken(substr(bin2hex(random_bytes($length)),0,65));
+
+            // essayer d'insérer en base
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+
+            // mail de confirmation d'inscription
+            $mailer = $this->container->get('mailer');
+            $twig = $this->container->get('twig');
+            $mail = new FnatMailer($mailer,$twig);
+            $mail->insVerifObs($user);
+
+            // on affiche la page de connexion avec le flash bag
+            $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
+            $user = new User();
+            $form = $this->createForm(ObsSignType::class, $user);
+            return $this->render('Front/kit_observation.html.twig', array(
+                'form' => $form->createView(),
+                'formn' => $formn->createView(),
+            ));
+        }
+
+        // on gère le cas du formulaire newsletter
         if ($formn->isSubmitted() && $formn->isValid()) {
 
             // création du token de vérifiction d'inscription
