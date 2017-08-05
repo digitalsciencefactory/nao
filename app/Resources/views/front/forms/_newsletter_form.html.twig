@@ -26,10 +26,17 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 col-lg-10 col-lg-offset-1" data-form-type="formoid">
-                    <form class="mbr-form" action="" method="post">
+                    <a name="news"></a>
+                    {{ form_start(formn, {'attr': {'class': 'mbr-form'}}) }}
+                    {% for message in app.flashes('noticenews') %}
+                        <div class="btn-success">
+                            {{ message }}
+                        </div>
+                        <br />
+                    {% endfor %}
                         <div class="mbr-subscribe mbr-subscribe-dark input-group">
-
-                            <input type="email" class="form-control" name="email" required="" data-form-field="Email" placeholder="Saisir votre adresse mail" id="form2-52-email">
+                            {{ form_errors(formn.mail) }}
+                            {{ form_widget(formn.mail, {'attr': {'class': 'form-control', 'placeholder': 'Saisir votre adresse mail'}}) }}
 
                             <span class="input-group-btn">
                                 <button type="submit" class="btn btn-white">
@@ -38,7 +45,8 @@
                             </span>
                         </div>
 
-                    </form>
+                    {{ form_rest(formn) }}
+                    {{ form_end(formn) }}
                 </div>
             </div>
         </div>

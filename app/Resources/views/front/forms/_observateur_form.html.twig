@@ -35,12 +35,17 @@
                                 <br />
                             {% endfor %}
                                 {% if form_errors(form) %}
-                                    <div class="alert alert-danger">
+                                    <div class="bg-danger">
                                         {{ form_errors(form) }}
                                     </div>
                                 {% endif %}
+
                             <div class="col-xs-12">
-                                {{ form_errors(form.mail) }}
+                                {% if form_errors(form.mail) %}
+                                <div class="bg-danger">
+                                    {{ form_errors(form.mail) }}
+                                </div>
+                                {% endif %}
                                 {{ form_widget(form.mail, {'attr': {'class': 'form-control'}}) }}
                             </div>
 
@@ -49,7 +54,7 @@
 
                                 {{ form_widget (form.plainPassword.first, {'attr': {'class': 'form-control','placeholder': 'Mot de passe'}}) }}
                                 {% if form_errors(form.plainPassword.first)  %}
-                                    <div class="alert alert-danger">{{ form_errors(form.plainPassword.first) }}</div>
+                                    <div class="bg-danger">{{ form_errors(form.plainPassword.first) }}</div>
                                 {% endif %}
                             </div>
 
@@ -57,7 +62,7 @@
 
                                 {{ form_widget (form.plainPassword.second, { 'attr': { 'class': 'form-control','placeholder': 'Vérification'} }) }}
                                 {% if form_errors(form.plainPassword.second)  %}
-                                    <div class="alert alert-danger">{{ form_errors(form.plainPassword.second) }}</div>
+                                    <div class="bg-danger">{{ form_errors(form.plainPassword.second) }}</div>
                                 {% endif %}
                             </div>
 

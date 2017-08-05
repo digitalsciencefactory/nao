@@ -7,3 +7,35 @@
 .boutonlogout{
     display: inline-block !important;
 }
+
+/* page Participer Mon Profil */
+.field-no-deco{
+    display: inline-block !important;
+    background: none !important;
+    border: 0px solid !important;
+    outline: none !important;
+    padding: 0.5em 1.07em 0.5em !important;
+    font-size: 1.07rem !important;
+    font-weight: 300 !important;
+    color: #FFF !important;
+}
+
+.field-fnat-hidden{
+    display: none !important;
+}
+
+.btn-no-deco{
+    display: none !important;
+}
+
+.lbl-no-deco{
+    display: none !important;
+}
+
+.lbl-modify{
+    display: inline-block !important;
+    /*padding: 0.5em 1.07em 0.5em !important;*/
+    font-size: 1.07rem !important;
+    font-weight: 300 !important;
+    color: #FFF !important;
+}

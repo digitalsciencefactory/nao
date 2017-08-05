@@ -25,7 +25,8 @@ class ObsSignType extends AbstractType
                 'required' => true,
                 'first_options'  => array('label' => ''),
                 'second_options' => array('label' => ''),
-            ));
+            ))
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
