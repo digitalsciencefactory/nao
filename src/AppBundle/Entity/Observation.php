@@ -127,6 +127,7 @@ class Observation
      */
     private $file;
 
+    private $especeTxt;
 
     /**
      * Observation constructor.
@@ -481,4 +482,23 @@ class Observation
     {
         return __DIR__.'/../../../web/'.$this->getUploadDir();
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEspeceTxt()
+    {
+        return $this->especeTxt;
+    }
+
+    /**
+     * @param mixed $especeTxt
+     */
+    public function setEspeceTxt($especeTxt)
+    {
+        $this->especeTxt = $especeTxt;
+    }
+
+
+
 }

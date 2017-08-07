@@ -10,6 +10,7 @@ use AppBundle\Form\ObservationType;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\UserType;
 
@@ -31,14 +32,14 @@ class ParticiperController extends Controller
     {
         $observation = new Observation();
         $form = $this->createForm(ObservationType::class, $observation);
-        $user = $this->getUser();
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $user = $this->getUser();
 
-        // On complète l'entité
-            $observation->setObservateur($user);
+            // On complète l'entité
+            $observation->setObservateur($user->getId());
 
 
         // on essaye d'insérer en base
@@ -106,5 +107,27 @@ class ParticiperController extends Controller
                 'form' => $form->createView(),
                 'avatar' => $user->getPhoto(),
             ));
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     *
+     * @Route("/participer/autocomplete", name="fn_participer_autocomplete")
+     */
+    public function autoCompletionAction(Request $request){
+        if($request->isXmlHttpRequest()) {
+
+            $search = $request->get('search');
+
+            $repository = $this
+                ->getDoctrine()
+                ->getManager()
+                ->getRepository('AppBundle:Taxref');
+
+            $results = $repository->getByAutoComplete($search);
+
+            return new JsonResponse($results);
+        }
     }
 }

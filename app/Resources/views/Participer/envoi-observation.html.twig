@@ -16,7 +16,7 @@
             <div class="lead">
                 <p>Grâce au formulaire ci-dessous, vous pouvez nous envoyer votre observations sur le terrain.</p>
                 <p>Ce formulaire est strictement réservé aux observations concernant les oiseaux.</p>
-                <p>Merci de remplir un formulaire pour chaque spécimen aperçu./p>
+                <p>Merci de remplir un formulaire pour chaque spécimen aperçu.</p>
             </div>
         </div>
     </section>
@@ -75,3 +75,35 @@
     {{ include('front/blocks/_adresse.html.twig') }}
 
 {% endblock body %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+            src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"
+            integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="
+            crossorigin="anonymous"></script>
+    <script>
+    $("input[data-id=especeId]").autocomplete({
+        source: function (request, response) {
+            var recherche = $("input[data-id=especeId]").val();
+            var objData = 'search=' + recherche;
+            var url = $(this.element).attr('data-url');
+
+            $.ajax({
+                url: url,
+                dataType: "json",
+                data : objData,
+                type: 'POST',
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return item;
+                        }));
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR, textStatus, errorThrown);
+                }
+            });
+        }
+    })
+    </script>
+{% endblock javascripts %}

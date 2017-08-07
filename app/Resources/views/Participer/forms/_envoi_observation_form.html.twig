@@ -14,17 +14,33 @@
 
         <div class="col-xs-12">
             {{ form_errors(form.espece) }}
-            {{ form_widget(form.espece, {'attr': {'class': 'form-control', 'placeholder': 'Nom de l espèce'}}) }}
+            {{ form_widget(form.especeTxt, {'attr': {
+                'class': 'form-control',
+                'placeholder': 'Nom de l espèce',
+                'data-id': 'especeId',
+                'data-url': path('fn_participer_autocomplete')
+            }
+            }
+
+            )}}
+            {{ form_widget(form.espece, {'attr': {
+                'class': 'form-control',
+                'placeholder': 'Nom de l espèce',
+                'hidden':'hidden',
+                'disabled': 'disabled'
+            } }
+            )
+            }}
         </div>
 
         <div class="col-xs-12">
             {{ form_errors(form.latitude) }}
-            {{ form_widget(form.latitude, {'attr': {'class': 'form-control', 'placeholder': 'Latitude'}}) }}
+            {{ form_widget(form.latitude, {'attr': {'class': 'form-control', 'placeholder': 'Latitude', 'disabled':'disabled'}}) }}
         </div>
 
         <div class="col-xs-12">
             {{ form_errors(form.longitude) }}
-            {{ form_widget(form.longitude, {'attr': {'class': 'form-control', 'placeholder': 'Longitude'}}) }}
+            {{ form_widget(form.longitude, {'attr': {'class': 'form-control', 'placeholder': 'Longitude', 'disabled':'disabled'}}) }}
         </div>
 
         <div class="col-xs-12">
@@ -32,25 +48,26 @@
             {{ form_widget(form.dobs, {'attr': {'class': 'form-control', 'placeholder': 'Date de l observation'}}) }}
         </div>
 
-        <div class="col-xs-12">
-            {{ form_errors(form.comm_obs) }}
-            {{ form_widget(form.comm_obs, {'attr': {'class': 'form-control', 'placeholder': 'Informations complémentaires'}}) }}
-        </div>
+<div class="col-xs-12">
+    {{ form_errors(form.comm_obs) }}
+    {{ form_widget(form.comm_obs, {'attr': {'class': 'form-control', 'placeholder': 'Informations complémentaires'}}) }}
+</div>
 
 
-        <div class="col-xs-12">
-            {{ form_widget (form.file,{ 'attr': { 'class': 'form-control','placeholder': 'Carte professionnelle'} }) }}
-            {% if form_errors(form.file)  %}
-                <div class="alert alert-danger">{{ form_errors(form.file) }}</div>
-            {% endif %}
-        </div>
+<div class="col-xs-12">
+    {{ form_widget (form.file,{ 'attr': { 'class': 'form-control','placeholder': 'Carte professionnelle'} }) }}
+    {% if form_errors(form.file)  %}
+        <div class="alert alert-danger">{{ form_errors(form.file) }}</div>
+    {% endif %}
+</div>
 
-        <br>
+<br>
 
-        <div class="col-xs-12" style="margin-top: 10px; text-align: center">
-            <button type="submit" class="btn btn-white">
-                Envoyer
-            </button>
-        </div>
+<div class="col-xs-12" style="margin-top: 10px; text-align: center">
+    {{ form_widget(form.envoyer,{'attr':{ 'class': 'btn bt-blanc' }} ) }}
+    {{ form_widget(form.dcree, {'attr': {'class': 'form-control', 'placeholder': 'Date de l observation', 'hidden':'hidden', 'disabled':'disabled'}}) }}
+
+</div>
+
 {{ form_rest(form) }}
 {{ form_end(form) }}

@@ -10,4 +10,23 @@ namespace AppBundle\Repository;
  */
 class TaxrefRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    /**
+     * Retourne les taxons au format json pour alimenter l'autocomplétion
+     * du formulaire d'ajout d'observation
+     *
+     * @param string $recherche
+     * @return array
+     */
+    public function getByAutoComplete($recherche){
+
+        $query = $this->_em->createQuery("SELECT t.id, t.lb_nom, t.nom_vern, t.nom_vern_eng FROM OCPlatformBundle:Taxref t WHERE t.lb_nom like '%:rechLbNom%' or t.nom_vern like '%:rechVern%' OR t.nom_vern_eng like '%:rechVernEng%'");
+
+        $query->setParameter('rechLbNom', $recherche);
+        $query->setParameter('rechVern', $recherche);
+        $query->setParameter('rechVernEng', $recherche);
+
+        return $query->getArrayResult();
+
+    }
 }
