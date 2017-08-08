@@ -38,10 +38,28 @@ class ParticiperController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
+            $espece = $observation->getEspece();
+
+            $taxrefManager = $this
+                ->getDoctrine()
+                ->getManager()
+                ->getRepository('AppBundle:Taxref');
+
+            $especeToSave = $taxrefManager->findOneBy(array('id' => $espece));
+
+            $observation->setEspece($especeToSave);
+            // on récupère l'espèce avec son id
+
 
             // On complète l'entité
             $observation->setObservateur($user->getId());
+            $observation->setDcree(new \DateTime('NOW'));
 
+            if($user->getRoles() == ("ROLE_NATURALISTE")){
+                $observation->setStatut("STATUT_VALIDE");
+                $observation->setNaturaliste($user->getId());
+                $observation->setDvalid(new \DateTime('NOW'));
+            }
 
         // on essaye d'insérer en base
             $em = $this->getDoctrine()->getManager();
@@ -50,7 +68,11 @@ class ParticiperController extends Controller
 
 
         // on affiche la page de connexion avec le flash bag
-        $request->getSession()->getFlashBag()->add('notice', 'Votre observation a bien été transmise à un naturaliste.');
+            if($user->getRoles() == ("ROLE_NATURALISTE")) {
+                $request->getSession()->getFlashBag()->add('notice', 'Votre observation est bien enregistrée et validée.');
+            }else{
+                $request->getSession()->getFlashBag()->add('notice', 'Votre observation a bien été transmise à un naturaliste.');
+            }
         $observation = new Observation();
         $form = $this->createForm(ObservationType::class, $observation);
 

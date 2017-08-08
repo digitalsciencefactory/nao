@@ -27,7 +27,7 @@
                 'class': 'form-control',
                 'placeholder': 'Nom de l espèce',
                 'hidden':'hidden',
-                'disabled': 'disabled'
+'value':''
             } }
             )
             }}
@@ -35,17 +35,17 @@
 
         <div class="col-xs-12">
             {{ form_errors(form.latitude) }}
-            {{ form_widget(form.latitude, {'attr': {'class': 'form-control', 'placeholder': 'Latitude', 'disabled':'disabled'}}) }}
+            {{ form_widget(form.latitude, {'attr': {'class': 'form-control', 'placeholder': 'Latitude', 'readonly':'readonly'}}) }}
         </div>
 
         <div class="col-xs-12">
             {{ form_errors(form.longitude) }}
-            {{ form_widget(form.longitude, {'attr': {'class': 'form-control', 'placeholder': 'Longitude', 'disabled':'disabled'}}) }}
+            {{ form_widget(form.longitude, {'attr': {'class': 'form-control', 'placeholder': 'Longitude', 'readonly':'readonly'}}) }}
         </div>
 
-        <div class="col-xs-12">
+        <div id="sandbox-container" class="col-xs-12">
             {{ form_errors(form.dobs) }}
-            {{ form_widget(form.dobs, {'attr': {'class': 'form-control', 'placeholder': 'Date de l observation'}}) }}
+            {{ form_widget(form.dobs, {'attr': {'class': 'form-control js-datepicker', 'placeholder': 'Date de l observation'}}) }}
         </div>
 
 <div class="col-xs-12">

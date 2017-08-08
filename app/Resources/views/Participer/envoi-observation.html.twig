@@ -6,6 +6,17 @@
     Envoi Observation - {{ parent() }}
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="{{ asset('assets/fnat/css/autocomplete.css') }}" />
+    <style>
+        #envoieObservationMap {
+            height: 100%;
+        }
+    </style>
+{% endblock stylesheets %}
+
 {% block body %}
 
     <section class="mbr-section mbr-after-navbar" id="content5-34" style="background-color: rgb(105, 176, 171); padding-top: 120px; padding-bottom: 0px;">
@@ -58,8 +69,9 @@
 
                             <div class="mbr-table mbr-valign-top col-md-6">
                                 <div class="mbr-map">
-                                    <iframe frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA0Dx_boXQiwvdz8sJHoYeZNVTdoWONYkU&amp;q=place_id:ChIJSZ296Zx_6EcRVNaCoS8yigk" allowfullscreen="">
-                                    </iframe>
+                                    <div id="envoieObservationMap"></div>
+                                    <!--iframe frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA0Dx_boXQiwvdz8sJHoYeZNVTdoWONYkU&amp;q=place_id:ChIJSZ296Zx_6EcRVNaCoS8yigk" allowfullscreen="">
+                                    </iframe-->
                                 </div>
                             </div>
 
@@ -78,38 +90,36 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <!-- Date picker -->
     <script
             src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"
             integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="
-            crossorigin="anonymous"></script>
-    <script>
-    $("input[data-id=especeId]").autocomplete({
+            crossorigin="anonymous">
 
-        source: function (request, response) {
-            var recherche = $("input[data-id=especeId]").val();
-            var objData = 'search=' + recherche;
-            var url = $(this.element).attr('data-url');
-            console.log(recherche);
-            console.log(objData);
-            console.log(url);
-            $.ajax({
-                url: url,
-                dataType: "json",
-                data : objData,
-                type: 'POST',
-                success: function (data) {
-                    response($.map(data, function (data) {
-                        return data.lbNom + "\n\r " + data.nomVern + "\n\r" + data.nomVern;
-                        }));
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log("jqXHR => ");
-                    console.log( jqXHR.toString() );
-                    console.log(textStatus, errorThrown);
-                }
-            });
-        },
-        minLength : 3
-    })
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+
+    <script>
+        $('#sandbox-container input').datepicker({
+            format: "dd/mm/yyyy",
+            weekStart: 1,
+            todayBtn: true,
+            language: "fr",
+            daysOfWeekHighlighted: "0",
+            calendarWeeks: true,
+            autoclose: true,
+            todayHighlight: true
+        });
+    </script>
+
+    <!-- autocomplete -->
+    <script src="{{ asset('assets/fnat/js/autocomplete.js') }}">
+    </script>
+
+    <!-- google maps -->
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcsMzqFeJRWLogNkUPgC8GNrHYkgzk7XA&callback=initMap">
+    </script>
+    <script src="{{ asset('assets/fnat/js/googlemaps_envoie_observation.js') }}" ></script>
+
 {% endblock javascripts %}
