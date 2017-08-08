@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  *
  * @ORM\Table(name="fnat_observation")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ObservationRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Observation
 {

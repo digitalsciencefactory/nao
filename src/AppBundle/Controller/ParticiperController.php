@@ -45,19 +45,19 @@ class ParticiperController extends Controller
                 ->getManager()
                 ->getRepository('AppBundle:Taxref');
 
-            $especeToSave = $taxrefManager->findOneBy(array('id' => $espece));
+            $especeToSave = $taxrefManager->getOneWithJoin($espece);
 
-            $observation->setEspece($especeToSave);
+            $observation->setEspece($especeToSave[0]);
             // on récupère l'espèce avec son id
 
 
             // On complète l'entité
-            $observation->setObservateur($user->getId());
+            $observation->setObservateur($user);
             $observation->setDcree(new \DateTime('NOW'));
 
-            if($user->getRoles() == ("ROLE_NATURALISTE")){
+            if($user->getRoles()[0] == "ROLE_NATURALISTE"){
                 $observation->setStatut("STATUT_VALIDE");
-                $observation->setNaturaliste($user->getId());
+                $observation->setNaturaliste($user);
                 $observation->setDvalid(new \DateTime('NOW'));
             }
 
@@ -68,7 +68,7 @@ class ParticiperController extends Controller
 
 
         // on affiche la page de connexion avec le flash bag
-            if($user->getRoles() == ("ROLE_NATURALISTE")) {
+            if($user->getRoles()[0] == ("ROLE_NATURALISTE")) {
                 $request->getSession()->getFlashBag()->add('notice', 'Votre observation est bien enregistrée et validée.');
             }else{
                 $request->getSession()->getFlashBag()->add('notice', 'Votre observation a bien été transmise à un naturaliste.');

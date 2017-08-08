@@ -43,4 +43,28 @@ class TaxrefRepository extends \Doctrine\ORM\EntityRepository
         return $query->getArrayResult();
 
     }
+
+    /**
+     * Retourne un taxref avec ses dépendances
+     * @param $id
+     * @return array
+     */
+    public function getOneWithJoin($id){
+        $qb = $this
+            ->createQueryBuilder('a')
+            ->leftJoin('a.rang', 'rang')
+            ->addSelect('rang')
+            ->leftJoin('a.habitat', 'habitat')
+            ->addSelect('habitat')
+            ->leftJoin('a.fr', 'fr')
+            ->addSelect('fr')
+            ->andWhere('a.id = :id')
+            ->setParameter('id', $id);
+
+        return $qb
+            ->getQuery()
+            ->getResult()
+            ;
+
+    }
 }
