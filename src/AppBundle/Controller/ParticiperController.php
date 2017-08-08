@@ -10,6 +10,7 @@ use AppBundle\Form\ObservationType;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\UserType;
@@ -113,21 +114,24 @@ class ParticiperController extends Controller
      * @param Request $request
      * @return JsonResponse
      *
-     * @Route("/participer/autocomplete", name="fn_participer_autocomplete")
+     * @Route("/participer/autocomplete/", name="fn_participer_autocomplete")
      */
-    public function autoCompletionAction(Request $request){
+    public function autoCompletionAction(Request $request)
+    {
         if($request->isXmlHttpRequest()) {
 
-            $search = $request->get('search');
+        $search = $request->get('search');
 
-            $repository = $this
-                ->getDoctrine()
-                ->getManager()
-                ->getRepository('AppBundle:Taxref');
+        $repository = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository('AppBundle:Taxref');
 
-            $results = $repository->getByAutoComplete($search);
+        $results = $repository->getByAutoComplete($search);
+        return new JsonResponse($results);
+    }
+        $results = Array();
 
-            return new JsonResponse($results);
-        }
+        return new JsonResponse($results);
     }
 }
