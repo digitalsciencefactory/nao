@@ -11,6 +11,7 @@ use AppBundle\Form\NewsletterType;
 use AppBundle\Entity\User;
 use AppBundle\Form\NatSignType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use AppBundle\Mailer\FnatMailer;
 
 class FrontController extends Controller
 {
