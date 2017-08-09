@@ -158,28 +158,68 @@ class InscriptionController extends Controller
     /**
      * @Route("/kit-observation", name="fn_front_kit")
      */
-    public function kitObservationAction (Request $request, UserPasswordEncoderInterface $encoder)
+    public function kitObservationAction (Request $request,UserPasswordEncoderInterface $encoder)
     {
         $user = new User();
         $form = $this->createForm(ObsSignType::class, $user);
         $form->handleRequest($request);
-
+        $newsletter = new Newsletter();
+        $formn = $this->createForm(NewsletterType::class, $newsletter);
+        $formn->handleRequest($request);
+        // on gère le cas du formulaire d'inscription
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $this->userAction($user, $encoder);
-            $this->mailerAction($user);
-
+            // on complète l'entité
+            $user->setRoles(array('ROLE_OBSERVATEUR'));
+            $user->setDcree(new \DateTime());
+            $user->setStatut('STATUT_INACTIF');
+            // hash du mot de passe
+            $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
+            // création du token de vérifiction d'inscription
+            $length = 65;
+            $user->setToken(substr(bin2hex(random_bytes($length)),0,65));
+            // essayer d'insérer en base
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+            // mail de confirmation d'inscription
+            $mailer = $this->container->get('mailer');
+            $twig = $this->container->get('twig');
+            $mail = new FnatMailer($mailer,$twig);
+            $mail->insVerifObs($user);
             // on affiche la page de connexion avec le flash bag
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $user = new User();
-            $form = $this->createForm(NatSignType::class, $user);
-            return $this->render('Front/inscription-naturaliste.html.twig', array(
+            $form = $this->createForm(ObsSignType::class, $user);
+            return $this->render('Front/kit_observation.html.twig', array(
+                'form' => $form->createView(),
+                'formn' => $formn->createView(),
+            ));
+        }
+        // on gère le cas du formulaire newsletter
+        if ($formn->isSubmitted() && $formn->isValid()) {
+            // création du token de vérifiction d'inscription
+            $length = 65;
+            $newsletter->setToken(substr(bin2hex(random_bytes($length)),0,65));
+            // essayer d'insérer en base
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($newsletter);
+            $em->flush();
+            // mail de confirmation d'inscription
+            $mailer = $this->container->get('mailer');
+            $twig = $this->container->get('twig');
+            $mail = new FnatMailer($mailer,$twig);
+            $mail->insVerifNews($newsletter);
+            // on affiche la page de connexion avec le flash bag
+            $request->getSession()->getFlashBag()->add('noticenews', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
+            $newsletter = new Newsletter();
+            $formn = $this->createForm(NewsletterType::class, $newsletter);
+            return $this->render('Front/kit_observation.html.twig', array(
+                'formn' => $formn->createView(),
                 'form' => $form->createView(),
             ));
         }
-
-
         return $this->render('Front/kit_observation.html.twig', array(
+            'formn' => $formn->createView(),
             'form' => $form->createView(),
         ));
     }
