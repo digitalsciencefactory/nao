@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
  * TaxrefRepository
@@ -10,4 +11,60 @@ namespace AppBundle\Repository;
  */
 class TaxrefRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * Retourne les taxons au format json pour alimenter l'autocomplétion
+     * du formulaire d'ajout d'observation
+     *
+     * @param string $recherche
+     * @return array
+     */
+    public function getByAutoComplete($recherche){
+        $qb = $this->_em->createQueryBuilder();
+        $qb->addSelect('Distinct t.id')
+        ->addSelect('t.lbNom')
+        ->addSelect('t.nomVern')
+        ->addSelect('t.nomVernEng')
+        ->from('AppBundle:Taxref', 't')
+        ->andWhere('t.lbNom like :rechLbNom OR t.nomVern like :rechVern OR t.nomVernEng like :rechVernEng');
+
+
+        $qb->setParameter('rechLbNom', '%'.$recherche.'%');
+        $qb->setParameter('rechVern', '%'.$recherche.'%');
+        $qb->setParameter('rechVernEng', '%'.$recherche.'%');
+
+        $query = $qb->getQuery();
+
+        //$query = $this->_em->createQuery('SELECT t.id, t.lbNom, t.nomVern, t.nomVern_eng FROM AppBundle:Taxref t WHERE t.lbNom like "%'.$recherche.'%" or t.nomVern like "%'.$recherche.'%" OR t.nomVern_eng like "%'.$recherche.'%"');
+
+        //$query
+        //$query->setParameter('rechVern', $recherche);
+        //$query->setParameter('rechVernEng', $recherche);
+
+        return $query->getArrayResult();
+
+    }
+
+    /**
+     * Retourne un taxref avec ses dépendances
+     * @param $id
+     * @return array
+     */
+    public function getOneWithJoin($id){
+        $qb = $this
+            ->createQueryBuilder('a')
+            ->leftJoin('a.rang', 'rang')
+            ->addSelect('rang')
+            ->leftJoin('a.habitat', 'habitat')
+            ->addSelect('habitat')
+            ->leftJoin('a.fr', 'fr')
+            ->addSelect('fr')
+            ->andWhere('a.id = :id')
+            ->setParameter('id', $id);
+
+        return $qb
+            ->getQuery()
+            ->getResult()
+            ;
+
+    }
 }

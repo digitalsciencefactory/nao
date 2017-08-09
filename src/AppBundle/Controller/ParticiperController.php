@@ -9,6 +9,8 @@ use AppBundle\Form\ObservationType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\UserType;
 
@@ -31,14 +33,35 @@ class ParticiperController extends Controller
     {
         $observation = new Observation();
         $form = $this->createForm(ObservationType::class, $observation);
-        $user = $this->getUser();
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $user = $this->getUser();
+            $espece = $observation->getEspece();
 
-        // On complète l'entité
+            $taxrefManager = $this
+                ->getDoctrine()
+                ->getManager()
+                ->getRepository('AppBundle:Taxref');
+
+            $especeToSave = $taxrefManager->getOneWithJoin($espece);
+
+            $observation->setEspece($especeToSave[0]);
+            // on récupère l'espèce avec son id
+
+
+            // On complète l'entité
             $observation->setObservateur($user);
+            $observation->setDcree(new \DateTime('NOW'));
+
+
+            if($user->getRoles()[0] == "ROLE_NATURALISTE"){
+                $observation->setStatut("STATUT_VALIDE");
+                $observation->setNaturaliste($user);
+                $observation->setDvalid(new \DateTime('NOW'));
+            }
+
 
         // on essaye d'insérer en base
             $em = $this->getDoctrine()->getManager();
@@ -47,7 +70,11 @@ class ParticiperController extends Controller
 
 
         // on affiche la page de connexion avec le flash bag
-        $request->getSession()->getFlashBag()->add('notice', 'Votre observation a bien été transmise à un naturaliste.');
+            if($user->getRoles()[0] == ("ROLE_NATURALISTE")) {
+                $request->getSession()->getFlashBag()->add('notice', 'Votre observation est bien enregistrée et validée.');
+            }else{
+                $request->getSession()->getFlashBag()->add('notice', 'Votre observation a bien été transmise à un naturaliste.');
+            }
         $observation = new Observation();
         $form = $this->createForm(ObservationType::class, $observation);
 
@@ -85,5 +112,30 @@ class ParticiperController extends Controller
             array(
                 'form' => $form->createView(),
             ));
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     *
+     * @Route("/participer/autocomplete/", name="fn_participer_autocomplete")
+     */
+    public function autoCompletionAction(Request $request)
+    {
+        if($request->isXmlHttpRequest()) {
+
+        $search = $request->get('search');
+
+        $repository = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository('AppBundle:Taxref');
+
+        $results = $repository->getByAutoComplete($search);
+        return new JsonResponse($results);
+    }
+        $results = Array();
+
+        return new JsonResponse($results);
     }
 }

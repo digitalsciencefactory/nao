@@ -1,0 +1,29 @@
+#ui-id-1{
+    list-style: none;
+}
+.ui-autocomplete { height: 300px; overflow-y: scroll; overflow-x: hidden;}
+.each{
+    /*display: block;*/
+    max-width: 400px;
+    border-bottom: 1px solid #555;
+    /*padding: 5px 0px 0px 15px;*/
+    /*background-color: rgba(255,255,255,1);*/
+
+}
+.acItem .name{
+    font-size: 14px !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+
+.acItem .desc{
+    font-size: 10px !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    color:#555 !important;
+}
+
+.acItem {
+    background-color: #CCBBA3;
+}
+.acItem:hover {
+    background-color: #69B0AB;
+}
