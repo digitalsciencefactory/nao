@@ -7,7 +7,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Newsletter;
-use AppBundle\Form\NewsletterType;
+use AppBundle\Form\Type\NewsletterType;
 use AppBundle\Entity\User;
 use AppBundle\Form\NatSignType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -79,7 +79,7 @@ class FrontController extends Controller
         $classMessage = "";
 
         // vérifier qu'elles ne sont pas vides et que le token = 65 caractères
-        if($mail != null && $length == 65){
+        if($mail !== null && $length == 65){
             // tenter de select le user
             $manager = $this->getDoctrine()->getManager();
             $repository = $manager->getRepository('AppBundle:User');
@@ -88,7 +88,7 @@ class FrontController extends Controller
                'token' => $token,
             ));
 
-            if($user != null){
+            if($user !== null){
                // update du user en supprimant le token et en le passant en actif
                 $user->setToken(null);
                 $user->setStatut("STATUT_ACTIF");

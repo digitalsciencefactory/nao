@@ -143,7 +143,7 @@ class Newsletter
     * @ORM\PostUpdate()
     */
     private function sendToNewsList(){
-        if($this->token == null){
+        if($this->token === null){
 
             // TODO faire l'envoie vers mailchimp api
         }

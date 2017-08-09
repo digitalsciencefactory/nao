@@ -4,15 +4,15 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Observation;
 use AppBundle\Entity\User;
-use AppBundle\Form\NatSignType;
-use AppBundle\Form\ObservationType;
+use AppBundle\Form\Type\NatSignType;
+use AppBundle\Form\Type\ObservationType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Form\UserType;
+use AppBundle\Form\Type\UserType;
 
 class ParticiperController extends Controller
 {

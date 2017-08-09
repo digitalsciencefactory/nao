@@ -34,12 +34,6 @@ class TaxrefRepository extends \Doctrine\ORM\EntityRepository
 
         $query = $qb->getQuery();
 
-        //$query = $this->_em->createQuery('SELECT t.id, t.lbNom, t.nomVern, t.nomVern_eng FROM AppBundle:Taxref t WHERE t.lbNom like "%'.$recherche.'%" or t.nomVern like "%'.$recherche.'%" OR t.nomVern_eng like "%'.$recherche.'%"');
-
-        //$query
-        //$query->setParameter('rechVern', $recherche);
-        //$query->setParameter('rechVernEng', $recherche);
-
         return $query->getArrayResult();
 
     }

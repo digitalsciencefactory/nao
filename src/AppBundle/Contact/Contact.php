@@ -48,7 +48,7 @@ class Contact {
 
     /* CONSTRUCTEUR */
     
-    function __construct() {
+    public function __construct() {
         $this->_date = new \Datetime();
     }
     

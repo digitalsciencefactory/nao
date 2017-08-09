@@ -34,7 +34,7 @@ class UserAuthenticator implements SimpleFormAuthenticatorInterface
         if ($passwordValid) {
             $statut = $user->getStatut();
             $token = $user->getToken();
-            if ($statut === "STATUT_INACTIF" || $token != null) {
+            if ($statut === "STATUT_INACTIF" || $token !== null) {
                 // CAUTION: this message will be returned to the client
                 // (so don't put any un-trusted messages / error strings here)
                 throw new CustomUserMessageAuthenticationException(
