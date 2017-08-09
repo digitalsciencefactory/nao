@@ -7,7 +7,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Newsletter;
-use AppBundle\Controller\NewsletterType;
+use AppBundle\Form\NewsletterType;
 use AppBundle\Entity\User;
 use AppBundle\Form\NatSignType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -36,6 +36,7 @@ class FrontController extends Controller
     {
         $newsletter = new Newsletter();
         $formn = $this->createForm(NewsletterType::class, $newsletter);
+
         $formn->handleRequest($request);
         if ($formn->isSubmitted() && $formn->isValid()) {
             // création du token de vérifiction d'inscription
