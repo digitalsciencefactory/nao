@@ -2,8 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Newsletter;
-use AppBundle\Form\NewsletterType;
 use AppBundle\Mailer\FnatMailer;
 use AppBundle\Form\ContactType;
 use AppBundle\Form\LoginType;
@@ -20,13 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class FrontController extends Controller
 {
-    /**
-     * @Route("/", name="fn_front_index")
-     * @Route("/accueil")
-     */
-    public function indexAction(){
-        return $this->render('Front/accueil.html.twig');
-    }
 
     /**
      * @Route("/contact", name="fn_front_contact")
@@ -57,44 +48,18 @@ class FrontController extends Controller
     }
 
     /**
-     * @Route("/inscription", name="fn_front_inscription")
-     */
-    public function inscriptionAction (){
-        return $this->render('Front/inscription.html.twig');
-    }
-
-    /**
      * @Route("/inscription-observateur", name="fn_front_inscription_obs")
      */
     public function inscriptionObsAction (Request $request,UserPasswordEncoderInterface $encoder)
     {
         $user = new User();
         $form = $this->createForm(ObsSignType::class, $user);
-
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            // on complète l'entité
-            $user->setRoles(array('ROLE_OBSERVATEUR'));
-            $user->setDcree(new \DateTime());
-            $user->setStatut('STATUT_INACTIF');
 
-            // hash du mot de passe
-            $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
-
-            // création du token de vérifiction d'inscription
-            $length = 65;
-            $user->setToken(substr(bin2hex(random_bytes($length)),0,65));
-
-            // essayer d'insérer en base
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-
-            // mail de confirmation d'inscription
-            $mailer = $this->container->get('mailer');
-            $twig = $this->container->get('twig');
-            $mail = new FnatMailer($mailer,$twig);
-            $mail->insVerifObs($user);
+            $this->userAction($user, $encoder);
+            $this->mailerAction($user);
 
             // on affiche la page de connexion avec le flash bag
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
@@ -119,32 +84,11 @@ class FrontController extends Controller
         $user = new User();
         $form = $this->createForm(NatSignType::class, $user);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
 
-            //$user->upload();
-
-            // on complète l'entité
-            $user->setStatut('STATUT_INACTIF');
-            $user->setRoles(array('ROLE_OBSERVATEUR'));
-            $user->setDcree(new \DateTime());
-
-            // hash du mot de passe
-            $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
-
-            // création du token de vérifiction d'inscription
-            $length = 65;
-            $user->setToken(substr(bin2hex(random_bytes($length)),0,65));
-
-// essayer d'insérer en base
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-
-            // mail de confirmation d'inscription
-            $mailer = $this->container->get('mailer');
-            $twig = $this->container->get('twig');
-            $mail = new FnatMailer($mailer,$twig);
-            $mail->insVerifNat($user);
+            $this->userAction($user, $encoder);
+            $this->mailerAction($user);
 
             // on affiche la page de connexion avec le flash bag
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
@@ -190,11 +134,7 @@ class FrontController extends Controller
                 $manager->persist($user);
                 $manager->flush();
 
-                // envoie du mail de validation d'inscription
-                $mailer = $this->container->get('mailer');
-                $twig = $this->container->get('twig');
-                $mail = new FnatMailer($mailer,$twig);
-                $mail->insValidObs($user);
+                $this->mailerAction($user);
 
                 // on crée le message à afficher
                 $messageBag = "Votre compte est validé. Vous pouvez vous identifier sur le site.";
@@ -217,77 +157,18 @@ class FrontController extends Controller
 
 
     }
-
-    /**
-     * @Route("/newsletter")
-     */
-    public function validerInscriptionNewsletterAction(Request $request){
-// récupérer les valeurs de l'url
-        $mail = $request->query->get('mail');
-        $token = $request->query->get('token');
-        $length = strlen($token);
-
-        $messageBag = "";
-        $classMessage = "";
-
-        // vérifier qu'elles ne sont pas vides et que le token = 65 caractères
-        if($mail != null && $length == 65){
-            // tenter de select le user
-            $manager = $this->getDoctrine()->getManager();
-            $repository = $manager->getRepository('AppBundle:Newsletter');
-            $news = $repository->findOneBy(array(
-                'mail' => $mail,
-                'token' => $token,
-            ));
-
-            if($news != null){
-                $news->setToken(null);
-
-                $manager->persist($news);
-                $manager->flush();
-
-                // envoie du mail de validation d'inscription
-                $mailer = $this->container->get('mailer');
-                $twig = $this->container->get('twig');
-                $mail = new FnatMailer($mailer,$twig);
-                $mail->insValidNews($news);
-
-                // on crée le message à afficher
-                $messageBag = "Votre inscription à la newsletter est validée.";
-                $classMessage = "alert alert-success";
-
-            } else {
-                $messageBag = "L'adresse email est inconnue ou votre inscription est déjà validée.";
-                $classMessage = "alert alert-danger";
-            }
-        } else {
-            $messageBag = "Le lien de vérification est érroné.";
-            $classMessage = "alert alert-danger";
-
-        }
-
-        return $this->render('Front/validation.html.twig', array(
-            'message' => $messageBag,
-            'classMessage' => $classMessage,
-        ));
-    }
-
     /**
      * @Route("/login", name="fn_front_connexion")
      *
      * Affiche la page de connexion
      */
-    public function loginAction (Request $request)
+    public function loginAction ()
     {
 
         // Si le visiteur est déjà identifié, on le redirige vers l'accueil
         if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirectToRoute('fn_front_index');
         }
-
-        $newsletter = new Newsletter();
-        $formn = $this->createForm(NewsletterType::class, $newsletter);
-        $formn->handleRequest($request);
 
         // Le service authentication_utils permet de récupérer le nom d'utilisateur
         // et l'erreur dans le cas où le formulaire a déjà été soumis mais était invalide
@@ -323,126 +204,57 @@ class FrontController extends Controller
     /**
      * @Route("/kit-observation", name="fn_front_kit")
      */
-    public function kitObservationAction (Request $request,UserPasswordEncoderInterface $encoder)
+    public function kitObservationAction (Request $request, UserPasswordEncoderInterface $encoder)
     {
         $user = new User();
         $form = $this->createForm(ObsSignType::class, $user);
-
         $form->handleRequest($request);
 
-        $newsletter = new Newsletter();
-        $formn = $this->createForm(NewsletterType::class, $newsletter);
-        $formn->handleRequest($request);
-
-        // on gère le cas du formulaire d'inscription
         if ($form->isSubmitted() && $form->isValid()) {
-            // on complète l'entité
-            $user->setRoles(array('ROLE_OBSERVATEUR'));
-            $user->setDcree(new \DateTime());
-            $user->setStatut('STATUT_INACTIF');
 
-            // hash du mot de passe
-            $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
-
-            // création du token de vérifiction d'inscription
-            $length = 65;
-            $user->setToken(substr(bin2hex(random_bytes($length)),0,65));
-
-            // essayer d'insérer en base
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-
-            // mail de confirmation d'inscription
-            $mailer = $this->container->get('mailer');
-            $twig = $this->container->get('twig');
-            $mail = new FnatMailer($mailer,$twig);
-            $mail->insVerifObs($user);
+            $this->userAction($user, $encoder);
+            $this->mailerAction($user);
 
             // on affiche la page de connexion avec le flash bag
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $user = new User();
-            $form = $this->createForm(ObsSignType::class, $user);
-            return $this->render('Front/kit_observation.html.twig', array(
-                'form' => $form->createView(),
-                'formn' => $formn->createView(),
-            ));
-        }
-
-        // on gère le cas du formulaire newsletter
-        if ($formn->isSubmitted() && $formn->isValid()) {
-
-            // création du token de vérifiction d'inscription
-            $length = 65;
-            $newsletter->setToken(substr(bin2hex(random_bytes($length)),0,65));
-
-
-            // essayer d'insérer en base
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($newsletter);
-            $em->flush();
-
-            // mail de confirmation d'inscription
-            $mailer = $this->container->get('mailer');
-            $twig = $this->container->get('twig');
-            $mail = new FnatMailer($mailer,$twig);
-            $mail->insVerifNews($newsletter);
-
-            // on affiche la page de connexion avec le flash bag
-            $request->getSession()->getFlashBag()->add('noticenews', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
-            $newsletter = new Newsletter();
-            $formn = $this->createForm(NewsletterType::class, $newsletter);
-            return $this->render('Front/kit_observation.html.twig', array(
-                'formn' => $formn->createView(),
+            $form = $this->createForm(NatSignType::class, $user);
+            return $this->render('Front/inscription-naturaliste.html.twig', array(
                 'form' => $form->createView(),
             ));
         }
 
 
         return $this->render('Front/kit_observation.html.twig', array(
-            'formn' => $formn->createView(),
             'form' => $form->createView(),
         ));
     }
 
-    /**
-     * @Route("/qui-sommes-nous", name="fn_front_about")
-     */
-    public function aboutAction (Request $request)
+    public function userAction(User $user, UserPasswordEncoderInterface $encoder)
     {
-        $newsletter = new Newsletter();
-        $formn = $this->createForm(NewsletterType::class, $newsletter);
-        $formn->handleRequest($request);
+        // on complète l'entité
+        $user->setRoles(array('ROLE_OBSERVATEUR'));
+        $user->setDcree(new \DateTime('NOW'));
 
-        if ($formn->isSubmitted() && $formn->isValid()) {
+        // hash du mot de passe
+        $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
 
-            // création du token de vérifiction d'inscription
-            $length = 65;
-            $newsletter->setToken(substr(bin2hex(random_bytes($length)),0,65));
+        // création du token de vérifiction d'inscription
+        $length = 65;
+        $user->setToken(substr(bin2hex(random_bytes($length)),0,65));
 
-
-            // essayer d'insérer en base
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($newsletter);
-            $em->flush();
-
-            // mail de confirmation d'inscription
-            $mailer = $this->container->get('mailer');
-            $twig = $this->container->get('twig');
-            $mail = new FnatMailer($mailer,$twig);
-            $mail->insVerifNews($newsletter);
-
-            // on affiche la page de connexion avec le flash bag
-            $request->getSession()->getFlashBag()->add('noticenews', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
-            $newsletter = new Newsletter();
-            $formn = $this->createForm(NewsletterType::class, $newsletter);
-            return $this->render('Front/qui-sommes-nous.html.twig#news', array(
-                'formn' => $formn->createView(),
-            ));
-        }
-        return $this->render('Front/qui-sommes-nous.html.twig', array(
-            'formn' => $formn->createView(),
-        ));
+        // essayer d'insérer en base
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
     }
 
+    public function mailerAction(User $user)
+    {
+        // mail de confirmation d'inscription
+        $mailer = $this->container->get('mailer');
+        $twig = $this->container->get('twig');
+        $mail = new FnatMailer($mailer,$twig);
+        $mail->insVerifObs($user);
+    }
 }

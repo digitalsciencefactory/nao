@@ -2,12 +2,11 @@
 
 namespace AppBundle\Controller;
 
-
 use AppBundle\Entity\Observation;
 use AppBundle\Entity\User;
 use AppBundle\Form\NatSignType;
 use AppBundle\Form\ObservationType;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +16,7 @@ class ParticiperController extends Controller
 {
     /**
      * @Route("/participer/espace-naturaliste", name="fn_participer_espace_nat")
+     * @Security("has_role('ROLE_NATURALISTE')")
      */
     public function espaceNatAction (Request $request)
     {
@@ -39,7 +39,6 @@ class ParticiperController extends Controller
 
         // On complète l'entité
             $observation->setObservateur($user);
-
 
         // on essaye d'insérer en base
             $em = $this->getDoctrine()->getManager();
@@ -75,36 +74,16 @@ class ParticiperController extends Controller
     }
 
     /**
-     * @Route("/participer/mon-compte", name="fn_participer_profil")
+     * @Route("/participer/nom-compte", name="fn_participer_profil")
      */
     public function profilAction (Request $request)
     {
+        /* todo:Compléter la méthode */
         $user = $this->getUser();
         $form = $this->createForm(UserType::class, $user);
-
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-
-            $request->getSession()->getFlashBag()->add('notice', 'Votre profil a été mis à jour.');
-
-            return $this->render('Participer/mon-compte.html.twig',
-                array(
-                    'form' => $form->createView(),
-                    'avatar' => $user->getPhoto(),
-                ));
-        }
-
-
         return $this->render('Participer/mon-compte.html.twig',
             array(
                 'form' => $form->createView(),
-                'avatar' => $user->getPhoto(),
             ));
     }
 }
