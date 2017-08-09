@@ -2,6 +2,7 @@
     "name": "darkchyper/nao",
     "license": "proprietary",
     "type": "project",
+    "description": "A Student symphony project about birds.",
     "autoload": {
         "psr-4": {
             "AppBundle\\": "src/AppBundle"
