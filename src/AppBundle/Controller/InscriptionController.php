@@ -170,24 +170,10 @@ class InscriptionController extends Controller
         $formn->handleRequest($request);
         // on gère le cas du formulaire d'inscription
         if ($form->isSubmitted() && $form->isValid()) {
-            // on complète l'entité
-            $user->setRoles(array('ROLE_OBSERVATEUR'));
-            $user->setDcree(new \DateTime());
-            $user->setStatut('STATUT_INACTIF');
-            // hash du mot de passe
-            $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
-            // création du token de vérifiction d'inscription
-            $length = 65;
-            $user->setToken(substr(bin2hex(random_bytes($length)),0,65));
-            // essayer d'insérer en base
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-            // mail de confirmation d'inscription
-            $mailer = $this->container->get('mailer');
-            $twig = $this->container->get('twig');
-            $mail = new FnatMailer($mailer,$twig);
-            $mail->insVerifObs($user);
+
+            // on gère l'inscription de l'observateur
+            $this->saveSignUpObs($encoder, $user);
+
             // on affiche la page de connexion avec le flash bag
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $user = new User();
@@ -199,18 +185,10 @@ class InscriptionController extends Controller
         }
         // on gère le cas du formulaire newsletter
         if ($formn->isSubmitted() && $formn->isValid()) {
-            // création du token de vérifiction d'inscription
-            $length = 65;
-            $newsletter->setToken(substr(bin2hex(random_bytes($length)),0,65));
-            // essayer d'insérer en base
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($newsletter);
-            $em->flush();
-            // mail de confirmation d'inscription
-            $mailer = $this->container->get('mailer');
-            $twig = $this->container->get('twig');
-            $mail = new FnatMailer($mailer,$twig);
-            $mail->insVerifNews($newsletter);
+
+            // on gère l'enregistrement de l'inscription à la newsletter
+            $this->saveSignUpNewsletter($newsletter);
+
             // on affiche la page de connexion avec le flash bag
             $request->getSession()->getFlashBag()->add('noticenews', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $newsletter = new Newsletter();
@@ -252,5 +230,48 @@ class InscriptionController extends Controller
         $twig = $this->container->get('twig');
         $mail = new FnatMailer($mailer,$twig);
         $mail->insVerifObs($user);
+    }
+
+    /**
+     * @param UserPasswordEncoderInterface $encoder
+     * @param $user
+     */
+    protected function saveSignUpObs(UserPasswordEncoderInterface $encoder, $user)
+    {
+        $user->setRoles(array('ROLE_OBSERVATEUR'));
+        $user->setDcree(new \DateTime());
+        $user->setStatut('STATUT_INACTIF');
+        // hash du mot de passe
+        $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
+        // création du token de vérifiction d'inscription
+        $length = 65;
+        $user->setToken(substr(bin2hex(random_bytes($length)), 0, 65));
+        // essayer d'insérer en base
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
+        // mail de confirmation d'inscription
+        $mailer = $this->container->get('mailer');
+        $twig = $this->container->get('twig');
+        $mail = new FnatMailer($mailer, $twig);
+        $mail->insVerifObs($user);
+    }
+
+    /**
+     * @param $newsletter
+     */
+    protected function saveSignUpNewsletter($newsletter)
+    {
+        $length = 65;
+        $newsletter->setToken(substr(bin2hex(random_bytes($length)), 0, 65));
+        // essayer d'insérer en base
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($newsletter);
+        $em->flush();
+        // mail de confirmation d'inscription
+        $mailer = $this->container->get('mailer');
+        $twig = $this->container->get('twig');
+        $mail = new FnatMailer($mailer, $twig);
+        $mail->insVerifNews($newsletter);
     }
 }
