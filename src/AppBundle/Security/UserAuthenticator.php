@@ -26,7 +26,7 @@ class UserAuthenticator implements SimpleFormAuthenticatorInterface
         } catch (UsernameNotFoundException $e) {
             // CAUTION: this message will be returned to the client
             // (so don't put any un-trusted messages / error strings here)
-            throw new CustomUserMessageAuthenticationException('Invalid username or password');
+            throw new CustomUserMessageAuthenticationException('email ou mot de passe incorrect');
         }
 
         $passwordValid = $this->encoder->isPasswordValid($user, $token->getCredentials());
@@ -38,7 +38,7 @@ class UserAuthenticator implements SimpleFormAuthenticatorInterface
                 // CAUTION: this message will be returned to the client
                 // (so don't put any un-trusted messages / error strings here)
                 throw new CustomUserMessageAuthenticationException(
-                    'Votre compte n\'est pas encore actif ou vous avez demander une récupération du mot de passe',
+                    'Votre compte n\'est pas encore actif ou vous avez demandé une récupération du mot de passe',
                     array(),
                 412// HTTP 412 Precondition Failed
                 );

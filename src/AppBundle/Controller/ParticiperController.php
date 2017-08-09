@@ -6,6 +6,7 @@ use AppBundle\Entity\Observation;
 use AppBundle\Entity\User;
 use AppBundle\Form\NatSignType;
 use AppBundle\Form\ObservationType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +16,7 @@ class ParticiperController extends Controller
 {
     /**
      * @Route("/participer/espace-naturaliste", name="fn_participer_espace_nat")
+     * @Security("has_role('ROLE_NATURALISTE')")
      */
     public function espaceNatAction (Request $request)
     {
@@ -37,7 +39,6 @@ class ParticiperController extends Controller
 
         // On complète l'entité
             $observation->setObservateur($user);
-
 
         // on essaye d'insérer en base
             $em = $this->getDoctrine()->getManager();

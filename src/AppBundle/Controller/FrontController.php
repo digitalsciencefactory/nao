@@ -18,13 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class FrontController extends Controller
 {
-    /**
-     * @Route("/", name="fn_front_index")
-     * @Route("/accueil")
-     */
-    public function indexAction(){
-        return $this->render('Front/accueil.html.twig');
-    }
 
     /**
      * @Route("/contact", name="fn_front_contact")
@@ -55,43 +48,18 @@ class FrontController extends Controller
     }
 
     /**
-     * @Route("/inscription", name="fn_front_inscription")
-     */
-    public function inscriptionAction (){
-        return $this->render('Front/inscription.html.twig');
-    }
-
-    /**
      * @Route("/inscription-observateur", name="fn_front_inscription_obs")
      */
     public function inscriptionObsAction (Request $request,UserPasswordEncoderInterface $encoder)
     {
         $user = new User();
         $form = $this->createForm(ObsSignType::class, $user);
-
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            // on complète l'entité
-            $user->setRoles(array('ROLE_OBSERVATEUR'));
-            $user->setDcree(new \DateTime());
 
-            // hash du mot de passe
-            $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
-
-            // création du token de vérifiction d'inscription
-            $length = 65;
-            $user->setToken(substr(bin2hex(random_bytes($length)),0,65));
-
-            // essayer d'insérer en base
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-
-            // mail de confirmation d'inscription
-            $mailer = $this->container->get('mailer');
-            $twig = $this->container->get('twig');
-            $mail = new FnatMailer($mailer,$twig);
-            $mail->insVerifObs($user);
+            $this->userAction($user, $encoder);
+            $this->mailerAction($user);
 
             // on affiche la page de connexion avec le flash bag
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
@@ -116,32 +84,11 @@ class FrontController extends Controller
         $user = new User();
         $form = $this->createForm(NatSignType::class, $user);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
 
-            //$user->upload();
-
-            // on complète l'entité
-            $user->setStatut('STATUT_INACTIF');
-            $user->setRoles(array('ROLE_OBSERVATEUR'));
-            $user->setDcree(new \DateTime());
-
-            // hash du mot de passe
-            $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
-
-            // création du token de vérifiction d'inscription
-            $length = 65;
-            $user->setToken(substr(bin2hex(random_bytes($length)),0,65));
-
-// essayer d'insérer en base
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-
-            // mail de confirmation d'inscription
-            $mailer = $this->container->get('mailer');
-            $twig = $this->container->get('twig');
-            $mail = new FnatMailer($mailer,$twig);
-            $mail->insVerifNat($user);
+            $this->userAction($user, $encoder);
+            $this->mailerAction($user);
 
             // on affiche la page de connexion avec le flash bag
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
@@ -187,11 +134,7 @@ class FrontController extends Controller
                 $manager->persist($user);
                 $manager->flush();
 
-                // envoie du mail de validation d'inscription
-                $mailer = $this->container->get('mailer');
-                $twig = $this->container->get('twig');
-                $mail = new FnatMailer($mailer,$twig);
-                $mail->insValidObs($user);
+                $this->mailerAction($user);
 
                 // on crée le message à afficher
                 $messageBag = "Votre compte est validé. Vous pouvez vous identifier sur le site.";
@@ -264,25 +207,21 @@ class FrontController extends Controller
     public function kitObservationAction (Request $request, UserPasswordEncoderInterface $encoder)
     {
         $user = new User();
-        $form = $this->createForm(NatSignType::class, $user);
+        $form = $this->createForm(ObsSignType::class, $user);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            // on complète l'entité
-            $user->setStatut('STATUT_INACTIF');
-            $user->setRoles(('ROLE_OBSERVATEUR'));
-            $user->setDcree(new \DateTime());
 
-            // hash du mot de passe
-            $user->getMdp($encoder->encodePassword($user, $user->getPlainPassword()));
+            $this->userAction($user, $encoder);
+            $this->mailerAction($user);
 
-            // création du token de vérifiction d'inscription
-            $length = 65;
-            $user->setToken(bin2hex(random_bytes($length)));
-
-
-            // TODO essayer d'insérer en base
-
-            // TODO envoyer un mail de confirmation d'inscription
+            // on affiche la page de connexion avec le flash bag
+            $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
+            $user = new User();
+            $form = $this->createForm(NatSignType::class, $user);
+            return $this->render('Front/inscription-naturaliste.html.twig', array(
+                'form' => $form->createView(),
+            ));
         }
 
 
@@ -291,12 +230,31 @@ class FrontController extends Controller
         ));
     }
 
-    /**
-     * @Route("/qui-sommes-nous", name="fn_front_about")
-     */
-    public function aboutAction ()
+    public function userAction(User $user, UserPasswordEncoderInterface $encoder)
     {
-        return $this->render('Front/qui-sommes-nous.html.twig');
+        // on complète l'entité
+        $user->setRoles(array('ROLE_OBSERVATEUR'));
+        $user->setDcree(new \DateTime('NOW'));
+
+        // hash du mot de passe
+        $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
+
+        // création du token de vérifiction d'inscription
+        $length = 65;
+        $user->setToken(substr(bin2hex(random_bytes($length)),0,65));
+
+        // essayer d'insérer en base
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
     }
 
+    public function mailerAction(User $user)
+    {
+        // mail de confirmation d'inscription
+        $mailer = $this->container->get('mailer');
+        $twig = $this->container->get('twig');
+        $mail = new FnatMailer($mailer,$twig);
+        $mail->insVerifObs($user);
+    }
 }
