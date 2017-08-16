@@ -98,6 +98,11 @@ class ParticiperController extends Controller
     {
         $observation = new Observation();
         $form = $this->createForm(CarteType::class, $observation);
+        $xmlFile = 'assets/fnat/xml/point.xml';
+        if (file_exists($xmlFile))
+        {
+            unlink($xmlFile);
+        }
 
         $form->handleRequest($request);
 
@@ -106,7 +111,7 @@ class ParticiperController extends Controller
             $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
             $obsList = $obsManager->findBy(array('espece' => $observation->getEspece()));
 
-            $this->SqlToXml($obsList);
+            $this->SqlToXml($obsList, $xmlFile);
 
             return $this->render('Participer/carte-des-observations.html.twig', array(
                 'form' => $form->createView(),
@@ -169,7 +174,7 @@ class ParticiperController extends Controller
         return new JsonResponse($results);
     }
 
-    public function SqlToXml($obsList)
+    public function SqlToXml($obsList, $xmlFile)
     {
         $domDocument = new \DOMDocument('1.0', "UTF-8");
 
@@ -188,7 +193,7 @@ class ParticiperController extends Controller
         echo $domDocument->saveXML();
 
         // Sauvegarder le document XML
-        $domDocument->save('assets/fnat/xml/point.xml');
+        $domDocument->save($xmlFile);
     }
 
 }
