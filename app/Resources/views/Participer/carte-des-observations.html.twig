@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="{{ asset('assets/fnat/css/autocomplete.css') }}" />
 
     <style>
-        #envoieObservationMap {
+        #carteObservationMap {
             height: 100%;
         }
     </style>
@@ -27,7 +27,7 @@
     </section>
 
     <!--  Zone de recherche  -->
-    <section class="mbr-section" id="form2-55" style="background-color: rgb(105, 176, 171); padding-top: 0px; padding-bottom: 40px;">
+    <section class="mbr-section" id="form2-55" style="background-color: rgb(105, 176, 171); padding-top: 0; padding-bottom: 40px;">
         <div class="mbr-section mbr-section__container mbr-section__container--middle">
             <div class="container">
                 <div class="row">
@@ -50,18 +50,15 @@
     </section>
 
     <!--  Carte -->
-    <section class="mbr-section mbr-section__container" >
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div id="envoieObservationMap"></div>
-
-                </div>
+    <section class="mbr-section mbr-section__container" style=" padding-top: 20px; padding-bottom: 40px;">
+        <div class="mbr-table mbr-valign-top col-md-6">
+            <div class="mbr-map col-xs-12" style ="padding-bottom: .9375rem">
+                <div id="carteObservationMap"></div>
             </div>
         </div>
     </section>
 
-    <section class="mbr-section" id="content5-56" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 0px;">
+    <section class="mbr-section" id="content5-56" style=" padding-top: 80px; padding-bottom: 40px;">
         <div class="container">
             <h3 class="mbr-section-title display-2">
                 Résultat(s) de recherche
@@ -117,8 +114,9 @@
 
     <!-- google maps -->
     <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcsMzqFeJRWLogNkUPgC8GNrHYkgzk7XA&callback=initMap">
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5YJYXmsfrbjwd_Cob43o19-4a3HbZYbc&callback=initMap">
     </script>
-    <script src="{{ asset('assets/fnat/js/googlemaps_envoie_observation.js') }}" ></script>
+ 
+
 
 {% endblock javascripts %}
