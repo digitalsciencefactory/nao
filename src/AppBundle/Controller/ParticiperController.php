@@ -106,6 +106,8 @@ class ParticiperController extends Controller
             $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
             $obsList = $obsManager->findBy(array('espece' => $observation->getEspece()));
 
+            $this->SqlToXml($obsList);
+
             return $this->render('Participer/carte-des-observations.html.twig', array(
                 'form' => $form->createView(),
                 'obsList' => $obsList,
@@ -165,6 +167,9 @@ class ParticiperController extends Controller
         $results = Array();
 
         return new JsonResponse($results);
+    }
+
+    public function SqlToXml($obsList){
     }
 
 }
