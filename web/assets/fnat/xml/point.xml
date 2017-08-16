@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<markers>
+    <marker name="Epervier" address="Par ici" lat="43.790842" lng="7.262765" />
+    <marker name="Buse" address="Par là" lat="46.109707" lng="2.242588"/>
+    <marker name="Corbeau" address="dans ce coin" lat="47.236634" lng="2.058567"/>
+    <marker name="Vautour" address="pas très loin" lat="46.1905741" lng="1.270298"/>
+</markers>

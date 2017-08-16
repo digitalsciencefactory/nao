@@ -51,7 +51,7 @@
 
     <!--  Carte -->
     <section class="mbr-section mbr-section__container" style=" padding-top: 20px; padding-bottom: 40px;">
-        <div class="mbr-table mbr-valign-top col-md-6">
+        <div class="mbr-table mbr-valign-top row">
             <div class="mbr-map col-xs-12" style ="padding-bottom: .9375rem">
                 <div id="carteObservationMap"></div>
             </div>
@@ -116,7 +116,8 @@
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5YJYXmsfrbjwd_Cob43o19-4a3HbZYbc&callback=initMap">
     </script>
- 
+
+    <script src="{{ asset('assets/fnat/js/googlemaps_carte_observation.js') }}" ></script>
 
 
 {% endblock javascripts %}
