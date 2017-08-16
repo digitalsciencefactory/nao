@@ -25,3 +25,5 @@ app/config/parameters.yml
 
 web/assets/.DS_Store
 src/AppBundle/Form/ObservationType.php
+web/assets/fnat/naturalistes/
+web/assets/fnat/observations/
