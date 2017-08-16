@@ -14,5 +14,12 @@
 !var/SymfonyRequirements.php
 /vendor/
 .DS_Store
+<<<<<<< HEAD
 web/assets/fnat/naturalistes/
 web/assets/fnat/observations/
+=======
+web/.DS_Store
+web/assets/.DS_Store
+web/assets/fnat/observations/
+web/assets/fnat/naturalistes/
+>>>>>>> Modification menu
