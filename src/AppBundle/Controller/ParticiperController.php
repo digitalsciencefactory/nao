@@ -169,7 +169,26 @@ class ParticiperController extends Controller
         return new JsonResponse($results);
     }
 
-    public function SqlToXml($obsList){
+    public function SqlToXml($obsList)
+    {
+        $domDocument = new \DOMDocument('1.0', "UTF-8");
+
+        $markers = $domDocument->createElement('markers');
+        $domDocument->appendChild($markers);
+
+        foreach ($obsList as $observation){
+            if ($observation->getStatut() == 'STATUT_VALIDE'){
+                $marker = $domDocument->createElement('marker');
+                $markers->appendChild($marker);
+                $marker->setAttribute("lat", $observation->getLatitude());
+                $marker->setAttribute("lng", $observation->getLongitude());
+            }
+        }
+
+        echo $domDocument->saveXML();
+
+        // Sauvegarder le document XML
+        $domDocument->save('assets/fnat/xml/point.xml');
     }
 
 }
