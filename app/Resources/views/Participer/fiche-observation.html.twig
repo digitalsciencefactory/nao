@@ -1,0 +1,60 @@
+{# app/Resources/views/front/carte-des-observations.html.twig #}
+
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Carte des observations - {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/fnat/css/autocomplete.css') }}" />
+{% endblock stylesheets %}
+
+
+{% block body %}
+
+    <section class="mbr-section" id="msg-box6-5l" style="background-color: rgb(105, 176, 171); padding-top: 80px; padding-bottom: 80px;">
+        <div class="container">
+            <div class="row">
+                <div class="mbr-table-md-up">
+
+                    <div class="mbr-table-cell mbr-right-padding-md-up mbr-valign-top col-md-7 image-size" style="width: 36%;">
+                        <div class="mbr-figure">
+                            <img src="{{ asset('assets/images/logo-carr-1400x1400.png') }}">
+                        </div>
+                    </div>
+
+                    <div class="mbr-table-cell col-md-5 text-xs-center text-md-left content-size">
+                        <h3 class="mbr-section-title display-2">Nom de l'espèce</h3>
+                        <div class="lead">
+
+                            <p>Informations sur l'observation</p>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--  Carte -->
+    <section class="mbr-section mbr-section__container" id="map2-2x" style="background-color: rgb(105, 176, 171); padding-top: 60px; padding-bottom: 60px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="mbr-map">
+                        <iframe frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA0Dx_boXQiwvdz8sJHoYeZNVTdoWONYkU&amp;q=place_id:ChIJSZ296Zx_6EcRVNaCoS8yigk" allowfullscreen="">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{ include('front/blocks/_follow.html.twig') }}
+
+{% endblock body %}
