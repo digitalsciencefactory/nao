@@ -1,0 +1,44 @@
+{{ form_start(form) }}
+    {% for message in app.flashes('notice') %}
+        <div class="btn-success">
+            {{ message }}
+        </div>
+        <br />
+    {% endfor %}
+
+    {% if form_errors(form) %}
+        <div class="alert alert-danger">
+            {{ form_errors(form) }}
+        </div>
+    {% endif %}
+
+<div class="col-xs-12">
+    {{ form_errors(form.espece) }}
+    {{ form_widget(form.especeTxt, {'attr': {
+        'class': 'form-control',
+        'placeholder': 'Nom de l espèce',
+        'data-id': 'especeId',
+        'data-url': path('fn_participer_autocomplete')
+    }
+    }
+
+    )}}
+    {{ form_widget(form.espece, {'attr': {
+        'class': 'form-control',
+        'placeholder': 'Nom de l espèce',
+        'hidden':'hidden',
+        'value':''
+    } }
+    )
+    }}
+</div>
+
+
+<br>
+
+<div class="col-xs-12" style="margin-top: 10px; text-align: center">
+    {{ form_widget(form.rechercher,{'attr':{ 'class': 'btn bt-blanc' }} ) }}
+</div>
+
+{{ form_rest(form) }}
+{{ form_end(form) }}
