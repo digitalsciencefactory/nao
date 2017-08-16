@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Observation;
 use AppBundle\Entity\User;
+use AppBundle\Form\Type\CarteType;
 use AppBundle\Form\Type\NatSignType;
 use AppBundle\Form\Type\ObservationType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -69,7 +70,7 @@ class ParticiperController extends Controller
             $em->flush();
 
 
-        // on affiche la page de connexion avec le flash bag
+        // on affiche la page envoi_observation avec le flash bag
             if($user->getRoles()[0] == ("ROLE_NATURALISTE")) {
                 $request->getSession()->getFlashBag()->add('notice', 'Votre observation est bien enregistrée et validée.');
             }else{
@@ -90,18 +91,47 @@ class ParticiperController extends Controller
     }
 
     /**
-     * @Route("/participer/carte-des-observations", name="fn_participer_map")
+     * @Route("/participer/carte-des-observations", name="fn_participer_carte_obs")
      * @Route("/participer")
      */
-    public function mapAction (Request $request)
+    public function carteObsAction (Request $request)
     {
-        /* todo:Compléter la méthode */
+        $observation = new Observation();
+        $form = $this->createForm(CarteType::class, $observation);
 
-        return $this->render('Participer/carte-des-observations.html.twig');
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
+            $obsList = $obsManager->findBy(array('espece' => $observation->getEspece()));
+
+            $this->SqlToXml($obsList);
+
+            return $this->render('Participer/carte-des-observations.html.twig', array(
+                'form' => $form->createView(),
+                'obsList' => $obsList,
+            ));
+
+        }
+
+        return $this->render('Participer/carte-des-observations.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 
     /**
-     * @Route("/participer/nom-compte", name="fn_participer_profil")
+     * @Route("/participer/fiche-observation/{id_fiche}", name="fn_fiche_observation")
+     *
+     */
+    public function ficheObsAction (Request $request)
+    {
+
+        return $this->render('Participer/fiche-observation.html.twig');
+    }
+
+    /**
+     * @Route("/participer/mon-compte", name="fn_participer_profil")
      */
     public function profilAction (Request $request)
     {
@@ -137,5 +167,10 @@ class ParticiperController extends Controller
         $results = Array();
 
         return new JsonResponse($results);
+    }
+
+    public function SqlToXml($obsList)
+    {
+
     }
 }

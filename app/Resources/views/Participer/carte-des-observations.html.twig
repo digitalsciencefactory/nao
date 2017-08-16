@@ -6,11 +6,121 @@
     Carte des observations - {{ parent() }}
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/fnat/css/autocomplete.css') }}" />
+
+    <style>
+        #envoieObservationMap {
+            height: 100%;
+        }
+    </style>
+{% endblock stylesheets %}
+
 
 {% block body %}
+    <!--  Titre  -->
+    <section class="mbr-section mbr-after-navbar" id="content5-2w" style="background-color: rgb(105, 176, 171); padding-top: 120px; padding-bottom: 0px;">
+        <div class="container">
+            <h3 class="mbr-section-title display-2">Carte des observations validées</h3>
+        </div>
+    </section>
 
-    {{ include('front/blocks/_observations.html.twig') }}
+    <!--  Zone de recherche  -->
+    <section class="mbr-section" id="form2-55" style="background-color: rgb(105, 176, 171); padding-top: 0px; padding-bottom: 40px;">
+        <div class="mbr-section mbr-section__container mbr-section__container--middle">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 text-xs-center">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mbr-section mbr-section-nopadding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;">
+
+                        {{ include('participer/forms/_carte_observation_form.html.twig') }}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--  Carte -->
+    <section class="mbr-section mbr-section__container" >
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div id="envoieObservationMap"></div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mbr-section" id="content5-56" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 0px;">
+        <div class="container">
+            <h3 class="mbr-section-title display-2">
+                Résultat(s) de recherche
+            </h3>
+        </div>
+    </section>
+
+    <section class="mbr-section extTable1" id="extTable1-57" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 120px;">
+        <div class="container table-wrapper">
+
+            <table class="table" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Observation prise par</th>
+                        <th>Validé par</th>
+                        <th><br></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if obsList is defined %}
+                    {% for observation in obsList %}
+                        {% if observation.statut == 'STATUT_VALIDE' %}
+                        <tr>
+                            <td>{{ observation.dObs|date('d/m/Y') }}</td>
+                            <td>{{ observation.observateur.mail }}</td>
+                            <td>{{ observation.naturaliste.mail }}</td>
+                            <td><a href="{{ path('fn_fiche_observation', {'id_fiche': observation.id}) }}">En savoir +</a></td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+               </tbody>
+            </table>
+        </div>
+    </section>
 
     {{ include('front/blocks/_follow.html.twig') }}
 
 {% endblock body %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <!-- autocomplete -->
+    <script
+            src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"
+            integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="
+            crossorigin="anonymous">
+
+    </script>
+    <script src="{{ asset('assets/fnat/js/autocomplete.js') }}">
+    </script>
+
+    <!-- google maps -->
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcsMzqFeJRWLogNkUPgC8GNrHYkgzk7XA&callback=initMap">
+    </script>
+    <script src="{{ asset('assets/fnat/js/googlemaps_envoie_observation.js') }}" ></script>
+
+{% endblock javascripts %}
