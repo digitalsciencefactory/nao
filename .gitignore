@@ -17,3 +17,5 @@
 .DS_Store
 web/.DS_Store
 web/assets/.DS_Store
+web/assets/fnat/observations/
+web/assets/fnat/naturalistes/
