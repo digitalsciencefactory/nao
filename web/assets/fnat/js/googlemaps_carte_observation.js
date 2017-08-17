@@ -3,7 +3,6 @@ function initMap() {
         center: new google.maps.LatLng(47.236634, 2.058567), // centrage sur la France
         zoom: 5
     });
-    var infoWindow = new google.maps.InfoWindow;
 
     downloadUrl('/assets/fnat/xml/point.xml', function(data) {
         var xml = data.responseXML;
@@ -17,10 +16,6 @@ function initMap() {
             var marker = new google.maps.Marker({
                 map: map,
                 position: point
-            });
-            marker.addListener('click', function() {
-                infoWindow.setContent(infowincontent);
-                infoWindow.open(map, marker);
             });
         });
     });
