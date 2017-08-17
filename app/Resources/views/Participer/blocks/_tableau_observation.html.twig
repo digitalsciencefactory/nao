@@ -1,0 +1,47 @@
+
+<section class="mbr-section" id="content5-56" style=" padding-top: 80px; padding-bottom: 40px;">
+    <div class="container">
+        <h3 class="mbr-section-title display-2">
+            {% if obsList is defined %}
+                {% if obsList != null %}
+                    Résultat(s) de recherche
+                {% else %}
+                    Aucune observation enregistrée
+                {% endif %}
+            {% else %}
+                Tableau des observations
+            {% endif %}
+        </h3>
+    </div>
+</section>
+
+<section class="mbr-section extTable1" id="extTable1-57" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 120px;">
+    <div class="container table-wrapper">
+        <table class="table" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Observation prise par</th>
+                <th>Validé par</th>
+                <th><br></th>
+            </tr>
+            </thead>
+
+            {% if obsList is defined %}
+                <tbody>
+                {% for observation in obsList %}
+                    {% if observation.statut == 'STATUT_VALIDE' %}
+                        <tr>
+                            <td>{{ observation.dObs|date('d/m/Y') }}</td>
+                            <td>{{ observation.observateur.mail }}</td>
+                            <td>{{ observation.naturaliste.mail }}</td>
+                            <td><a href="{{ path('fn_fiche_observation', {'id_fiche': observation.id}) }}">En savoir +</a></td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            {% endif %}
+
+        </table>
+    </div>
+</section>

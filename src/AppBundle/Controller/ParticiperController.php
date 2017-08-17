@@ -24,7 +24,38 @@ class ParticiperController extends Controller
     public function espaceNatAction (Request $request)
     {
         /* todo:Compléter la méthode */
-        return $this->render('Participer/espace-naturaliste.html.twig');
+
+        $observation = new Observation();
+        $form = $this->createForm(CarteType::class, $observation);
+        $xmlFile = 'assets/fnat/xml/point.xml';
+
+        //On initialise le fichier xml pour ne pas afficher de points avant requète
+        if (file_exists($xmlFile))
+        {
+            $domDocument = new \DOMDocument('1.0', "UTF-8");
+            $domDocument->save($xmlFile);
+        }
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
+            $obsList = $obsManager->findBy(array('espece' => $observation->getEspece()));
+
+            // On rempli le fichier XML
+            $this->SqlToXml($obsList, $xmlFile);
+
+            return $this->render('Participer/espace-naturaliste.html.twig', array(
+                'form' => $form->createView(),
+                'obsList' => $obsList,
+            ));
+
+        }
+
+        return $this->render('Participer/espace-naturaliste.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 
     /**
