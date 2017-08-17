@@ -1,44 +1,62 @@
-{{ form_start(form) }}
-    {% for message in app.flashes('notice') %}
-        <div class="btn-success">
-            {{ message }}
+<section class="mbr-section" id="form2-55" style="background-color: rgb(105, 176, 171); padding-top: 0; padding-bottom: 40px;">
+    <div class="mbr-section mbr-section__container mbr-section__container--middle">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 text-xs-center">
+                </div>
+            </div>
         </div>
-        <br />
-    {% endfor %}
+    </div>
 
-    {% if form_errors(form) %}
-        <div class="alert alert-danger">
-            {{ form_errors(form) }}
+    <div class="mbr-section mbr-section-nopadding">
+        <div class="container">
+            <div class="row">
+
+                    {{ form_start(form) }}
+                    {% for message in app.flashes('notice') %}
+                        <div class="btn-success">
+                            {{ message }}
+                        </div>
+                        <br />
+                    {% endfor %}
+
+                    {% if form_errors(form) %}
+                        <div class="alert alert-danger">
+                            {{ form_errors(form) }}
+                        </div>
+                    {% endif %}
+
+                    <div class="col-xs-12 col-lg-10 col-lg-offset-1" data-form-type="formoid">
+                        <div class="mbr-subscribe mbr-subscribe-dark input-group">
+                            {{ form_errors(form.espece) }}
+                            {{ form_widget(form.especeTxt, {'attr': {
+                                'class': 'mbr-form',
+                                'placeholder': 'Nom de l espèce',
+                                'data-id': 'especeId',
+                                'data-url': path('fn_participer_autocomplete')
+                            }
+                            }
+
+                            )}}
+                            {{ form_widget(form.espece, {'attr': {
+                                'class': 'mbr-form',
+                                'placeholder': 'Nom de l espèce',
+                                'hidden':'hidden',
+                                'value':''
+                            } }
+                            )
+                            }}
+
+                        <span class="input-group-btn">
+                            {{ form_widget(form.rechercher,{'attr':{ 'class': 'btn btn-white' }} ) }}
+                        </span>
+
+                        </div>
+                    </div>
+
+                    {{ form_rest(form) }}
+                    {{ form_end(form) }}
+            </div>
         </div>
-    {% endif %}
-
-<div class="col-xs-12">
-    {{ form_errors(form.espece) }}
-    {{ form_widget(form.especeTxt, {'attr': {
-        'class': 'form-control',
-        'placeholder': 'Nom de l espèce',
-        'data-id': 'especeId',
-        'data-url': path('fn_participer_autocomplete')
-    }
-    }
-
-    )}}
-    {{ form_widget(form.espece, {'attr': {
-        'class': 'form-control',
-        'placeholder': 'Nom de l espèce',
-        'hidden':'hidden',
-        'value':''
-    } }
-    )
-    }}
-</div>
-
-
-<br>
-
-<div class="col-xs-12" style="margin-top: 10px; text-align: center">
-    {{ form_widget(form.rechercher,{'attr':{ 'class': 'btn bt-blanc' }} ) }}
-</div>
-
-{{ form_rest(form) }}
-{{ form_end(form) }}
+    </div>
+</section>

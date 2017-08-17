@@ -8,6 +8,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+
     <link rel="stylesheet" href="{{ asset('assets/fnat/css/autocomplete.css') }}" />
 
     <style>
@@ -17,93 +18,11 @@
     </style>
 {% endblock stylesheets %}
 
-
 {% block body %}
-    <!--  Titre  -->
-    <section class="mbr-section mbr-after-navbar" id="content5-2w" style="background-color: rgb(105, 176, 171); padding-top: 120px; padding-bottom: 0px;">
-        <div class="container">
-            <h3 class="mbr-section-title display-2">Carte des observations validées</h3>
-        </div>
-    </section>
 
-    <!--  Zone de recherche  -->
-    <section class="mbr-section" id="form2-55" style="background-color: rgb(105, 176, 171); padding-top: 0; padding-bottom: 40px;">
-        <div class="mbr-section mbr-section__container mbr-section__container--middle">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xs-12 text-xs-center">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="mbr-section mbr-section-nopadding">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;">
+    {{ include('Participer/blocks/_carte_observation.html.twig') }}
 
-                        {{ include('participer/forms/_carte_observation_form.html.twig') }}
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!--  Carte -->
-    <section class="mbr-section mbr-section__container" style=" padding-top: 20px; padding-bottom: 40px;">
-        <div class="mbr-table mbr-valign-top row">
-            <div class="mbr-map col-xs-12" style ="padding-bottom: .9375rem">
-                <div id="carteObservationMap"></div>
-            </div>
-        </div>
-    </section>
-
-    <section class="mbr-section" id="content5-56" style=" padding-top: 80px; padding-bottom: 40px;">
-        <div class="container">
-            <h3 class="mbr-section-title display-2">
-                {% if obsList is defined %}
-                    {% if obsList != null %}
-                        Résultat(s) de recherche
-                    {% else %}
-                        Aucune observation enregistrée
-                    {% endif %}
-                {% else %}
-                    Tableau des observations
-                {% endif %}
-            </h3>
-        </div>
-    </section>
-
-    <section class="mbr-section extTable1" id="extTable1-57" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 120px;">
-        <div class="container table-wrapper">
-            <table class="table" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Observation prise par</th>
-                        <th>Validé par</th>
-                        <th><br></th>
-                    </tr>
-                </thead>
-
-                {% if obsList is defined %}
-                    <tbody>
-                        {% for observation in obsList %}
-                            {% if observation.statut == 'STATUT_VALIDE' %}
-                            <tr>
-                                <td>{{ observation.dObs|date('d/m/Y') }}</td>
-                                <td>{{ observation.observateur.mail }}</td>
-                                <td>{{ observation.naturaliste.mail }}</td>
-                                <td><a href="{{ path('fn_fiche_observation', {'id_fiche': observation.id}) }}">En savoir +</a></td>
-                            </tr>
-                            {% endif %}
-                        {% endfor %}
-                    </tbody>
-                {% endif %}
-
-            </table>
-        </div>
-    </section>
+    {{ include('Participer/blocks/_tableau_observation.html.twig') }}
 
     {{ include('front/blocks/_follow.html.twig') }}
 
@@ -117,17 +36,14 @@
             src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"
             integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="
             crossorigin="anonymous">
+    </script>
 
-    </script>
-    <script src="{{ asset('assets/fnat/js/autocomplete.js') }}">
-    </script>
+    <script src="{{ asset('assets/fnat/js/autocomplete.js') }}"></script>
 
     <!-- google maps -->
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5YJYXmsfrbjwd_Cob43o19-4a3HbZYbc&callback=initMap">
     </script>
-
     <script src="{{ asset('assets/fnat/js/googlemaps_carte_observation.js') }}" ></script>
-
 
 {% endblock javascripts %}
