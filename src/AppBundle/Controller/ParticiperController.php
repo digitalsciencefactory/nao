@@ -168,8 +168,20 @@ class ParticiperController extends Controller
     public function ficheObsAction ($slug)
     {
         $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
-        $observation = $obsManager
-            ->getOneWithJoin($slug);
+        $obsList = $obsManager->findBy(array('id' => $slug));
+        $observation = $obsManager->getOneWithJoin($slug);
+
+        $xmlFile = 'assets/fnat/xml/point.xml';
+
+        //On initialise le fichier xml pour ne pas afficher de points avant requète
+        if (file_exists($xmlFile))
+        {
+            $domDocument = new \DOMDocument('1.0', "UTF-8");
+            $domDocument->save($xmlFile);
+        }
+
+        // On rempli le fichier XML
+        $this->SqlToXml($obsList, $xmlFile);
 
         return $this->render('Participer/fiche-observation.html.twig', array(
             'observation' => $observation,
