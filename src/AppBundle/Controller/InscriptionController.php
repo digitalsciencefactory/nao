@@ -38,7 +38,7 @@ class InscriptionController extends Controller
             $request->getSession()->getFlashBag()->add('noticenews', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $newsletter = new Newsletter();
             $formn = $this->createForm(NewsletterType::class, $newsletter);
-            return $this->render('Front/qui-sommes-nous.html.twig.html.twig', array(
+            return $this->render('Front/qui-sommes-nous.html.twig', array(
                 'formn' => $formn->createView(),
             ));
         }

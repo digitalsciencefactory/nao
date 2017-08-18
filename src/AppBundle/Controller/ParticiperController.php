@@ -143,7 +143,8 @@ class ParticiperController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 
             $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
-            $obsList = $obsManager->findBy(array('espece' => $observation->getEspece()));
+            $obsList = $obsManager
+                ->getEspeceWithJoin($observation->getEspece());
 
             // On rempli le fichier XML
             $this->SqlToXml($obsList, $xmlFile);
@@ -161,13 +162,18 @@ class ParticiperController extends Controller
     }
 
     /**
-     * @Route("/participer/fiche-observation/{id_fiche}", name="fn_fiche_observation")
+     * @Route("/participer/fiche-observation/{slug}", name="fn_fiche_observation")
      *
      */
-    public function ficheObsAction (Request $request)
+    public function ficheObsAction ($slug)
     {
+        $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
+        $observation = $obsManager
+            ->getOneWithJoin($slug);
 
-        return $this->render('Participer/fiche-observation.html.twig');
+        return $this->render('Participer/fiche-observation.html.twig', array(
+            'observation' => $observation,
+        ));
     }
 
     /**
