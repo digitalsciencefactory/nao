@@ -1,13 +1,14 @@
-{# app/Resources/views/front/fiche-observation.html.twig #}
+{# app/Resources/views/front/carte-des-observations.html.twig #}
 
 {% extends "base.html.twig" %}
 
 {% block title %}
-    Fiche Observation {{ observation[0].id }} - {{ parent() }}
+    Modification fiche {{ observation[0].id }} - {{ parent() }}
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
+
     <link rel="stylesheet" href="{{ asset('assets/fnat/css/autocomplete.css') }}" />
 
     <style>
@@ -31,23 +32,20 @@
 
                     <div class="mbr-table-cell col-md-5 text-xs-center text-md-left content-size">
                         <br>
-                        <h3 class="mbr-section-title display-2">{{ observation[0].espece.lbNom }}</h3>
+                        <h3 class="mbr-section-title display-2">Observation à valider</h3>
                         <div class="lead">
-
                             <p>Informations sur l'observation</p>
                             <strong>Date: </strong> {{ observation[0].dobs|date('d/m/Y') }}
                             <br>
                             <strong>Observation prise par: </strong> {{ observation[0].observateur.mail }}
                             <br>
-                            <strong>Validée le: </strong> {{ observation[0].dvalid|date('d/m/Y') }}
-                            <br>
-                            <strong>Validée par le naturaliste: </strong>  {{ observation[0].naturaliste.mail }}
                         </div>
 
                         <br>
 
                         <div class="lead">
-                            <p>Informations complémentaires</p>
+                            <p>Espèce observée</p>
+                            <strong>Nom: </strong> {{ observation[0].espece.lbNom }}
                             <strong>Nom vernaculaire: </strong> {{ observation[0].espece.nomVern }}
                             <br>
                             <strong>Nom vernaculaire anglais: </strong> {{ observation[0].espece.nomVernEng }}
@@ -84,6 +82,13 @@
 
 {% block javascripts %}
     {{ parent() }}
+
+    <!-- autocomplete -->
+    <script
+            src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"
+            integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="
+            crossorigin="anonymous">
+    </script>
 
     <script src="{{ asset('assets/fnat/js/autocomplete.js') }}"></script>
 
