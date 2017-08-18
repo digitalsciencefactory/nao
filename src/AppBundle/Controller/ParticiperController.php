@@ -23,8 +23,6 @@ class ParticiperController extends Controller
      */
     public function espaceNatAction (Request $request)
     {
-        /* todo:Compléter la méthode */
-
         $observation = new Observation();
         $form = $this->createForm(CarteType::class, $observation);
         $xmlFile = 'assets/fnat/xml/point.xml';
@@ -35,6 +33,9 @@ class ParticiperController extends Controller
             $domDocument = new \DOMDocument('1.0', "UTF-8");
             $domDocument->save($xmlFile);
         }
+
+        $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
+        $obsTable = $obsManager->findAll();
 
         $form->handleRequest($request);
 
@@ -49,12 +50,14 @@ class ParticiperController extends Controller
             return $this->render('Participer/espace-naturaliste.html.twig', array(
                 'form' => $form->createView(),
                 'obsList' => $obsList,
+                'obsTab' => $obsTable,
             ));
 
         }
 
         return $this->render('Participer/espace-naturaliste.html.twig', array(
             'form' => $form->createView(),
+            'obsTable' => $obsTable,
         ));
     }
 
@@ -189,6 +192,34 @@ class ParticiperController extends Controller
     }
 
     /**
+     * @Route("/participer/fiche-modification/{slug}", name="fn_fiche_modification")
+     *
+     */
+    public function ficheModifAction ($slug)
+    {
+        $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
+        $obsList = $obsManager->findBy(array('id' => $slug));
+        $observation = $obsManager->getOneWithJoin($slug);
+
+        $xmlFile = 'assets/fnat/xml/point.xml';
+
+        //On initialise le fichier xml pour ne pas afficher de points avant requète
+        if (file_exists($xmlFile))
+        {
+            $domDocument = new \DOMDocument('1.0', "UTF-8");
+            $domDocument->save($xmlFile);
+        }
+
+        // On rempli le fichier XML
+        $this->SqlToXml($obsList, $xmlFile, 'all');
+
+        return $this->render('Participer/fiche-modification.html.twig', array(
+            'observation' => $observation,
+        ));
+    }
+
+
+    /**
      * @Route("/participer/mon-compte", name="fn_participer_profil")
      */
     public function profilAction (Request $request)
@@ -227,19 +258,29 @@ class ParticiperController extends Controller
         return new JsonResponse($results);
     }
 
-    public function SqlToXml($obsList, $xmlFile)
+    public function SqlToXml($obsList, $xmlFile, $status=null)
     {
         $domDocument = new \DOMDocument('1.0', "UTF-8");
         $markers = $domDocument->createElement('markers');
         $domDocument->appendChild($markers);
 
-        foreach ($obsList as $observation){
-            if ($observation->getStatut() == 'STATUT_VALIDE'){
+        if ($status == null){
+            foreach ($obsList as $observation){
+                if ($observation->getStatut() == 'STATUT_VALIDE'){
+                    $marker = $domDocument->createElement('marker');
+                    $markers->appendChild($marker);
+                    $marker->setAttribute("lat", $observation->getLatitude());
+                    $marker->setAttribute("lng", $observation->getLongitude());
+                }
+            }
+        } else {
+            foreach ($obsList as $observation){
                 $marker = $domDocument->createElement('marker');
                 $markers->appendChild($marker);
                 $marker->setAttribute("lat", $observation->getLatitude());
                 $marker->setAttribute("lng", $observation->getLongitude());
             }
+
         }
 
         echo $domDocument->saveXML();

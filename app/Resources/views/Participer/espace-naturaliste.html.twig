@@ -19,7 +19,6 @@
 {% endblock stylesheets %}
 
 {% block body %}
-
 <!--  Intro  -->
     <section class="mbr-section mbr-after-navbar" id="content5-2o" style="padding-top: 120px; padding-bottom: 40px;">
         <div class="container">
@@ -27,16 +26,11 @@
                 Espace Naturaliste
             </h3>
             <div class="lead">
-                <p>
-                    Cet espace dédié et réservé aux naturalistes, vous permet de consulter :
-                </p>
-
                 <ul class="text-blacklist-inline-item">
+                    Cet espace dédié et réservé aux naturalistes, vous permet de consulter :
                     <li>
                         La liste des observations en attente de validation
                     </li>
-                </ul>
-                <ul class="text-black list-inline-item">
                     <li>
                         La liste et carte des observations validées
                     </li>
@@ -46,6 +40,7 @@
     </section>
 
 <!--  Observation en attente -->
+
     <section class="mbr-section extTable1" id="extTable1-2t" style="background-color: rgb(105, 176, 171); padding-top: 40px; padding-bottom: 120px;">
         <div class="container">
             <h3 class="mbr-section-title display-2">
@@ -54,9 +49,25 @@
         </div>
 
         <div class="container table-wrapper">
-
             <table class="table" cellspacing="0" width="100%">
-                Colonnes : Date / Espèces / Pseudo / lien "consulter"
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Observation prise par</th>
+                    <th> </th>
+                </tr>
+                </thead>
+                    <tbody>
+                    {% for observation in obsTable %}
+                        {% if observation.statut == 'STATUT_EN_ATTENTE' %}
+                            <tr>
+                                <td>{{ observation.dObs|date('d/m/Y') }}</td>
+                                <td>{{ observation.observateur.mail }}</td>
+                                <td><a href="{{ path('fn_fiche_modification', {slug: observation.id}) }}">Voir la fiche</a></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
             </table>
         </div>
     </section>
@@ -72,7 +83,26 @@
         <div class="container table-wrapper" >
 
             <table class="table" cellspacing="0" width="100%">
-                Colonnes : Date / Espèces / Pseudo / lien "consulter"
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Observation prise par</th>
+                    <th>Validé par</th>
+                    <th><br></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for observation in obsTable %}
+                    {% if observation.statut == 'STATUT_VALIDE' %}
+                        <tr>
+                            <td>{{ observation.dObs|date('d/m/Y') }}</td>
+                            <td>{{ observation.observateur.mail }}</td>
+                            <td>{{ observation.naturaliste.mail }}</td>
+                            <td><a href="{{ path('fn_fiche_observation', {slug: observation.id}) }}">Voir la fiche</a></td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
             </table>
         </div>
     </section>
