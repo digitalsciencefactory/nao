@@ -34,11 +34,12 @@
                                 </div>
                                 <br />
                             {% endfor %}
-                                {% if form_errors(form) %}
-                                    <div class="bg-danger">
-                                        {{ form_errors(form) }}
-                                    </div>
-                                {% endif %}
+
+                            {% if form_errors(form) %}
+                                <div class="bg-danger">
+                                    {{ form_errors(form) }}
+                                </div>
+                            {% endif %}
 
                             <div class="col-xs-12">
                                 {% if form_errors(form.mail) %}

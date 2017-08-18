@@ -6,11 +6,44 @@
     Carte des observations - {{ parent() }}
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ asset('assets/fnat/css/autocomplete.css') }}" />
+
+    <style>
+        #carteObservationMap {
+            height: 100%;
+        }
+    </style>
+{% endblock stylesheets %}
 
 {% block body %}
 
-    {{ include('front/blocks/_observations.html.twig') }}
+    {{ include('Participer/blocks/_carte_observation.html.twig') }}
+
+    {{ include('Participer/blocks/_tableau_observation.html.twig') }}
 
     {{ include('front/blocks/_follow.html.twig') }}
 
 {% endblock body %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <!-- autocomplete -->
+    <script
+            src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"
+            integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="
+            crossorigin="anonymous">
+    </script>
+
+    <script src="{{ asset('assets/fnat/js/autocomplete.js') }}"></script>
+
+    <!-- google maps -->
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5YJYXmsfrbjwd_Cob43o19-4a3HbZYbc&callback=initMap">
+    </script>
+    <script src="{{ asset('assets/fnat/js/googlemaps_carte_observation.js') }}" ></script>
+
+{% endblock javascripts %}

@@ -53,14 +53,6 @@
     {{ form_widget(form.comm_obs, {'attr': {'class': 'form-control', 'placeholder': 'Informations complémentaires'}}) }}
 </div>
 
-
-<div class="col-xs-12">
-    {{ form_widget (form.file,{ 'attr': { 'class': 'form-control','placeholder': 'Carte professionnelle'} }) }}
-    {% if form_errors(form.file)  %}
-        <div class="alert alert-danger">{{ form_errors(form.file) }}</div>
-    {% endif %}
-</div>
-
 <br>
 
 <div class="col-xs-12" style="margin-top: 10px; text-align: center">

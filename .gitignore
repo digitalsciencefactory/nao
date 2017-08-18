@@ -1,11 +1,6 @@
 /.idea
-/.idea/
 /nbproject
-/nbproject/
-/.web-server-pid
 /app/config/parameters.yml
-/build/
-/phpunit.xml
 /var/*
 !/var/cache
 /var/cache/*
@@ -18,12 +13,7 @@
 !var/sessions/.gitkeep
 !var/SymfonyRequirements.php
 /vendor/
-/web/bundles/
 .DS_Store
-var/logs/dev.log
-app/config/parameters.yml
-
-web/assets/.DS_Store
-src/AppBundle/Form/ObservationType.php
 web/assets/fnat/naturalistes/
 web/assets/fnat/observations/
+

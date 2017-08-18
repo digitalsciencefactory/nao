@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Observation;
 use AppBundle\Entity\User;
+use AppBundle\Form\Type\CarteType;
 use AppBundle\Form\Type\NatSignType;
 use AppBundle\Form\Type\ObservationType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -23,7 +24,38 @@ class ParticiperController extends Controller
     public function espaceNatAction (Request $request)
     {
         /* todo:Compléter la méthode */
-        return $this->render('Participer/espace-naturaliste.html.twig');
+
+        $observation = new Observation();
+        $form = $this->createForm(CarteType::class, $observation);
+        $xmlFile = 'assets/fnat/xml/point.xml';
+
+        //On initialise le fichier xml pour ne pas afficher de points avant requète
+        if (file_exists($xmlFile))
+        {
+            $domDocument = new \DOMDocument('1.0', "UTF-8");
+            $domDocument->save($xmlFile);
+        }
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
+            $obsList = $obsManager->findBy(array('espece' => $observation->getEspece()));
+
+            // On rempli le fichier XML
+            $this->SqlToXml($obsList, $xmlFile);
+
+            return $this->render('Participer/espace-naturaliste.html.twig', array(
+                'form' => $form->createView(),
+                'obsList' => $obsList,
+            ));
+
+        }
+
+        return $this->render('Participer/espace-naturaliste.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 
     /**
@@ -69,7 +101,7 @@ class ParticiperController extends Controller
             $em->flush();
 
 
-        // on affiche la page de connexion avec le flash bag
+        // on affiche la page envoi_observation avec le flash bag
             if($user->getRoles()[0] == ("ROLE_NATURALISTE")) {
                 $request->getSession()->getFlashBag()->add('notice', 'Votre observation est bien enregistrée et validée.');
             }else{
@@ -90,18 +122,62 @@ class ParticiperController extends Controller
     }
 
     /**
-     * @Route("/participer/carte-des-observations", name="fn_participer_map")
+     * @Route("/participer/carte-des-observations", name="fn_participer_carte_obs")
      * @Route("/participer")
      */
-    public function mapAction (Request $request)
+    public function carteObsAction (Request $request)
     {
-        /* todo:Compléter la méthode */
+        $observation = new Observation();
+        $form = $this->createForm(CarteType::class, $observation);
+        $xmlFile = 'assets/fnat/xml/point.xml';
 
-        return $this->render('Participer/carte-des-observations.html.twig');
+        //On initialise le fichier xml pour ne pas afficher de points avant requète
+        if (file_exists($xmlFile))
+        {
+            $domDocument = new \DOMDocument('1.0', "UTF-8");
+            $domDocument->save($xmlFile);
+        }
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
+            $obsList = $obsManager
+                ->getEspeceWithJoin($observation->getEspece());
+
+            // On rempli le fichier XML
+            $this->SqlToXml($obsList, $xmlFile);
+
+            return $this->render('Participer/carte-des-observations.html.twig', array(
+                'form' => $form->createView(),
+                'obsList' => $obsList,
+            ));
+
+        }
+
+        return $this->render('Participer/carte-des-observations.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 
     /**
-     * @Route("/participer/nom-compte", name="fn_participer_profil")
+     * @Route("/participer/fiche-observation/{slug}", name="fn_fiche_observation")
+     *
+     */
+    public function ficheObsAction ($slug)
+    {
+        $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
+        $observation = $obsManager
+            ->getOneWithJoin($slug);
+
+        return $this->render('Participer/fiche-observation.html.twig', array(
+            'observation' => $observation,
+        ));
+    }
+
+    /**
+     * @Route("/participer/mon-compte", name="fn_participer_profil")
      */
     public function profilAction (Request $request)
     {
@@ -138,4 +214,26 @@ class ParticiperController extends Controller
 
         return new JsonResponse($results);
     }
+
+    public function SqlToXml($obsList, $xmlFile)
+    {
+        $domDocument = new \DOMDocument('1.0', "UTF-8");
+        $markers = $domDocument->createElement('markers');
+        $domDocument->appendChild($markers);
+
+        foreach ($obsList as $observation){
+            if ($observation->getStatut() == 'STATUT_VALIDE'){
+                $marker = $domDocument->createElement('marker');
+                $markers->appendChild($marker);
+                $marker->setAttribute("lat", $observation->getLatitude());
+                $marker->setAttribute("lng", $observation->getLongitude());
+            }
+        }
+
+        echo $domDocument->saveXML();
+
+        // Sauvegarder le document XML
+        $domDocument->save($xmlFile);
+    }
+
 }

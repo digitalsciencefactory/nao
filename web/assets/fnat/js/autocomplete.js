@@ -38,6 +38,7 @@ $(function() {
             $("input[data-id=especeId]").val(noNull(ui.item.lbNom) + ", " + noNull(ui.item.nomVern) + ", " + noNull(ui.item.nomVernEng) );
 
             $("#observation_espece").val(ui.item.id);
+            $("#carte_espece").val(ui.item.id);
             return false;
         }
 
