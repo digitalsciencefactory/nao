@@ -9,8 +9,13 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('assets/fnat/css/autocomplete.css') }}" />
-{% endblock stylesheets %}
 
+    <style>
+        #carteObservationMap {
+            height: 100%;
+        }
+    </style>
+{% endblock stylesheets %}
 
 {% block body %}
     {{ dump(observation|default) }}
@@ -21,19 +26,37 @@
 
                     <div class="mbr-table-cell mbr-right-padding-md-up mbr-valign-top col-md-7 image-size" style="width: 36%;">
                         <div class="mbr-figure">
-                            <img src="{{ asset('assets/images/logo-carr-1400x1400.png') }}">
+                            <img src="{{asset('assets/fnat/observations/' ~ observation[0].photo ~ '')}}">
                         </div>
                     </div>
 
                     <div class="mbr-table-cell col-md-5 text-xs-center text-md-left content-size">
-                        <h3 class="mbr-section-title display-2">Nom de l'espèce</h3>
+                        <h3 class="mbr-section-title display-2">{{ observation[0].espece.lbNom }}</h3>
                         <div class="lead">
 
                             <p>Informations sur l'observation</p>
-
+                            <strong>Date: </strong> {{ observation[0].dobs|date('d/m/Y') }}
+                            <br>
+                            <strong>Observation prise par: </strong> {{ observation[0].observateur.mail }}
+                            <br>
+                            <strong>Validée le: </strong> {{ observation[0].dvalid|date('d/m/Y') }}
+                            <br>
+                            <strong>Validée par le naturaliste: </strong>  {{ observation[0].naturaliste.mail }}
                         </div>
 
+                        <br>
 
+                        <div class="lead">
+                            <p>Informations complémentaires</p>
+                            <strong>Nom vernaculaire: </strong> {{ observation[0].espece.nomVern }}
+                            <br>
+                            <strong>Nom vernaculaire anglais: </strong> {{ observation[0].espece.nomVernEng }}
+                            <br>
+                            <strong>Ordre / Famille:</strong> {{ observation[0].espece.ordre }} / {{ observation[0].espece.famille}}
+                            <br>
+                            <strong>Habitat:</strong> {{ observation[0].espece.habitat.lbHabitat}} / {{ observation[0].espece.habitat.rmHabitat}}
+
+                        </div>
                     </div>
 
                 </div>
@@ -42,13 +65,13 @@
     </section>
 
     <!--  Carte -->
+
     <section class="mbr-section mbr-section__container" id="map2-2x" style="background-color: rgb(105, 176, 171); padding-top: 60px; padding-bottom: 60px;">
         <div class="container">
             <div class="row">
                 <div class="col-xs-12">
                     <div class="mbr-map">
-                        <iframe frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA0Dx_boXQiwvdz8sJHoYeZNVTdoWONYkU&amp;q=place_id:ChIJSZ296Zx_6EcRVNaCoS8yigk" allowfullscreen="">
-                        </iframe>
+                        <div id="carteObservationMap"></div>
                     </div>
                 </div>
             </div>
@@ -58,3 +81,16 @@
     {{ include('front/blocks/_follow.html.twig') }}
 
 {% endblock body %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('assets/fnat/js/autocomplete.js') }}"></script>
+
+    <!-- google maps -->
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5YJYXmsfrbjwd_Cob43o19-4a3HbZYbc&callback=initMap">
+    </script>
+    <script src="{{ asset('assets/fnat/js/googlemaps_carte_observation.js') }}" ></script>
+
+{% endblock javascripts %}
