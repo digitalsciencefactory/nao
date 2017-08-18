@@ -22,7 +22,6 @@ class TaxrefStatuts
 
     /**
      * @var string
-     * @ORM\Id
      * @ORM\Column(name="statut", type="string", length=1)
      * @ORM\GeneratedValue(strategy="NONE")
      */
