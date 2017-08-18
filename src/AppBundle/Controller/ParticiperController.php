@@ -50,7 +50,7 @@ class ParticiperController extends Controller
             return $this->render('Participer/espace-naturaliste.html.twig', array(
                 'form' => $form->createView(),
                 'obsList' => $obsList,
-                'obsTab' => $obsTable,
+                'obsTable' => $obsTable,
             ));
 
         }
