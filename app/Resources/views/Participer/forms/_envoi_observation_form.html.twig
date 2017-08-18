@@ -56,7 +56,8 @@
 <br>
 
 <div class="col-xs-12" style="margin-top: 10px; text-align: center">
-    {{ form_widget(form.envoyer,{'attr':{ 'class': 'btn bt-blanc' }} ) }}
+    {{ form_widget(form.file,{'attr':{ 'class': 'form-control' }} ) }}
+    {{ form_widget(form.envoyer,{'attr':{ 'class': 'btn btn-info' }} ) }}
     {{ form_widget(form.dcree, {'attr': {'class': 'form-control', 'placeholder': 'Date de l observation', 'hidden':'hidden', 'disabled':'disabled'}}) }}
 
 </div>
