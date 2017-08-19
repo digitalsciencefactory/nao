@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * @ORM\Table(name="fnat_user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  * @UniqueEntity(fields={"mail"}, message="Cet e-mail est déjà utilisé.", groups={"obs","nat"})
+ * @UniqueEntity(fields={"pseudo"}, message="Ce pseudonyme est déjà utilisé.", groups={"obs","nat"})
  * @ORM\HasLifecycleCallbacks
  */
 class User implements UserInterface, \Serializable
@@ -36,6 +37,26 @@ class User implements UserInterface, \Serializable
      * @Assert\Email
      */
     private $mail;
+
+    /**
+     * @var string
+     * @ORM\Column(name="pseudo", type="string", length=20, unique=true)
+     * @Assert\NotBlank(groups={"login"})
+     * @Assert\NotBlank(groups={"nat"})
+     * @Assert\NotBlank(groups={"obs"})
+     * @Assert\Length(
+     *     min        = 4,
+     *     max        = 20,
+     *     minMessage = "Votre pseudonyme doit faire au moins { min } caractères",
+     *     maxMessage = "Votre psudonyme ne peut exéder { max } caractères.")
+     * @Assert\Regex(
+     *     pattern     = "/^[a-zA-Z]{1}[a-zA-Z0-9\-_]{3,19}+[^\-_]$/",
+     *     htmlPattern = "^[a-zA-Z]{1}[a-zA-Z0-9\-_]{3,19}+[^\-_]$",
+     *     message     = "Le pseudonyme doit commencer par une lettre, ne peut comporter que des lettres, chiffres, tirets (-) et underscore (_), faire entre 4 et 20 caractères et doit se terminer par une lettre ou un chiffre.",
+     *     groups      = {"obs", "nat"}
+     * )
+     */
+    private $pseudo;
 
     /**
      * @var string
@@ -197,6 +218,24 @@ class User implements UserInterface, \Serializable
     {
         return $this->mail;
     }
+
+    /**
+     * @return string
+     */
+    public function getPseudo()
+    {
+        return $this->pseudo;
+    }
+
+    /**
+     * @param string $pseudo
+     */
+    public function setPseudo($pseudo)
+    {
+        $this->pseudo = $pseudo;
+    }
+
+
 
     /**
      * Set mdp
