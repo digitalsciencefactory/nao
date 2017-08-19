@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use AppBundle\Entity\User;
@@ -18,6 +19,9 @@ class ObsSignType extends AbstractType
         $builder
             ->add('mail', EmailType::class, array('label' => ' ', 'attr' => array(
                 'placeholder' => 'e-mail',
+            )))
+            ->add('pseudo', TextType::class, array('label' => ' ', 'attr' => array(
+                'placeholder' => 'pseudonyme',
             )))
             ->add('plainPassword', RepeatedType::class,  array(
                 'type' => PasswordType::class,

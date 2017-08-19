@@ -23,7 +23,7 @@
 
                     <div class="mbr-table-cell col-md-5 text-xs-center text-md-left content-size">
                         <h3 class="mbr-section-title display-2">
-                            Votre profil
+                            Votre profil {{ pseudonyme }}
                         </h3>
                     </div>
 
@@ -51,6 +51,11 @@
                         </div>
                         <br />
                     {% endfor %}
+                    {% if form_errors(form) != null %}
+                        <div class="alert alert-danger">
+                            {{ form_errors(form) }}
+                        </div>
+                    {% endif %}
                     <div class="form-group">
                         <div class="col-sm-12 col-md-3">
                             <label for="p-mp-dcree" class="control-label lbl-modify">Date d'inscription :</label>
