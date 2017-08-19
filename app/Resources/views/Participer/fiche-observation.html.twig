@@ -1,13 +1,14 @@
-{# app/Resources/views/front/fiche-observation.html.twig #}
+{# app/Resources/views/front/carte-des-observations.html.twig #}
 
 {% extends "base.html.twig" %}
 
 {% block title %}
-    Fiche Observation {{ observation[0].id }} - {{ parent() }}
+    Modification fiche {{ observation[0].id }} - {{ parent() }}
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
+
     <link rel="stylesheet" href="{{ asset('assets/fnat/css/autocomplete.css') }}" />
 
     <style>
@@ -23,6 +24,7 @@
             <div class="row">
                 <div class="mbr-table-md-up">
 
+
                     <div class="mbr-table-cell mbr-right-padding-md-up mbr-valign-top col-md-7 image-size" style="width: 36%;">
                         <div class="mbr-figure">
                             <img src="{{asset('assets/fnat/observations/' ~ observation[0].photo ~ '')}}">
@@ -33,29 +35,29 @@
                         <br>
                         <h3 class="mbr-section-title display-2">{{ observation[0].espece.lbNom }}</h3>
                         <div class="lead">
-
-                            <p>Informations sur l'observation</p>
+                            <h4 class="text-white">Informations sur l'observation</h4>
                             <strong>Date: </strong> {{ observation[0].dobs|date('d/m/Y') }}
                             <br>
                             <strong>Observation prise par: </strong> {{ observation[0].observateur.mail }}
                             <br>
-
-                            <strong>Validée le: </strong> {{ observation[0].dvalid|date('d/m/Y') }}
+                            <strong>Observation validée par: </strong> {{ observation[0].naturaliste.mail }}
                             <br>
-                            <strong>Validée par le naturaliste: </strong>  {{ observation[0].naturaliste.mail }}
+                            <strong>Observation validée le: </strong> {{ observation[0].dvalid|date('d/m/Y') }}
+                            <br>
                         </div>
 
                         <br>
 
                         <div class="lead">
-                            <p>Informations complémentaires</p>
+                            <h4 class="text-white">Informations complémentaires</h4>
                             <strong>Nom vernaculaire: </strong> {{ observation[0].espece.nomVern }}
                             <br>
                             <strong>Nom vernaculaire anglais: </strong> {{ observation[0].espece.nomVernEng }}
                             <br>
                             <strong>Ordre / Famille:</strong> {{ observation[0].espece.ordre }} / {{ observation[0].espece.famille}}
                             <br>
-                            <strong>Habitat:</strong> {{ observation[0].espece.habitat.lbHabitat}} / {{ observation[0].espece.habitat.rmHabitat}}
+                            <strong>Habitat:</strong> {{ observation[0].espece.habitat.lbHabitat}} <br>
+                            {{ observation[0].espece.habitat.rmHabitat}}
 
                         </div>
                     </div>
@@ -85,6 +87,13 @@
 
 {% block javascripts %}
     {{ parent() }}
+
+    <!-- autocomplete -->
+    <script
+            src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"
+            integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="
+            crossorigin="anonymous">
+    </script>
 
     <script src="{{ asset('assets/fnat/js/autocomplete.js') }}"></script>
 

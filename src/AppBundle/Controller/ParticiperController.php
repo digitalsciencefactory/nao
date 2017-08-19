@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\Type\UserType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class ParticiperController extends Controller
 {
@@ -143,46 +144,49 @@ class ParticiperController extends Controller
      * @Route("/participer/fiche-observation/{slug}", name="fn_fiche_observation")
      *
      */
-    public function ficheObsAction ($slug)
+    public function ficheObsAction (Request $request, $slug)
     {
-        $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
-        $obs = $obsManager->findBy(array('id' => $slug));
-
-        XMLGenerator::SqlToXml($obs);
-
-        return $this->render('Participer/fiche-observation.html.twig', array(
-            'observation' => $obs,
-        ));
-    }
-
-    /**
-     * @Route("/participer/fiche-modification/{slug}", name="fn_fiche_modification")
-     * @Security("has_role('ROLE_NATURALISTE')")
-     */
-    public function ficheModifAction (Request $request, $slug)
-    {
+        $user = $this->getUser();
         $observation = new Observation();
         $form = $this->createForm(ModificationObsType::class, $observation);
         $form->handleRequest($request);
 
         $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
         $obsList = $obsManager->findBy(array('id' => $slug));
-
+dump($obsList);
         XMLGenerator::SqlToXml($obsList);
 
-        return $this->render('Participer/fiche-modification.html.twig', array(
-            'observation' => $obsList,
-            'form' => $form->createView(),
-        ));
+
+        if($user->getRoles()[0] == ("ROLE_NATURALISTE")) {
+            return $this->render('Participer/fiche-modification.html.twig', array(
+                'observation' => $obsList,
+                'form' => $form->createView(),
+            ));
+        }else{
+            return $this->render('Participer/fiche-observation.html.twig', array(
+                'observation' => $obsList,
+                'form' => $form->createView(),
+            ));
+        }
+
     }
 
     /**
      * @Route("/participer/valider-fiche/{slug}", name="fn_fiche_valider")
      * @Security("has_role('ROLE_NATURALISTE')")
      */
-    public function validerObsAction ($slug)
+    public function validerObsAction (Request $request, $slug)
     {
+        $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
+        $obs = $obsManager->find($slug);
 
+        $obs->setDvalid(new \DateTime('NOW'));
+
+        $obsManager= $this->getDoctrine()->getManager();
+        $obsManager->update($obs);
+        $obsManager->flush();
+
+        return $this->redirectToRoute('fn_participer_espace_nat');
     }
 
     /**
@@ -191,7 +195,16 @@ class ParticiperController extends Controller
      */
     public function supprimerObsAction (Request $request, $slug)
     {
+        $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
+        $obs = $obsManager->find($slug);
 
+        $obsManager= $this->getDoctrine()->getManager();
+        $obsManager->remove($obs);
+        $obsManager->flush();
+
+        $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été supprimée.');
+
+        return $this->redirectToRoute('fn_participer_espace_nat');
     }
 
     /**

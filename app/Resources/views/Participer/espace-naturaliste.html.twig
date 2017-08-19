@@ -63,7 +63,7 @@
                             <tr>
                                 <td>{{ observation.dObs|date('d/m/Y') }}</td>
                                 <td>{{ observation.observateur.mail }}</td>
-                                <td><a href="{{ path('fn_fiche_modification', {slug: observation.id}) }}">Voir la fiche</a></td>
+                                <td><a href="{{ path('fn_fiche_observation', {slug: observation.id}) }}">Voir la fiche</a></td>
                             </tr>
                         {% endif %}
                     {% endfor %}
