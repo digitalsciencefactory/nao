@@ -38,16 +38,19 @@
 
 <!--  menu -->
 {% block navbar %}
+
     {% if is_granted('ROLE_ADMIN') %}
         {% include('dashboard/menu/menu-administrateur.html.twig') %}
     {%  else %}
         {% include('dashboard/menu/menu-naturaliste.html.twig') %}
     {% endif %}
+
 {% endblock %}
 
 
 
 {% block body %}
+
     {% include('dashboard/block/blck_espace_administrateur.html.twig') %}
 
 {% endblock body %}

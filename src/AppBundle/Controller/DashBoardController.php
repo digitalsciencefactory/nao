@@ -16,6 +16,7 @@ class DashBoardController extends Controller
         return $this->render('dashboard/accueil.html.twig');
     }
 
+
     /**
      * @Route("/dashboard/extraction-donnees", name="fn_dashboard_bdd")
      * @Security("has_role('ROLE_NATURALISTE')")
@@ -23,5 +24,6 @@ class DashBoardController extends Controller
     public function bddAction(){
         return $this->render('dashboard/extraction.html.twig');
     }
+
 
 }
