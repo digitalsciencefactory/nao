@@ -88,10 +88,18 @@
                             </li>
 
                             {% if is_granted('ROLE_NATURALISTE') %}
-                                <li class="nav-item">
-                                    <a class="nav-link link" href="/participer/espace-naturaliste">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link link dropdown-toggle" href="" data-toggle="dropdown-submenu" aria-expanded="false">
                                         Espace Naturaliste
                                     </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/participer/espace-naturaliste">
+                                            Les observations</a>
+                                        <a class="dropdown-item" href="/dashboard/extraction-donnees">
+                                            Base de données
+                                        </a>
+                                    </div>
+
                                 </li>
                             {% endif %}
 
