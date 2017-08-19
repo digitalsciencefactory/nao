@@ -214,8 +214,47 @@ dump($obsList);
     {
         $user = $this->getUser();
         $form = $this->createForm(UserType::class, $user);
-        return $this->render('Participer/mon-compte.html.twig', array(
-            'form' => $form->createView(),
+
+        $form->handleRequest($request);
+
+        // on gère la modification du compte
+        if ($form->isSubmitted() && $form->isValid()) {
+            $userManager = $this
+                ->getDoctrine()
+                ->getManager();
+
+            $userRepository = $userManager->getRepository('AppBundle:User');
+            $userMail = $this->getUser()->getMail();
+            $userDB = $userRepository->findOneBy(array('mail' => $userMail));
+
+            // $user vient du formulaire utilisateur
+            // $userDB vient de la BDD
+            $userDB->setNom($user->getNom());
+            $userDB->setPrenom($user->getPrenom());
+            $userDB->setDdn($user->getDdn());
+            $userDB->setCodePostal($user->getCodePostal());
+            $userDB->setPhoto($user->getPhoto());
+
+            $userManager->persist($userDB);
+            $userManager->flush();
+
+            $form = $this->createForm(UserType::class, $userDB);
+
+            $request->getSession()->getFlashBag()->add('notice', 'Votre profil a été mis à jour..');
+            return $this->render('Participer/mon-compte.html.twig',
+                array(
+                    'pseudonyme' => $user->getPseudo(),
+                    'avatar' => $userDB->getPhoto(),
+                    'form' => $form->createView(),
+                ));
+
+        }
+
+        return $this->render('Participer/mon-compte.html.twig',
+            array(
+                'pseudonyme' => $user->getPseudo(),
+                'avatar' => $user->getPhoto(),
+                'form' => $form->createView(),
             ));
     }
 

@@ -31,7 +31,8 @@ class UserType extends AbstractType
                 'widget' => 'single_text',
                 // do not render as type="date", to avoid HTML5 date pickers
                 'html5' => true,
-                'format' => 'dd/MM/yyyy'
+                'format' => 'dd/MM/yyyy',
+                'invalid_message' => "La date doit être au format JJ/MM/AAAA. Votre profil n'a pas été mis à jour ",
                 // add a class that can be selected in JavaScript
             ))
             ->add('photo', ChoiceType::class, array(
