@@ -286,6 +286,7 @@ class InscriptionController extends Controller
         $user = new User();
         $form = $this->createForm(ObsSignType::class, $user);
         $form->handleRequest($request);
+
         $newsletter = new Newsletter();
         $formn = $this->createForm(NewsletterType::class, $newsletter);
         $formn->handleRequest($request);
