@@ -11,11 +11,12 @@
     <!--  Information sur l'observation -->
     {{ include('Participer/blocks/_info_observation.html.twig') }}
 
-    <!--  Formulaire demodification -->
-    {% if observation.statut == 'STATUT_EN_ATTENTE' %}
-    {{ include('Participer/forms/_modif_observation_form.html.twig') }}
+    <!--  Formulaire de modification -->
+    {% if is_granted('ROLE_NATURALISTE') %}
+        {% if observation.statut == 'STATUT_EN_ATTENTE'%}
+            {{ include('Participer/forms/_modif_observation_form.html.twig') }}
+        {% endif %}
     {% endif %}
-
     <!--  Carte des observations valides par espèce -->
     {{ include('Participer/blocks/_carte_observation.html.twig') }}
 
