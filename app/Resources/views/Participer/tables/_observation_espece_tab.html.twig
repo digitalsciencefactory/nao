@@ -1,4 +1,4 @@
-
+{# app/Resources/views/tales/_observation_espece_html.twig #}
 <section class="mbr-section" id="content5-56" style=" padding-top: 80px; padding-bottom: 40px;">
     <div class="container">
         <h3 class="mbr-section-title display-2">
@@ -33,8 +33,8 @@
                     {% if observation.statut == 'STATUT_VALIDE' %}
                         <tr>
                             <td>{{ observation.dObs|date('d/m/Y') }}</td>
-                            <td>{{ observation.observateur.mail }}</td>
-                            <td>{{ observation.naturaliste.mail }}</td>
+                            <td>{{ observation.observateur.pseudo }}</td>
+                            <td>{{ observation.naturaliste.pseudo }}</td>
                             <td><a href="{{ path('fn_fiche_observation', {slug: observation.id}) }}">En savoir +</a></td>
                         </tr>
                     {% endif %}

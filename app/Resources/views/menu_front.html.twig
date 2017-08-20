@@ -1,0 +1,84 @@
+{# app/Resources/views/menu_front.html.twig #}
+<div id="menu-3f">
+    <nav class="navbar navbar-dropdown navbar-fixed-top">
+        <div class="container">
+
+            <div class="mbr-table">
+                <div class="mbr-table-cell">
+                    <div class="navbar-brand">
+                        <a href="/" class="navbar-logo">
+                            <img src="{{ asset('assets/images/logo-rectangle-185x128.png')}}" alt="Flash Nature"/>
+                        </a>
+                        <a class="navbar-caption" href="/"></a>
+                    </div>
+                </div>
+
+                <div class="mbr-table-cell">
+
+                    <div class="navbar-toggler pull-xs-right hidden-md-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
+                        <div class="hamburger-icon"></div>
+                    </div>
+
+                    <ul class="nav-dropdown collapse pull-xs-right nav navbar-nav navbar-toggleable-sm" id="exCollapsingNavbar">
+
+                        <li class="nav-item">
+                            <a class="nav-link link" href="/">Accueil</a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link link" href="/inscription">L'application</a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link link dropdown-toggle" href="" data-toggle="dropdown-submenu" aria-expanded="false">Participer</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/participer/envoi-observation">Envoi d'observation</a>
+                                <a class="dropdown-item" href="/participer/carte-des-observations">Carte des observations</a>
+                            </div>
+                        </li>
+
+                        {% if is_granted('ROLE_NATURALISTE') %}
+                            <li class="nav-item">
+                                <a class="nav-link link" href="/participer/espace-naturaliste">Espace Naturaliste</a>
+                            </li>
+                        {% endif %}
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link link dropdown-toggle" href="" data-toggle="dropdown-submenu" aria-expanded="false">Infos pratiques</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/kit-observation">Kit Observation</a>
+                                <a class="dropdown-item" href="/qui-sommes-nous">Qui sommes nous ?</a>
+                                <a class="dropdown-item" href="/contact">Contact</a>
+                            </div>
+                        </li>
+
+                        {% if app.user == null %}
+                            <li class="nav-item nav-btn">
+                                <a class="nav-link btn btn-secondary-outline btn-secondary" href="/login">Se connecter</a>
+                            </li>
+                            <li class="nav-item nav-btn">
+                                <a class="nav-link btn btn-secondary-outline btn-secondary" href="/inscription">S'inscrire</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link link" href="/participer/mon-compte">Mon compte</a>
+                            </li>
+                            <li class="nav-item nav-btn">
+                                <span>{{ app.user.pseudo }} </span>
+                                <a class="nav-link link boutonlogout" href="/logout">
+                                    <img src=" {{ asset('assets/fnat/icon/bouton_deconnexion.png') }}" id="boutonLogOut" />
+                                </a>
+                            </li>
+                        {% endif %}
+
+                    </ul>
+
+                    <div hidden="" class="navbar-toggler navbar-close" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
+                        <div class="close-icon"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>

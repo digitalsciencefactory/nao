@@ -36,20 +36,21 @@ class ParticiperController extends Controller
         $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
         $obsTable = $obsManager->findAll();
 
+        // Formulaire de la carte des observations (Liste)
         if ($form->isSubmitted() && $form->isValid()) {
 
             $obsList = $obsManager->findBy(array('espece' => $observation->getEspece()));
 
             XMLGenerator::SqlToXml($obsList);
 
-            return $this->render('Participer/espace-naturaliste.html.twig', array(
+            return $this->render('Participer/espace_naturaliste.html.twig', array(
                 'form' => $form->createView(),
                 'obsList' => $obsList,
                 'obsTable' => $obsTable,
             ));
         }
 
-        return $this->render('Participer/espace-naturaliste.html.twig', array(
+        return $this->render('Participer/espace_naturaliste.html.twig', array(
             'form' => $form->createView(),
             'obsTable' => $obsTable,
         ));
@@ -99,13 +100,13 @@ class ParticiperController extends Controller
         $observation = new Observation();
         $form = $this->createForm(ObservationType::class, $observation);
 
-        return $this->render('Participer/envoi-observation.html.twig', array(
+        return $this->render('Participer/envoi_observation.html.twig', array(
             'form' => $form->createView(),
         ));
 
         }
 
-        return $this->render('Participer/envoi-observation.html.twig', array(
+        return $this->render('Participer/envoi_observation.html.twig', array(
             'form' => $form->createView(),
         ));
     }
@@ -122,6 +123,7 @@ class ParticiperController extends Controller
 
         XMLGenerator::initFile();
 
+        // Formulaire de la carte des observations (Liste)
         if ($form->isSubmitted() && $form->isValid()) {
 
             $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
@@ -129,63 +131,65 @@ class ParticiperController extends Controller
 
             XMLGenerator::SqlToXml($obsList, 'STATUT_VALIDE');
 
-            return $this->render('Participer/carte-des-observations.html.twig', array(
+            return $this->render('Participer/carte_observations.html.twig', array(
                 'form' => $form->createView(),
                 'obsList' => $obsList,
             ));
         }
 
-        return $this->render('Participer/carte-des-observations.html.twig', array(
+        return $this->render('Participer/carte_observations.html.twig', array(
             'form' => $form->createView(),
         ));
     }
 
     /**
      * @Route("/participer/fiche-observation/{slug}", name="fn_fiche_observation")
-     *
+     * @Security("has_role('ROLE_NATURALISTE')")
      */
     public function ficheObsAction (Request $request, $slug)
     {
-        $user = $this->getUser();
-        $observation = new Observation();
-        $form = $this->createForm(ModificationObsType::class, $observation);
+        $obsForm = new Observation();
+        $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
+
+        $form = $this->createForm(ModificationObsType::class, $obsForm);
         $form->handleRequest($request);
 
-        $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
-        $obsList = $obsManager->findBy(array('id' => $slug));
-dump($obsList);
-        XMLGenerator::SqlToXml($obsList);
+        $obs = $obsManager->findOneBy(array('id' => $slug));
+
+        XMLGenerator::SqlToXml($obsManager->findBy(array('id' => $slug)));
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+
+dump($obsForm);
+            //$taxrefManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
+            //$especeToSave = $taxrefManager->find($espece);
 
 
-        if($user->getRoles()[0] == ("ROLE_NATURALISTE")) {
-            return $this->render('Participer/fiche-modification.html.twig', array(
-                'observation' => $obsList,
-                'form' => $form->createView(),
-            ));
-        }else{
-            return $this->render('Participer/fiche-observation.html.twig', array(
-                'observation' => $obsList,
-                'form' => $form->createView(),
-            ));
+
+            //$obs->setEspece($especeToSave);
+            //$obs->setCommObs($obsForm->getCommObs());
+            //$obs->setDvalid(new \DateTime('NOW'));
+            //$obs->setStatut('STATUT_VALIDE');
+            //$obs->setNaturaliste($this->getUser());
+
+            //$obsManager= $this->getDoctrine()->getManager();
+            //$obsManager->persist($obs);
+            //$obsManager->flush();
         }
 
+        return $this->render('Participer/fiche_observation.html.twig', array(
+            'observation' => $obs,
+            'form' => $form->createView(),
+        ));
     }
 
     /**
-     * @Route("/participer/valider-fiche/{slug}", name="fn_fiche_valider")
-     * @Security("has_role('ROLE_NATURALISTE')")
-     */
+ * @Route("/participer/valider-fiche/{slug}", name="fn_fiche_valider")
+ * @Security("has_role('ROLE_NATURALISTE')")
+ */
     public function validerObsAction (Request $request, $slug)
     {
-        $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
-        $obs = $obsManager->find($slug);
-
-        $obs->setDvalid(new \DateTime('NOW'));
-
-        $obsManager= $this->getDoctrine()->getManager();
-        $obsManager->update($obs);
-        $obsManager->flush();
-
         return $this->redirectToRoute('fn_participer_espace_nat');
     }
 
@@ -241,7 +245,7 @@ dump($obsList);
             $form = $this->createForm(UserType::class, $userDB);
 
             $request->getSession()->getFlashBag()->add('notice', 'Votre profil a été mis à jour..');
-            return $this->render('Participer/mon-compte.html.twig',
+            return $this->render('Participer/mon_compte.html.twig',
                 array(
                     'pseudonyme' => $user->getPseudo(),
                     'avatar' => $userDB->getPhoto(),
@@ -250,7 +254,7 @@ dump($obsList);
 
         }
 
-        return $this->render('Participer/mon-compte.html.twig',
+        return $this->render('Participer/mon_compte.html.twig',
             array(
                 'pseudonyme' => $user->getPseudo(),
                 'avatar' => $user->getPhoto(),

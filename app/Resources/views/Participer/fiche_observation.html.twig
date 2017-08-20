@@ -1,0 +1,33 @@
+{# app/Resources/views/front/fiche_observationhtml.twig #}
+
+{% extends "Participer/observation_base.html.twig" %}
+
+{% block title %}
+    Fiche {{ observation.id }} - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+    <!--  Information sur l'observation -->
+    {{ include('Participer/blocks/_info_observation.html.twig') }}
+
+    <!--  Formulaire demodification -->
+    {% if observation.statut == 'STATUT_EN_ATTENTE' %}
+    {{ include('Participer/forms/_modif_observation_form.html.twig') }}
+    {% endif %}
+
+    <!--  Carte des observations valides par espèce -->
+    {{ include('Participer/blocks/_carte_observation.html.twig') }}
+
+    <!--  Tableau des observations valides par espèce -->
+    {{ include('front/blocks/_follow.html.twig') }}
+
+{% endblock body %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <!-- google maps -->
+    <script src="{{ asset('assets/fnat/js/googlemaps_carte_observation.js') }}" ></script>
+
+{% endblock javascripts %}

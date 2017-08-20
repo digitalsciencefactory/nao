@@ -1,0 +1,49 @@
+{# app/Resources/views/forms/_modif_observation_form.html.twig #}
+{{ form_start(form) }}
+    {% for message in app.flashes('notice') %}
+        <div class="btn-success">
+            {{ message }}
+        </div>
+        <br />
+    {% endfor %}
+
+    {% if form_errors(form) %}
+        <div class="alert alert-danger">
+            {{ form_errors(form) }}
+        </div>
+    {% endif %}
+
+    <div class="col-xs-12">
+        {{ form_errors(form.espece) }}
+        {{ form_widget(form.especeTxt, {'attr': {
+            'class': 'form-control',
+            'placeholder': 'Nom de l espèce',
+            'data-id': 'especeId',
+            'data-url': path('fn_participer_autocomplete')
+        }
+        }
+
+        )}}
+        {{ form_widget(form.espece, {'attr': {
+            'class': 'form-control',
+            'placeholder': 'Nom de l espèce',
+            'hidden':'hidden',
+            'value':''
+        } }
+        )
+        }}
+    </div>
+
+    <div class="col-xs-12">
+        {{ form_errors(form.comm_obs) }}
+        {{ form_widget(form.comm_obs, {'attr': {'class': 'form-control', 'placeholder': 'Informations complémentaires'}}) }}
+    </div>
+
+    <br>
+
+    <span class="group-btn">
+        {{ form_widget(form.valider,{'attr':{ 'class': 'btn btn-success' }} ) }}
+    </span>
+
+{{ form_rest(form) }}
+{{ form_end(form) }}

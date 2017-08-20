@@ -10,6 +10,7 @@ namespace AppBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,10 +22,11 @@ class ModificationObsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('espece',      IntegerType::class, array('label' => ' '))
-            ->add('especeTxt',      TextType::class, array('label' => ' '))
+            ->add('espece',      IntegerType::class, array('label' => ' ', 'required' => false))
+            ->add('especeTxt',      TextType::class, array('label' => ' ', 'required' => false))
+            ->add('comm_obs', TextareaType::class, array('label' => '', 'required' => false))
 
-            ->add('modifier',      SubmitType::class)
+            ->add('valider',      SubmitType::class)
         ;
 
     }

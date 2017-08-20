@@ -1,0 +1,63 @@
+<section class="mbr-section" id="msg-box6-5l" style="background-color: rgb(105, 176, 171); padding-top: 80px; padding-bottom: 80px;">
+    <div class="container">
+        <div class="row">
+            <div class="mbr-table-md-up">
+
+
+                <div class="mbr-table-cell mbr-right-padding-md-up mbr-valign-top col-md-7 image-size" style="width: 36%;">
+                    <div class="mbr-figure">
+                        {% if observation.photo != null %}
+                        <img src="{{asset('assets/fnat/observations/' ~ observation.photo ~ '')}}">
+                        {% else %}
+                        <img src="{{asset('photo.png')}}">
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="mbr-table-cell col-md-5 text-xs-center text-md-left content-size">
+                    <br>
+                    <h3 class="mbr-section-title display-2">{{ observation.espece.lbNom }}</h3>
+                    <div class="lead">
+                        <h4 class="text-white">Informations sur l'observation n° {{ observation.id }}</h4>
+                        <strong>Date: </strong> {{ observation.dobs|date('d/m/Y') }}
+                        <br>
+                        <strong>Observation prise par: </strong> {{ observation.observateur.mail }}
+                        <br>
+
+                        {% if observation.statut == 'STATUT_VALIDE' %}
+                            <strong>Observation validée par: </strong> {{ observation.observateur.mail }}
+                            <br>
+                            <strong>Observation validée le: </strong>  {{ observation.dvalid|date('d/m/Y') }}
+                        {% endif %}
+
+                        <br>
+                        <strong>Remarques: </strong>
+                        {% if observation.commObs != null%}
+                            {{ observation.commObs }}
+                        {% endif %}
+                    </div>
+
+                    <br>
+
+                    <div class="lead">
+                        <h4 class="text-white">Informations complémentaires</h4>
+                        <strong>Nom vernaculaire: </strong> {{ observation.espece.nomVern }}
+                        <br>
+                        <strong>Nom vernaculaire anglais: </strong> {{ observation.espece.nomVernEng }}
+                        <br>
+                        <strong>Ordre / Famille:</strong> {{ observation.espece.ordre }} / {{ observation.espece.famille}}
+                        <br>
+                        <strong>Habitat:</strong> {{ observation.espece.habitat.lbHabitat}}
+                        <br>
+                        {{ observation.espece.habitat.rmHabitat}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
