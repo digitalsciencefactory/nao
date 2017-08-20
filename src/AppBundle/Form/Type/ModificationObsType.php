@@ -22,7 +22,7 @@ class ModificationObsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('espece',      IntegerType::class, array('label' => ' ', 'required' => false))
+            ->add('espece',      IntegerType::class, array('label' => ' '))
             ->add('especeTxt',      TextType::class, array('label' => ' ', 'required' => false))
             ->add('comm_obs', TextareaType::class, array('label' => '', 'required' => false))
 
