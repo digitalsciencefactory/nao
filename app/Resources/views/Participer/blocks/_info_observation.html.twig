@@ -1,18 +1,10 @@
-<section class="mbr-section" id="msg-box6-5l" style="background-color: rgb(105, 176, 171); padding-top: 80px; padding-bottom: 80px;">
+{# app/Resources/views/blocks/_info_observation.html.twig #}
+<section class="mbr-section" id="msg-box6-5l" style="background-color: rgb(105, 176, 171); padding-top: 80px; padding-bottom: 0;">
     <div class="container">
         <div class="row">
             <div class="mbr-table-md-up">
 
-
-                <div class="mbr-table-cell mbr-right-padding-md-up mbr-valign-top col-md-7 image-size" style="width: 36%;">
-                    <div class="mbr-figure">
-                        {% if observation.photo != null %}
-                        <img src="{{asset('assets/fnat/observations/' ~ observation.photo ~ '')}}">
-                        {% else %}
-                        <img src="{{asset('photo.png')}}">
-                        {% endif %}
-                    </div>
-                </div>
+                {{ include('Participer/blocks/_photo_observation.html.twig') }}
 
                 <div class="mbr-table-cell col-md-5 text-xs-center text-md-left content-size">
                     <br>
