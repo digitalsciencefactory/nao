@@ -78,19 +78,6 @@ class DashBoardController extends Controller
                     // fermeture du fichier
                     fclose($handle);
 
-                    // création du zip
-                    /*$zip = new \ZipArchive();
-                    $fileZip = $file . '.zip';
-
-                    if ($zip->open($path.$fileZip, ZipArchive::CREATE)) {
-                        $zip->addFile($path.$file);
-                        $zip->close();
-
-                    }
-
-                    // suppression du fichier csv
-                    unlink($path.$file);*/
-
                     // notice du téléchargement
                     $request->getSession()->getFlashBag()->add('notice', 'La requête a retournée ' . count($observations) .' observation(s). Le téléchargement va commencer automatiquement.');
 
