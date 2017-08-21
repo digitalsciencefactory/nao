@@ -39,6 +39,7 @@ $(function() {
 
             $("#observation_espece").val(ui.item.id);
             $("#carte_espece").val(ui.item.id);
+            $("#modification_obs_espece").val(ui.item.id);
             return false;
         }
 

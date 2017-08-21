@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Observation;
+use AppBundle\Entity\Taxref;
 use AppBundle\Entity\User;
 use AppBundle\Form\Type\CarteType;
 use AppBundle\Form\Type\ModificationObsType;
@@ -126,6 +127,7 @@ class ParticiperController extends Controller
         // Formulaire de la carte des observations (Liste)
         if ($form->isSubmitted() && $form->isValid()) {
 
+            dump($observation->getEspece());
             $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
             $obsList = $obsManager->findBy(array('espece' => $observation->getEspece()));
 
@@ -143,39 +145,52 @@ class ParticiperController extends Controller
     }
 
     /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route ("/participer/getXMLMarker/{id}", defaults={"_format"="xml"}, name="fn_map_XML")
+     */
+    public function getXMLMarkerAction(Taxref $espece)
+    {
+
+        $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
+        $datas = $obsManager->findBy(array('espece' => $espece->getId()));
+
+        return $this->render('Participer/getXML.xml.twig', array(
+            'datas' => $datas,
+        ));
+    }
+
+    /**
      * @Route("/participer/fiche-observation/{slug}", name="fn_fiche_observation")
      * @Security("has_role('ROLE_NATURALISTE')")
      */
     public function ficheObsAction (Request $request, $slug)
     {
         $obsForm = new Observation();
-        $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
-
         $form = $this->createForm(ModificationObsType::class, $obsForm);
         $form->handleRequest($request);
 
+        $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
         $obs = $obsManager->findOneBy(array('id' => $slug));
 
         XMLGenerator::SqlToXml($obsManager->findBy(array('id' => $slug)));
 
         if ($form->isSubmitted() && $form->isValid())
         {
+            $espece = $obsForm->getEspece();
+            $taxrefManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
+            $especeToSave = $taxrefManager->find($espece);
 
-dump($obsForm);
-            //$taxrefManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
-            //$especeToSave = $taxrefManager->find($espece);
+            dump($espece);
 
+            $obs->setEspece($especeToSave);
+            $obs->setCommObs($obsForm->getCommObs());
+            $obs->setDvalid(new \DateTime('NOW'));
+            $obs->setStatut('STATUT_VALIDE');
+            $obs->setNaturaliste($this->getUser());
 
-
-            //$obs->setEspece($especeToSave);
-            //$obs->setCommObs($obsForm->getCommObs());
-            //$obs->setDvalid(new \DateTime('NOW'));
-            //$obs->setStatut('STATUT_VALIDE');
-            //$obs->setNaturaliste($this->getUser());
-
-            //$obsManager= $this->getDoctrine()->getManager();
-            //$obsManager->persist($obs);
-            //$obsManager->flush();
+            $obsManager= $this->getDoctrine()->getManager();
+            $obsManager->persist($obs);
+            $obsManager->flush();
         }
 
         return $this->render('Participer/fiche_observation.html.twig', array(

@@ -23,7 +23,8 @@
                             'class': 'form-control',
                             'placeholder': 'Nom de l espèce',
                             'data-id': 'especeId',
-                            'data-url': path('fn_participer_autocomplete')
+                            'data-url': path('fn_participer_autocomplete'),
+                            'value': observation.espece.lbNom
                         }
                         }
 
@@ -32,7 +33,7 @@
                             'class': 'form-control',
                             'placeholder': 'Nom de l espèce',
                             'hidden':'hidden',
-                            'value':''
+                            'value': observation.espece.id
                         } }
                         )
                         }}
