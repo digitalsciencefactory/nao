@@ -25,7 +25,7 @@ security:
         - { path: ^/participer/espace-naturaliste, roles: ROLE_NATURALISTE }
         - { path: ^/dashboard$, roles: ROLE_NATURALISTE }
         - { path: ^/dashboard/extraction-donnees, roles: ROLE_NATURALISTE }
-        - { path: ^/dashboard, roles: ROLE_ADMIN }
+
 
     providers:
         fnat_user_provider:
