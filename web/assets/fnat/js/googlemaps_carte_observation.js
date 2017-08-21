@@ -4,6 +4,25 @@ function initMap() {
         zoom: 5
     });
 
+    $markers = $.ajax({
+        url: url,
+        dataType: "xml",
+        data : objData,
+        type: 'GET',
+
+        success: function (data) {
+            response($.map(data, function (data) {
+                return data;
+            }));
+        },
+
+        error: function (jqXHR, textStatus, errorThrown) {
+            /*console.log("jqXHR => ");
+            console.log( jqXHR );
+            console.log(textStatus, errorThrown);*/
+        }
+    }); // fin de l'ajax
+
     downloadUrl('/assets/fnat/xml/point.xml', function(data) {
         var xml = data.responseXML;
         var markers = xml.documentElement.getElementsByTagName('marker');

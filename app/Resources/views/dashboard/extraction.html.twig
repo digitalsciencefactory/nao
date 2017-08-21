@@ -55,6 +55,12 @@
                             </div>
                             <br />
                         {% endfor %}
+                        {% if fichierExtract %}
+                            <div class="btn-success">
+                                Si le téléchargement ne démarre pas au bout de 5 secondes, le fichier est disponible  <a href="/dashboard/extract/{{   fichierExtract }}" target="_blank">ici</a>.
+                            </div>
+                            <br />
+                        {% endif %}
 
                         {% if form_errors(form) %}
                             <div class="alert alert-danger">

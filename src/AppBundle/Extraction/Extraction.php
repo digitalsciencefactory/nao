@@ -78,6 +78,6 @@ class Extraction
      * @return bool
      */
     public function datefinApresDatedebut(){
-        return $this->datedebut < $this->datefin;
+        return $this->datedebut <= $this->datefin;
     }
 }
