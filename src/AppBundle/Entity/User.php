@@ -49,12 +49,6 @@ class User implements UserInterface, \Serializable
      *     max        = 20,
      *     minMessage = "Votre pseudonyme doit faire au moins { min } caractères",
      *     maxMessage = "Votre psudonyme ne peut exéder { max } caractères.")
-     * @Assert\Regex(
-     *     pattern     = "/^[a-zA-Z]{1}[a-zA-Z0-9\-_]{3,19}+[^\-_]$/",
-     *     htmlPattern = "^[a-zA-Z]{1}[a-zA-Z0-9\-_]{3,19}+[^\-_]$",
-     *     message     = "Le pseudonyme doit commencer par une lettre, ne peut comporter que des lettres, chiffres, tirets (-) et underscore (_), faire entre 4 et 20 caractères et doit se terminer par une lettre ou un chiffre.",
-     *     groups      = {"obs", "nat"}
-     * )
      */
     private $pseudo;
 

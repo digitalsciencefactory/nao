@@ -10,5 +10,20 @@ namespace AppBundle\Repository;
  */
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @return array
+     */
+    public function getNaturalistesEnAttente(){
+        $qb = $this
+            ->createQueryBuilder('a')
+            ->select('a')
+            ->andWhere('a.carte is not null')
+            ->andWhere('a.roles = :role')
+            ->setParameter('role', "a:1:{i:0;s:16:\"ROLE_OBSERVATEUR\";}");
 
+        return $qb
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

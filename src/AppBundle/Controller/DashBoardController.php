@@ -125,4 +125,22 @@ class DashBoardController extends Controller
         $path = __DIR__.'/../../../web/downloads/';
         return $this->file($path.$slug);
     }
+
+    /**
+     * @Route("/dashboard/naturalistes-a-valider", name="fn_dashboard_natavalid")
+     */
+    public function natEnAttenteAction(){
+        // récupération des naturalistes en attente de validation
+        $manager = $this
+            ->getDoctrine()
+            ->getManager();
+        $userRepository = $manager->getRepository('AppBundle:User');
+
+        $users = $userRepository->getNaturalistesEnAttente();
+
+        return $this->render('dashboard/naturalistes_en_attente.html.twig',
+            array(
+                'users' => $users,
+            ));
+    }
 }

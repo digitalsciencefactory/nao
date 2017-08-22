@@ -1,0 +1,61 @@
+{# app/Resources/views/front/accueil.html.twig #}
+
+{% extends "baseDashboard.html.twig" %}
+
+
+{% block title %}
+    Naturalistes en attente de validation - {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        td.positionne{
+            position: relative;
+        }
+    td img {
+    position:absolute;
+    left:-9999em;
+    top:0;
+    }
+    td:hover img {
+        left: 0px;
+        top: 30px;
+        border-color: white;
+        border: 3px solid;
+    }
+        .slimbtn {
+            padding: .375rem 1.6rem !important;
+        }
+    </style>
+{% endblock stylesheets %}
+
+{% block body %}
+    {{  parent() }}
+
+    {# bloc explications de la page #}
+    <section class="mbr-section" id="content5-13" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 0px;">
+        <div class="container">
+            <h3 class="mbr-section-title display-2">Base de données observations&nbsp;<br></h3>
+            <div class="lead">
+                <p>
+                    <strong>Les comptes naturalistes en attente ci-dessous sont issues d'une demande de l'utilisateur pour obtenir le statut et les droits "Naturaliste" . Via ce tableau, vouc pouvez consulter la carte professionnelle et ensuite Valider / Refuser le statut à l'utilisateur.</strong>
+                </p>
+                <p>
+                    <strong>En cas de problématique technique : assistance@digitalsciencefactory.com</strong>
+                </p>
+            </div>
+        </div>
+    </section>
+    {# fin bloc explications de la page #}
+
+    {# bloc affichage des natularistes en attente #}
+    {% include("dashboard/block/_blck_tab_naturalistes_avalider.html.twig") %}
+    {# fin bloc affichage des naturalistes#}
+{% endblock body %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+
+{% endblock javascripts %}
