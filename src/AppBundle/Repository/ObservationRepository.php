@@ -28,7 +28,8 @@ class ObservationRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin('espece.fr', 'fr')
             ->addSelect('fr')
             ->andWhere('a.espece = :espece')
-            ->setParameter('espece', $espece);
+            ->setParameter('espece', $espece)
+            ->orderBy('a.dcree', 'ASC');
 
         return $qb
             ->getQuery()
