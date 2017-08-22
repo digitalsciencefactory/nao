@@ -1,27 +1,29 @@
-{# app/Resources/views/tales/_observation_attente_html.twig #}
-<section class="mbr-section extTable1" id="extTable1-2t" style="background-color: rgb(105, 176, 171); padding-top: 40px; padding-bottom: 120px;">
+{# app/Resources/views/tales/_observation_valide_html.twig #}
+<section class="mbr-section extTable1" id="extTable1-2u" style="background-color: rgb(255, 255, 255); padding-top: 120px; padding-bottom: 120px;">
     <div class="container">
         <h3 class="mbr-section-title display-2">
-            Observations en attente
+            Observations validées
         </h3>
     </div>
 
-    <div class="container table-wrapper">
+    <div class="container table-wrapper" >
         <table class="table" cellspacing="0" width="100%">
             <thead>
             <tr>
                 <th>Date</th>
                 <th>Observation prise par</th>
-                <th>Espèce observée</th>
-                <th> </th>
+                <th>Validé par</th>
+                <th>Espèces observées</th>
+                <th>Fiches</th>
             </tr>
             </thead>
             <tbody>
             {% for observation in obsTable %}
-                {% if observation.statut == 'STATUT_EN_ATTENTE' %}
+                {% if observation.statut == 'STATUT_VALIDE' %}
                     <tr>
                         <td>{{ observation.dObs|date('d/m/Y') }}</td>
-                        <td>{{ observation.observateur.mail }}</td>
+                        <td>{{ observation.observateur.pseudo }}</td>
+                        <td>{{ observation.naturaliste.pseudo }}</td>
                         <td>{{ observation.espece.lbNom }} <br>
                             {% if observation.espece.nomVern != null %}
                                 {{ observation.espece.nomVern }}

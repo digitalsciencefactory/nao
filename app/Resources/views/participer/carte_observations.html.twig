@@ -1,6 +1,6 @@
 {# app/Resources/views/front/carte-des-observations.html.twig #}
 
-{% extends "Participer/observation_base.html.twig" %}
+{% extends "participer/observation_base.html.twig" %}
 
 {% block title %}
     Carte des observations - {{ parent() }}
@@ -18,11 +18,11 @@
 
     {{ include('participer/forms/_autocomplete_form.html.twig') }}
 
-    {{ include('Participer/blocks/_carte_observation.html.twig') }}
+    {{ include('participer/blocks/_carte_observation.html.twig') }}
 
 <!--  Tableau des observations valides par espèce -->
 
-    {{ include('Participer/tables/_observation_espece_tab.html.twig') }}
+    {{ include('participer/tables/_observation_espece_tab.html.twig') }}
 
 <!--  Blocks -->
 
