@@ -122,16 +122,12 @@ class ParticiperController extends Controller
         $form = $this->createForm(CarteType::class, $observation);
         $form->handleRequest($request);
 
-        XMLGenerator::initFile();
-
         // Formulaire de la carte des observations (Liste)
         if ($form->isSubmitted() && $form->isValid()) {
 
             dump($observation->getEspece());
             $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
             $obsList = $obsManager->findBy(array('espece' => $observation->getEspece()));
-
-            XMLGenerator::SqlToXml($obsList, 'STATUT_VALIDE');
 
             return $this->render('Participer/carte_observations.html.twig', array(
                 'form' => $form->createView(),

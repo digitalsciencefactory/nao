@@ -40,7 +40,12 @@
                         }}
 
                         <span class="input-group-btn">
-                            {{ form_widget(form.rechercher,{'attr':{ 'class': 'btn btn-white' }} ) }}
+                            {{ form_widget(form.rechercher,{'attr':{
+                                'class': 'btn btn-white',
+                                'id':'drop'
+                            }}
+                            )
+                            }}
                         </span>
 
                     </div>

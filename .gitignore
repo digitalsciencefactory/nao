@@ -16,8 +16,5 @@
 .DS_Store
 web/assets/fnat/naturalistes/
 web/assets/fnat/observations/
-
-web/assets/fnat/xml/*
-
 *.xml
-web/assets/fnat/xml/point.xml
+web/assets/.DS_Store
