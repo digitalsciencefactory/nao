@@ -38,11 +38,11 @@ class InscriptionController extends Controller
             $request->getSession()->getFlashBag()->add('noticenews', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $newsletter = new Newsletter();
             $formn = $this->createForm(NewsletterType::class, $newsletter);
-            return $this->render('Front/qui-sommes-nous.html.twig', array(
+            return $this->render('front/qui-sommes-nous.html.twig', array(
                 'formn' => $formn->createView(),
             ));
         }
-        return $this->render('Front/qui-sommes-nous.html.twig', array(
+        return $this->render('front/qui-sommes-nous.html.twig', array(
             'formn' => $formn->createView(),
         ));
     }
@@ -69,10 +69,10 @@ class InscriptionController extends Controller
             $form = $this->createForm(ContactType::class, $contact);
             $request->getSession()->getFlashBag()->add('notice', 'Formulaire envoyé avec succès.');
 
-            return $this->render('Front/contact.html.twig', array('form' => $form->createView(),));
+            return $this->render('front/contact.html.twig', array('form' => $form->createView(),));
         }
 
-        return $this->render('Front/contact.html.twig', array('form' => $form->createView(),));
+        return $this->render('front/contact.html.twig', array('form' => $form->createView(),));
     }
 
     /**
@@ -98,7 +98,7 @@ class InscriptionController extends Controller
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $user = new User();
             $form = $this->createForm(ObsSignType::class, $user);
-            return $this->render('Front/inscription-observateur.html.twig', array(
+            return $this->render('front/inscription-observateur.html.twig', array(
                 'form' => $form->createView(),
                 'formn' => $formn->createView(),
             ));
@@ -114,13 +114,13 @@ class InscriptionController extends Controller
             $request->getSession()->getFlashBag()->add('noticenews', 'Votre inscription à notre Newsletter été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $newsletter = new Newsletter();
             $formn = $this->createForm(NewsletterType::class, $newsletter);
-            return $this->render('Front/inscription-observateur.html.twig', array(
+            return $this->render('front/inscription-observateur.html.twig', array(
                 'formn' => $formn->createView(),
                 'form' => $form->createView(),
             ));
         }
 
-        return $this->render('Front/inscription-observateur.html.twig', array(
+        return $this->render('front/inscription-observateur.html.twig', array(
             'formn' => $formn->createView(),
             'form' => $form->createView(),
         ));
@@ -150,7 +150,7 @@ class InscriptionController extends Controller
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $user = new User();
             $form = $this->createForm(NatSignType::class, $user);
-            return $this->render('Front/inscription-naturaliste.html.twig', array(
+            return $this->render('front/inscription-naturaliste.html.twig', array(
                 'form' => $form->createView(),
                 'formn' => $formn->createView(),
             ));
@@ -166,13 +166,13 @@ class InscriptionController extends Controller
             $request->getSession()->getFlashBag()->add('noticenews', 'Votre inscription à notre Newsletter a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $newsletter = new Newsletter();
             $formn = $this->createForm(NewsletterType::class, $newsletter);
-            return $this->render('Front/inscription-naturaliste#newsletter.html.twig', array(
+            return $this->render('front/inscription-naturaliste#newsletter.html.twig', array(
                 'formn' => $formn->createView(),
                 'form' => $form->createView(),
             ));
         }
 
-        return $this->render('Front/inscription-naturaliste.html.twig', array(
+        return $this->render('front/inscription-naturaliste.html.twig', array(
             'formn' => $formn->createView(),
             'form' => $form->createView(),
         ));
@@ -222,7 +222,7 @@ class InscriptionController extends Controller
 
         }
 
-        return $this->render('Front/validation.html.twig', array(
+        return $this->render('front/validation.html.twig', array(
             'message' => $messageBag,
             'classMessage' => $classMessage,
         ));
@@ -271,7 +271,7 @@ class InscriptionController extends Controller
 
         }
 
-        return $this->render('Front/validation.html.twig', array(
+        return $this->render('front/validation.html.twig', array(
             'message' => $messageBag,
             'classMessage' => $classMessage,
         ));
@@ -301,7 +301,7 @@ class InscriptionController extends Controller
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $user = new User();
             $form = $this->createForm(ObsSignType::class, $user);
-            return $this->render('Front/kit_observation.html.twig', array(
+            return $this->render('front/kit_observation.html.twig', array(
                 'form' => $form->createView(),
                 'formn' => $formn->createView(),
             ));
@@ -317,12 +317,12 @@ class InscriptionController extends Controller
             $request->getSession()->getFlashBag()->add('noticenews', 'Votre inscription à notre Newsletter a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $newsletter = new Newsletter();
             $formn = $this->createForm(NewsletterType::class, $newsletter);
-            return $this->render('Front/kit_observation.html.twig', array(
+            return $this->render('front/kit_observation.html.twig', array(
                 'formn' => $formn->createView(),
                 'form' => $form->createView(),
             ));
         }
-        return $this->render('Front/kit_observation.html.twig', array(
+        return $this->render('front/kit_observation.html.twig', array(
             'formn' => $formn->createView(),
             'form' => $form->createView(),
         ));
