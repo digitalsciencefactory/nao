@@ -4,14 +4,32 @@
 
 
 {% block title %}
-    Accueil - {{ parent() }}
+    Extraction de données - {{ parent() }}
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.css">
+{% endblock stylesheets %}
 
 {% block body %}
-{{  parent() }}
+    {{  parent() }}
 
-
+    {# bloc explications de la page #}
+    <section class="mbr-section" id="content5-13" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 0px;">
+        <div class="container">
+            <h3 class="mbr-section-title display-2">Base de données observations&nbsp;<br></h3>
+            <div class="lead">
+                <p>
+                    <strong>Le formulaire ci dessous permet d'extraire, au format csv, les observations validées sur un temps donné.</strong>
+                </p>
+                <p>
+                    <strong>En cas de problématique technique : assistance@digitalsciencefactory.com</strong>
+                </p>
+            </div>
+        </div>
+    </section>
+    {# fin bloc explications de la page #}
 
     {# bloc formulaire de recherche #}
     <section class="mbr-section" id="form2-14" style="background-color: rgb(163, 143, 132); padding-top: 40px; padding-bottom: 0px;">
@@ -76,3 +94,36 @@
     </section>
     {# fin bloc formulaire de recherche #}
 {% endblock body %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <!-- Date picker -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+
+    <script>
+    $('#sandbox-container input').datepicker({
+        format: "dd/mm/yyyy",
+        weekStart: 1,
+        endDate: "Today",
+        language: "fr",
+        daysOfWeekHighlighted: "0",
+        calendarWeeks: true,
+        autoclose: true,
+        todayHighlight: true
+    });
+    </script>
+    <script>
+        $('#sandbox-container2 input').datepicker({
+            format: "dd/mm/yyyy",
+            weekStart: 1,
+            endDate: "Today",
+            language: "fr",
+            daysOfWeekHighlighted: "0",
+            calendarWeeks: true,
+            autoclose: true,
+            todayHighlight: true
+        });
+    </script>
+
+{% endblock javascripts %}

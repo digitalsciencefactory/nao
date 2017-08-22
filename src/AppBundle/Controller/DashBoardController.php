@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-
 use AppBundle\Entity\Observation;
 use AppBundle\Extraction\Extraction;
 use AppBundle\Form\Type\ExtractType;

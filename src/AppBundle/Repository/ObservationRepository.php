@@ -65,4 +65,36 @@ class ObservationRepository extends \Doctrine\ORM\EntityRepository
 
     }
 
+    /**
+     * Retourne toutes les observation entre deux dates
+     *
+     * @param $datedebut
+     * @param $datefin
+     * @return array
+     */
+    public function extract($datedebut, $datefin){
+        $qb = $this
+            ->createQueryBuilder('a')
+            ->select('a')
+            ->leftJoin('a.espece', 'espece')
+            ->addSelect('espece')
+            ->leftJoin('espece.rang', 'rang')
+            ->addSelect('rang')
+            ->leftJoin('espece.habitat', 'habitat')
+            ->addSelect('habitat')
+            ->leftJoin('espece.fr', 'fr')
+            ->addSelect('fr')
+            ->andWhere('a.dobs >= :datedebut')
+            ->setParameter('datedebut', $datedebut)
+            ->andWhere('a.dobs <= :datefin')
+            ->setParameter('datefin', $datefin)
+            ->andWhere('a.statut = :statut')
+            ->setParameter('statut', "STATUT_VALIDE");
+
+        return $qb
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 }
