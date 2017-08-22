@@ -500,6 +500,13 @@ class Observation
         $this->especeTxt = $especeTxt;
     }
 
-
+    /**
+     * Retourne une partie de l'observation sous forme d'un tableau
+     *
+     * @return array
+     */
+    public function toArray(){
+        return array($this->dobs->format("d-m-Y H:i:s"),$this->espece->getLbNom(),$this->espece->getNomVern(),$this->espece->getNomVernEng(),$this->latitude,$this->longitude,$this->commObs,$this->commNat);
+    }
 
 }

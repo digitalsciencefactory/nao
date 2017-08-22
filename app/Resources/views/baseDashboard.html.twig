@@ -28,8 +28,9 @@
         <link rel="stylesheet" href="{{ asset('assets/socicon/css/styles.css') }}">
 
         <link rel="stylesheet" href="{{ asset('assets/et-line-font-plugin/style.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/dashboard/web/assets/mobirise-icons/mobirise-icons.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/web/assets/mobirise-icons/mobirise-icons.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/dashboard/mobirise3-blocks-plugin/css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/mobirise/css/mbr-additional.css') }}">
     {% endblock stylesheets %}
 
 </head>
@@ -38,17 +39,20 @@
 
 <!--  menu -->
 {% block navbar %}
+
     {% if is_granted('ROLE_ADMIN') %}
         {% include('dashboard/menu/menu-administrateur.html.twig') %}
     {%  else %}
         {% include('dashboard/menu/menu-naturaliste.html.twig') %}
     {% endif %}
+
 {% endblock %}
 
 
 
 {% block body %}
-    {% include('dashboard/block/blck_espace_administrateur.html.twig') %}
+
+    {% include('dashboard/block/_blck_espace_administrateur.html.twig') %}
 
 {% endblock body %}
 
@@ -64,19 +68,19 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('assets/dashboard/web/assets/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/tether/tether.min.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/smooth-scroll/smooth-scroll.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/viewport-checker/jquery.viewportchecker.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/jarallax/jarallax.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/bootstrap-carousel-swipe/bootstrap-carousel-swipe.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/dataTables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/dropdown/js/script.min.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/touch-swipe/jquery.touch-swipe.min.js') }}"></script>
+    <script src="{{ asset('assets/web/assets/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/tether/tether.min.js') }}"></script>
+    <script src="{{ asset('assets/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('assets/smooth-scroll/smooth-scroll.js') }}"></script>
+    <script src="{{ asset('assets/viewport-checker/jquery.viewportchecker.js') }}"></script>
+    <script src="{{ asset('assets/jarallax/jarallax.js') }}"></script>
+    <script src="{{ asset('assets/bootstrap-carousel-swipe/bootstrap-carousel-swipe.js') }}"></script>
+    <script src="{{ asset('assets/dataTables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/dropdown/js/script.min.js') }}"></script>
+    <script src="{{ asset('assets/touch-swipe/jquery.touch-swipe.min.js') }}"></script>
     <script src="{{ asset('assets/dashboard/theme/js/script.js') }}"></script>
     <script src="{{ asset('assets/dashboard/mobirise3-blocks-plugin/js/script.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/dataTables/dataTables.bootstrap4.min.js') }}"></script>
 
 {% endblock %}
 <input name="animation" type="hidden">

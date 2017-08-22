@@ -25,7 +25,6 @@ class ModificationObsType extends AbstractType
             ->add('espece',      IntegerType::class, array('label' => ' '))
             ->add('especeTxt',      TextType::class, array('label' => ' '))
             ->add('comm_nat', TextareaType::class, array('label' => '', 'required' => false))
-
             ->add('valider',      SubmitType::class)
         ;
 
