@@ -1,0 +1,66 @@
+{# app/Resources/views/forms/_envoi_observation_form.html.twig #}
+{{ form_start(form) }}
+    {% for message in app.flashes('notice') %}
+        <div class="btn-success">
+            {{ message }}
+        </div>
+        <br />
+    {% endfor %}
+
+    {% if form_errors(form) %}
+        <div class="alert alert-danger">
+            {{ form_errors(form) }}
+        </div>
+    {% endif %}
+
+    <div class="col-xs-12">
+        {{ form_errors(form.espece) }}
+        {{ form_widget(form.especeTxt, {'attr': {
+            'class': 'form-control',
+            'placeholder': 'Nom de l espèce',
+            'data-id': 'especeId',
+            'data-url': path('fn_participer_autocomplete')
+        }
+        }
+
+        )}}
+        {{ form_widget(form.espece, {'attr': {
+            'class': 'form-control',
+            'placeholder': 'Nom de l espèce',
+            'hidden':'hidden',
+            'value':''
+        } }
+        )
+        }}
+    </div>
+
+    <div class="col-xs-12">
+        {{ form_errors(form.latitude) }}
+        {{ form_widget(form.latitude, {'attr': {'class': 'form-control', 'placeholder': 'Latitude', 'readonly':'readonly'}}) }}
+    </div>
+
+    <div class="col-xs-12">
+        {{ form_errors(form.longitude) }}
+        {{ form_widget(form.longitude, {'attr': {'class': 'form-control', 'placeholder': 'Longitude', 'readonly':'readonly'}}) }}
+    </div>
+
+    <div id="sandbox-container" class="col-xs-12">
+        {{ form_errors(form.dobs) }}
+        {{ form_widget(form.dobs, {'attr': {'class': 'form-control js-datepicker', 'placeholder': 'Date de l observation'}}) }}
+    </div>
+
+    <div class="col-xs-12">
+        {{ form_errors(form.comm_obs) }}
+        {{ form_widget(form.comm_obs, {'attr': {'class': 'form-control', 'placeholder': 'Informations complémentaires'}}) }}
+    </div>
+
+    <br>
+
+    <div class="col-xs-12" style="margin-top: 10px; text-align: center">
+        {{ form_widget(form.file,{'attr':{ 'class': 'form-control' }} ) }}
+        {{ form_widget(form.envoyer,{'attr':{ 'class': 'btn btn-info' }} ) }}
+        {{ form_widget(form.dcree, {'attr': {'class': 'form-control', 'placeholder': 'Date de l observation', 'hidden':'hidden', 'disabled':'disabled'}}) }}
+    </div>
+
+{{ form_rest(form) }}
+{{ form_end(form) }}

@@ -1,0 +1,56 @@
+{# app/Resources/views/blocks/_carte_observation.html.twig #}
+<section class="mbr-section mbr-section__container" id="map2-2x" style="background-color: rgb(105, 176, 171); padding-top: 60px; padding-bottom: 60px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="mbr-map">
+                    <div id="carteObservationMap"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% block javascripts %}
+    <script>
+        var neighborhoods = [
+            {%  if obsMap is defined %}
+            {% for obs in obsMap %}
+                {% if obs.statut == 'STATUT_VALIDE' %}
+                    {lat: {{ obs.latitude }}, lng: {{ obs.longitude }} },
+                {% endif %}
+            {% endfor %}
+            {% endif %}
+        ];
+        var markers = [];
+        var map;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('carteObservationMap'), {
+                zoom: 5,
+                center: {lat: 47.236634, lng: 2.058567}
+            });
+            clearMarkers();
+            for (var i = 0; i < neighborhoods.length; i++) {
+                addMarkerWithTimeout(neighborhoods[i], i * 200);
+            }
+        }
+
+        function addMarkerWithTimeout(position, timeout) {
+            window.setTimeout(function() {
+                markers.push(new google.maps.Marker({
+                    position: position,
+                    map: map,
+                    animation: google.maps.Animation.DROP
+                }));
+            }, timeout);
+        }
+
+        function clearMarkers() {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(null);
+            }
+            markers = [];
+        }
+    </script>
+{% endblock javascripts %}

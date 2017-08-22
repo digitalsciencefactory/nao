@@ -34,12 +34,14 @@
                                 </div>
                                 <br />
                             {% endfor %}
-                                {% if form_errors(form) %}
-                                    <div class="bg-danger">
-                                        {{ form_errors(form) }}
-                                    </div>
-                                {% endif %}
 
+                            {% if form_errors(form) %}
+                                <div class="bg-danger">
+                                    {{ form_errors(form) }}
+                                </div>
+                            {% endif %}
+
+                            <!-- MAIL -->
                             <div class="col-xs-12">
                                 {% if form_errors(form.mail) %}
                                 <div class="bg-danger">
@@ -49,6 +51,15 @@
                                 {{ form_widget(form.mail, {'attr': {'class': 'form-control'}}) }}
                             </div>
 
+                            <!-- PSEUDO -->
+                            <div class="col-xs-12">
+                                {% if form_errors(form.pseudo) %}
+                                    <div class="bg-danger">
+                                        {{ form_errors(form.pseudo) }}
+                                    </div>
+                                {% endif %}
+                                {{ form_widget(form.pseudo, {'attr': {'class': 'form-control'}}) }}
+                            </div>
 
                             <div class="col-xs-12">
 
@@ -78,7 +89,7 @@
                                 Déjà membre ?
                                 <p>
                                     Connectez-vous en
-                                    <a href="/connexion">
+                                    <a href="/login">
                                         cliquant ici
                                     </a>
                                 </p>

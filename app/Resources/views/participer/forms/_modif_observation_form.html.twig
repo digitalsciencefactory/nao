@@ -1,0 +1,63 @@
+{# app/Resources/views/forms/_modif_observation_form.html.twig #}
+<section class="mbr-section" id="form2-55" style="background-color: rgb(105, 176, 171); padding-top: 0; padding-bottom: 0;">
+    <div class="mbr-section mbr-s">
+        <div class="container">
+            <div class="row">
+                {{ form_start(form) }}
+                    {% for message in app.flashes('notice') %}
+                        <div class="btn-success">
+                            {{ message }}
+                        </div>
+                        <br />
+                    {% endfor %}
+
+                    {% if form_errors(form) %}
+                        <div class="alert alert-danger">
+                            {{ form_errors(form) }}
+                        </div>
+                    {% endif %}
+
+                    <div class="col-xs-12">
+                        {{ form_errors(form.espece) }}
+                        {{ form_widget(form.especeTxt, {'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'Nom de l espèce',
+                            'data-id': 'especeId',
+                            'data-url': path('fn_participer_autocomplete'),
+                            'value': observation.espece.lbNom
+                        }
+                        }
+
+                        )}}
+                        {{ form_widget(form.espece, {'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'Nom de l espèce',
+                            'hidden':'hidden',
+                            'value': observation.espece.id
+                        } }
+                        )
+                        }}
+                    </div>
+
+                    <br>
+
+                    <div class="col-xs-12">
+                        <div class="text-xs-center mbr-section-sm-padding">
+                            {{ form_errors(form.comm_nat) }}
+                            {{ form_widget(form.comm_nat, {'attr': {'class': 'form-control', 'placeholder': 'Informations complémentaires'}}) }}
+                        </div>
+
+                        <div class="text-xs-center">
+                            <a class="btn btn-danger" href="{{ path('fn_fiche_supprimer', {id: observation.id}) }}">
+                                Supprimer
+                            </a>
+                            {{ form_widget(form.valider,{'attr':{ 'class': 'btn btn-success' }} ) }}
+                        </div>
+                    </div>
+
+                    {{ form_rest(form) }}
+                    {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</section>

@@ -21,7 +21,6 @@ class TaxrefHabitats
     private $id;
 
     /**
-     * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      * @var int
      * @ORM\Column(name="habitat", type="smallint", unique=true)

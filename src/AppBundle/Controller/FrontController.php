@@ -3,15 +3,7 @@
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity\Newsletter;
-use AppBundle\Form\Type\NewsletterType;
-use AppBundle\Entity\User;
-use AppBundle\Form\NatSignType;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use AppBundle\Mailer\FnatMailer;
 
 class FrontController extends Controller
 {
@@ -20,104 +12,16 @@ class FrontController extends Controller
      * @Route("/accueil")
      */
     public function indexAction(){
-        return $this->render('Front/accueil.html.twig');
+        return $this->render('front/accueil.html.twig');
     }
 
     /**
      * @Route("/inscription", name="fn_front_inscription")
      */
     public function inscriptionAction (){
-        return $this->render('Front/inscription.html.twig');
+        return $this->render('front/inscription.html.twig');
     }
 
-    /**
-     * @Route("/qui-sommes-nous", name="fn_front_about")
-     */
-    public function aboutAction (Request $request)
-    {
-        $newsletter = new Newsletter();
-        $formn = $this->createForm(NewsletterType::class, $newsletter);
-
-        $formn->handleRequest($request);
-        if ($formn->isSubmitted() && $formn->isValid()) {
-            // création du token de vérifiction d'inscription
-            $length = 65;
-            $newsletter->setToken(substr(bin2hex(random_bytes($length)),0,65));
-            // essayer d'insérer en base
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($newsletter);
-            $em->flush();
-            // mail de confirmation d'inscription
-            $mailer = $this->container->get('mailer');
-            $twig = $this->container->get('twig');
-            $mail = new FnatMailer($mailer,$twig);
-            $mail->insVerifNews($newsletter);
-            // on affiche la page de connexion avec le flash bag
-            $request->getSession()->getFlashBag()->add('noticenews', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
-            $newsletter = new Newsletter();
-            $formn = $this->createForm(NewsletterType::class, $newsletter);
-            return $this->render('Front/qui-sommes-nous.html.twig#news', array(
-                'formn' => $formn->createView(),
-            ));
-        }
-        return $this->render('Front/qui-sommes-nous.html.twig', array(
-            'formn' => $formn->createView(),
-        ));
-    }
-
-    /**
-     * @param Request $request
-     * @Route("/activate")
-     */
-    public function validerInscriptionAction(Request $request){
-        // récupérer les valeurs de l'url
-        $mail = $request->query->get('mail');
-        $token = $request->query->get('token');
-        $length = strlen($token);
-
-        $messageBag = "";
-        $classMessage = "";
-
-        // vérifier qu'elles ne sont pas vides et que le token = 65 caractères
-        if($mail !== null && $length == 65){
-            // tenter de select le user
-            $manager = $this->getDoctrine()->getManager();
-            $repository = $manager->getRepository('AppBundle:User');
-            $user = $repository->findOneBy(array(
-               'mail' => $mail,
-               'token' => $token,
-            ));
-
-            if($user !== null){
-               // update du user en supprimant le token et en le passant en actif
-                $user->setToken(null);
-                $user->setStatut("STATUT_ACTIF");
-                $manager->persist($user);
-                $manager->flush();
-
-                $this->mailerAction($user);
-
-                // on crée le message à afficher
-                $messageBag = "Votre compte est validé. Vous pouvez vous identifier sur le site.";
-                $classMessage = "alert alert-success";
-
-            } else {
-                $messageBag = "L'adresse email est inconnue ou votre compte est déjà validé.";
-                $classMessage = "alert alert-danger";
-            }
-        } else {
-            $messageBag = "Le lien de vérification est érroné.";
-            $classMessage = "alert alert-danger";
-
-        }
-
-        return $this->render('Front/validation.html.twig', array(
-            'message' => $messageBag,
-            'classMessage' => $classMessage,
-        ));
-
-
-    }
     /**
      * @Route("/login", name="fn_front_connexion")
      *
@@ -136,7 +40,7 @@ class FrontController extends Controller
         // (mauvais mot de passe par exemple)
         $authenticationUtils = $this->get('security.authentication_utils');
 
-        return $this->render('Front/connexion.html.twig', array(
+        return $this->render('front/connexion.html.twig', array(
             'last_username' => $authenticationUtils->getLastUsername(),
             'error'         => $authenticationUtils->getLastAuthenticationError(),
         ));

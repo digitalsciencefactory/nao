@@ -10,6 +10,91 @@ namespace AppBundle\Repository;
  */
 class ObservationRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * Retourne une observation avec ses dépendances
+     * @param $espece
+     * @return array
+     */
+    public function getEspeceWithJoin($espece){
+        $qb = $this
+            ->createQueryBuilder('a')
+            ->select('a')
+            ->leftJoin('a.espece', 'espece')
+            ->addSelect('espece')
+            ->leftJoin('espece.rang', 'rang')
+            ->addSelect('rang')
+            ->leftJoin('espece.habitat', 'habitat')
+            ->addSelect('habitat')
+            ->leftJoin('espece.fr', 'fr')
+            ->addSelect('fr')
+            ->andWhere('a.espece = :espece')
+            ->setParameter('espece', $espece)
+            ->orderBy('a.dcree', 'ASC');
 
+        return $qb
+            ->getQuery()
+            ->getResult()
+            ;
+
+    }
+
+    /**
+     * Retourne une observation avec ses dépendances
+     * @param $espece
+     * @return array
+     */
+    public function getOneWithJoin($id){
+        $qb = $this
+            ->createQueryBuilder('a')
+            ->select('a')
+            ->leftJoin('a.espece', 'espece')
+            ->addSelect('espece')
+            ->leftJoin('espece.rang', 'rang')
+            ->addSelect('rang')
+            ->leftJoin('espece.habitat', 'habitat')
+            ->addSelect('habitat')
+            ->leftJoin('espece.fr', 'fr')
+            ->addSelect('fr')
+            ->andWhere('a.id = :id')
+            ->setParameter('id', $id);
+
+        return $qb
+            ->getQuery()
+            ->getResult()
+            ;
+
+    }
+
+    /**
+     * Retourne toutes les observation entre deux dates
+     *
+     * @param $datedebut
+     * @param $datefin
+     * @return array
+     */
+    public function extract($datedebut, $datefin){
+        $qb = $this
+            ->createQueryBuilder('a')
+            ->select('a')
+            ->leftJoin('a.espece', 'espece')
+            ->addSelect('espece')
+            ->leftJoin('espece.rang', 'rang')
+            ->addSelect('rang')
+            ->leftJoin('espece.habitat', 'habitat')
+            ->addSelect('habitat')
+            ->leftJoin('espece.fr', 'fr')
+            ->addSelect('fr')
+            ->andWhere('a.dobs >= :datedebut')
+            ->setParameter('datedebut', $datedebut)
+            ->andWhere('a.dobs <= :datefin')
+            ->setParameter('datefin', $datefin)
+            ->andWhere('a.statut = :statut')
+            ->setParameter('statut', "STATUT_VALIDE");
+
+        return $qb
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 
 }

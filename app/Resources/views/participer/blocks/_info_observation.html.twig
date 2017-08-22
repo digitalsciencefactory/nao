@@ -1,0 +1,91 @@
+{# app/Resources/views/blocks/_info_observation.html.twig #}
+<section class="mbr-section" id="msg-box6-5l" style="background-color: rgb(105, 176, 171); padding-top: 80px; padding-bottom: 0;">
+    <div class="container">
+        <div class="row">
+            <div class="mbr-table-md-up">
+
+                {{ include('participer/blocks/_photo_observation.html.twig') }}
+
+                <div class="mbr-table-cell col-md-5 text-xs-center text-md-left content-size">
+                    <br>
+                    <h3 class="mbr-section-title display-2">{{ observation.espece.lbNom }}</h3>
+                    <div class="lead">
+                        <h4 class="text-white">Informations sur l'observation n° {{ observation.id }}</h4>
+                        <strong>Date: </strong> {{ observation.dobs|date('d/m/Y') }}
+                        <br>
+                        <strong>Observation prise par: </strong> {{ observation.observateur.mail }}
+                        <br>
+                        <strong>Remarques: </strong>
+                        {% if observation.commObs is defined %}
+                            {{ observation.commObs }}
+                        {% endif %}
+                        <br>
+                        {% if observation.statut == 'STATUT_VALIDE' %}
+                            <strong>Observation validée par: </strong> {{ observation.observateur.mail }}
+                            <br>
+                            <strong>Observation validée le: </strong>  {{ observation.dvalid|date('d/m/Y') }}
+                            <br>
+                            <strong>Commentaire naturaliste: </strong>
+                                {% if observation.commNat is defined %}
+                                    {{ observation.commNat }}
+                                {% endif %}
+                            {% else %}
+                            <strong> Observation en attente de validation  </strong>
+                        {% endif %}
+
+                        <br>
+
+                    </div>
+
+                    <br>
+
+                    <div class="lead">
+                        <h4 class="text-white">Informations complémentaires</h4>
+                        <strong>Nom vernaculaire: </strong>
+                            {% if observation.espece.nomVern is defined %}
+                                {{ observation.espece.nomVern }}
+                            {% endif %}
+                        <br>
+                        <strong>Nom vernaculaire anglais: </strong>
+                            {% if observation.espece.nomVernEng is defined %}
+                                {{ observation.espece.nomVernEng }}
+                            {% endif %}
+                        <br>
+                        <strong>Ordre / Famille:</strong>
+                        {% if observation.espece.ordre is defined %}
+                            {{ observation.espece.ordre }}
+                        {% endif %} /
+                        {% if observation.espece.famille is defined %}
+                            {{ observation.espece.famille }}
+                        {% endif %}
+                        <br>
+                        <strong>Habitat:</strong>
+                        {% if observation.espece.habitat.lbHabitat is defined %}
+                            {{ observation.espece.habitat.lbHabitat }}
+                        {% endif %}
+                        <br>
+                        {% if observation.espece.habitat.rmHabitat is defined %}
+                            {{ observation.espece.habitat.rmHabitat}}
+                        {% endif %}
+                        <br>
+                        <strong>Référence:</strong>
+                        {% if observation.espece.url is defined %}
+                            <a href="{{ observation.espece.url }}" class="text-white">{{ observation.espece.url }}</a>
+                        {% endif %}
+                        <br>
+                        <strong>Auteur:</strong>
+                        {% if observation.espece.lbauteur is defined %}
+                            {{ observation.espece.lbauteur }}
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
