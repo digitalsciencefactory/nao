@@ -42,14 +42,14 @@ class ParticiperController extends Controller
             //Récupère la liste des observations selon l'éspèce
             $obsMap= $obsManager->findBy(array('espece' => $obsForm->getEspece()));
 
-            return $this->render('Participer/espace_naturaliste.html.twig', array(
+            return $this->render('participer/espace_naturaliste.html.twig', array(
                 'form' => $form->createView(),
                 'obsMap' => $obsMap,
                 'obsTable' => $obsTable,
             ));
         }
 
-        return $this->render('Participer/espace_naturaliste.html.twig', array(
+        return $this->render('participer/espace_naturaliste.html.twig', array(
             'form' => $form->createView(),
             'obsTable' => $obsTable,
         ));
@@ -99,13 +99,13 @@ class ParticiperController extends Controller
         $observation = new Observation();
         $form = $this->createForm(ObservationType::class, $observation);
 
-        return $this->render('Participer/envoi_observation.html.twig', array(
+        return $this->render('participer/envoi_observation.html.twig', array(
             'form' => $form->createView(),
         ));
 
         }
 
-        return $this->render('Participer/envoi_observation.html.twig', array(
+        return $this->render('participer/envoi_observation.html.twig', array(
             'form' => $form->createView(),
         ));
     }
@@ -127,13 +127,13 @@ class ParticiperController extends Controller
             $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
             $obsMap = $obsManager->findBy(array('espece' => $obsForm->getEspece()));
 
-            return $this->render('Participer/carte_observations.html.twig', array(
+            return $this->render('participer/carte_observations.html.twig', array(
                 'form' => $form->createView(),
                 'obsMap' => $obsMap,
             ));
         }
 
-        return $this->render('Participer/carte_observations.html.twig', array(
+        return $this->render('participer/carte_observations.html.twig', array(
             'form' => $form->createView(),
         ));
     }
@@ -175,7 +175,7 @@ class ParticiperController extends Controller
             return $this->redirectToRoute('fn_fiche_observation', ['id' => $observation->getId()]);
         }
 
-        return $this->render('Participer/fiche_observation.html.twig', array(
+        return $this->render('participer/fiche_observation.html.twig', array(
             'observation' => $observation,
             'form' => $form->createView(),
         ));
@@ -235,7 +235,7 @@ class ParticiperController extends Controller
             $form = $this->createForm(UserType::class, $userDB);
 
             $request->getSession()->getFlashBag()->add('notice', 'Votre profil a été mis à jour..');
-            return $this->render('Participer/mon_compte.html.twig',
+            return $this->render('participer/mon_compte.html.twig',
                 array(
                     'pseudonyme' => $user->getPseudo(),
                     'avatar' => $userDB->getPhoto(),
@@ -245,7 +245,7 @@ class ParticiperController extends Controller
 
         }
 
-        return $this->render('Participer/mon_compte.html.twig',
+        return $this->render('participer/mon_compte.html.twig',
             array(
                 'pseudonyme' => $user->getPseudo(),
                 'avatar' => $user->getPhoto(),
