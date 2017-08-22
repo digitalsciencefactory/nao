@@ -1,0 +1,32 @@
+<section class="mbr-section extTable1" id="extTable1-e" style="background-color: rgb(163, 143, 132); padding-top: 40px; padding-bottom: 120px;">
+
+    <div class="container table-wrapper" data-search="true" search-text="Rechercher :" info1-text="" info2-text="" info3-text="" info4-text="">
+        <p> Il y a {{ users|length }} naturaliste(s) en attente.</p>
+        <table class="table" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Date d'inscription</th>
+                    <th>Pseudo</th>
+                    <th>Carte naturaliste</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr class="positionne">
+                    <td>{{ user.dcree|date("d/m/Y") }}</td>
+                    <td>{{ user.pseudo }}</td>
+                    <td><a href="#" ><strong>Consulter</strong></a><img class="popopver" src="{{ asset('assets/fnat/naturalistes/' ~ user.carte ~ '') }}" alt="Photo du badge de {{ user.pseudo }}" /></td>
+                    <td>{{ user.mail }}</td>
+                    <td>
+                        <button class="btn btn-danger slimbtn" type="submit" value="refuser">Refuser</button>
+                        <button class="btn btn-success slimbtn" type="submit" value="valider">Valider</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</section>
