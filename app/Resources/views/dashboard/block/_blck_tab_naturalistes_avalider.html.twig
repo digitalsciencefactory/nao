@@ -1,7 +1,29 @@
 <section class="mbr-section extTable1" id="extTable1-e" style="background-color: rgb(163, 143, 132); padding-top: 40px; padding-bottom: 120px;">
 
+    {% for message in app.flashes('notice') %}
+        <div class="bg-success">
+            {{ message }}
+        </div>
+        <br />
+    {% endfor %}
+
+    {% for message in app.flashes('noticeWarning') %}
+        <div class="btn-warning">
+            {{ message }}
+        </div>
+        <br />
+    {% endfor %}
+
+    {% for message in app.flashes('noticeError') %}
+        <div class="btn-danger">
+            {{ message }}
+        </div>
+        <br />
+    {% endfor %}
+
     <div class="container table-wrapper" data-search="true" search-text="Rechercher :" info1-text="" info2-text="" info3-text="" info4-text="">
         <p> Il y a {{ users|length }} naturaliste(s) en attente.</p>
+        <div class="table-responsive positionne">
         <table class="table" cellspacing="0" width="100%">
             <thead>
                 <tr>
@@ -14,19 +36,48 @@
             </thead>
             <tbody>
                 {% for user in users %}
-                <tr class="positionne">
-                    <td>{{ user.dcree|date("d/m/Y") }}</td>
+                <tr>
+                    <td>{{ user.dcree|date("d/m/Y H:i:s") }}</td>
                     <td>{{ user.pseudo }}</td>
-                    <td><a href="#" ><strong>Consulter</strong></a><img class="popopver" src="{{ asset('assets/fnat/naturalistes/' ~ user.carte ~ '') }}" alt="Photo du badge de {{ user.pseudo }}" /></td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-lg slimbtn" data-toggle="modal" data-target="#{{ user.pseudo }}">Consulter
+                        </button>
+                        {# MODAL #}
+
+                        <div class="modal fade" id="{{ user.pseudo }}" tabindex="-1" role="dialog" aria-labelledby="{{ user.pseudo }}Label">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Carte professionnelle de {{ user.pseudo }}</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img class="img-responsive" src="{{ asset('assets/fnat/naturalistes/' ~ user.carte ~ '') }}" alt="Carte professionnelle de {{ user.pseudo }}" />
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# FIN MODAL #}
+                    </td>
                     <td>{{ user.mail }}</td>
                     <td>
-                        <button class="btn btn-danger slimbtn" type="submit" value="refuser">Refuser</button>
-                        <button class="btn btn-success slimbtn" type="submit" value="valider">Valider</button>
+                        <form class="left" action="/dashboard/naturalistes/refuser/{{ user.id }}" method="POST">
+                            <button class="btn btn-danger slimbtn" type="submit" value="refuser">Refuser</button>
+                        </form>
+                        <form class="right" action="/dashboard/naturalistes/valider/{{ user.id }}" method="POST">
+                            <button class="btn btn-success slimbtn" type="submit" value="valider">Valider</button>
+                        </form>
                     </td>
                 </tr>
+
+
                 {% endfor %}
             </tbody>
         </table>
-
+        </div>
     </div>
 </section>
