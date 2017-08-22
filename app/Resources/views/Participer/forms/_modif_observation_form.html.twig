@@ -48,7 +48,7 @@
                         </div>
 
                         <div class="text-xs-center">
-                            <a class="btn btn-danger" href="/participer/envoi-observation">
+                            <a class="btn btn-danger" href="{{ path('fn_fiche_supprimer', {id: observation.id}) }}">
                                 Supprimer
                             </a>
                             {{ form_widget(form.valider,{'attr':{ 'class': 'btn btn-success' }} ) }}

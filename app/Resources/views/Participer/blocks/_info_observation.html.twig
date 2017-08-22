@@ -15,33 +15,69 @@
                         <br>
                         <strong>Observation prise par: </strong> {{ observation.observateur.mail }}
                         <br>
-
+                        <strong>Remarques: </strong>
+                        {% if observation.commObs is defined %}
+                            {{ observation.commObs }}
+                        {% endif %}
+                        <br>
                         {% if observation.statut == 'STATUT_VALIDE' %}
                             <strong>Observation validée par: </strong> {{ observation.observateur.mail }}
                             <br>
                             <strong>Observation validée le: </strong>  {{ observation.dvalid|date('d/m/Y') }}
+                            <br>
+                            <strong>Commentaire naturaliste: </strong>
+                                {% if observation.commNat is defined %}
+                                    {{ observation.commNat }}
+                                {% endif %}
+                            {% else %}
+                            <strong> Observation en attente de validation  </strong>
                         {% endif %}
 
                         <br>
-                        <strong>Remarques: </strong>
-                        {% if observation.commObs != null%}
-                            {{ observation.commObs }}
-                        {% endif %}
+
                     </div>
 
                     <br>
 
                     <div class="lead">
                         <h4 class="text-white">Informations complémentaires</h4>
-                        <strong>Nom vernaculaire: </strong> {{ observation.espece.nomVern }}
+                        <strong>Nom vernaculaire: </strong>
+                            {% if observation.espece.nomVern is defined %}
+                                {{ observation.espece.nomVern }}
+                            {% endif %}
                         <br>
-                        <strong>Nom vernaculaire anglais: </strong> {{ observation.espece.nomVernEng }}
+                        <strong>Nom vernaculaire anglais: </strong>
+                            {% if observation.espece.nomVernEng is defined %}
+                                {{ observation.espece.nomVernEng }}
+                            {% endif %}
                         <br>
-                        <strong>Ordre / Famille:</strong> {{ observation.espece.ordre }} / {{ observation.espece.famille}}
+                        <strong>Ordre / Famille:</strong>
+                        {% if observation.espece.ordre is defined %}
+                            {{ observation.espece.ordre }}
+                        {% endif %} /
+                        {% if observation.espece.famille is defined %}
+                            {{ observation.espece.famille }}
+                        {% endif %}
                         <br>
-                        <strong>Habitat:</strong> {{ observation.espece.habitat.lbHabitat}}
+                        <strong>Habitat:</strong>
+                        {% if observation.espece.habitat.lbHabitat is defined %}
+                            {{ observation.espece.habitat.lbHabitat }}
+                        {% endif %}
                         <br>
-                        {{ observation.espece.habitat.rmHabitat}}
+                        {% if observation.espece.habitat.rmHabitat is defined %}
+                            {{ observation.espece.habitat.rmHabitat}}
+                        {% endif %}
+                        <br>
+                        <strong>Référence:</strong>
+                        {% if observation.espece.url is defined %}
+                            <a href="{{ observation.espece.url }}" class="text-white">{{ observation.espece.url }}</a>
+                        {% endif %}
+                        <br>
+                        <strong>Auteur:</strong>
+                        {% if observation.espece.lbauteur is defined %}
+                            {{ observation.espece.lbauteur }}
+                        {% endif %}
+
                     </div>
                 </div>
             </div>

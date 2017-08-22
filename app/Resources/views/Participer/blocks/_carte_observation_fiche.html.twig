@@ -14,13 +14,7 @@
 {% block javascripts %}
     <script>
         var neighborhoods = [
-            {%  if obsMap is defined %}
-            {% for obs in obsMap %}
-                {% if obs.statut == 'STATUT_VALIDE' %}
-                    {lat: {{ obs.latitude }}, lng: {{ obs.longitude }} },
-                {% endif %}
-            {% endfor %}
-            {% endif %}
+                    {lat: {{ observation.latitude }}, lng: {{ observation.longitude }} }
         ];
         var markers = [];
         var map;

@@ -17,10 +17,11 @@
             {{ include('Participer/forms/_modif_observation_form.html.twig') }}
         {% endif %}
     {% endif %}
-    <!--  Carte des observations valides par espèce -->
-    {{ include('Participer/blocks/_carte_observation.html.twig') }}
 
-    <!--  Tableau des observations valides par espèce -->
+    <!--  Carte des observations valides par espèce -->
+    {{ include('Participer/blocks/_carte_observation_fiche.html.twig') }}
+
+    <!--  Blocks -->
     {{ include('front/blocks/_follow.html.twig') }}
 
 {% endblock body %}

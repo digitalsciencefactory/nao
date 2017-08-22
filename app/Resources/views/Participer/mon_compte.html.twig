@@ -186,30 +186,15 @@
         </div>
     </section>
 
-
-<!--  Observations  -->
-    <section class="mbr-section" id="content5-5v" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 0;">
-        <div class="container">
-            <h3 class="mbr-section-title display-2 text-black ">
-                Vos observations
-            </h3>
-        </div>
-    </section>
-
-    <section class="mbr-section extTable1" id="extTable1-5u" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 40px;">
-        <div class="container table-wrapper" data-search="false" >
-            <table class="table" cellspacing="0" width="100%">
-                Date EspèceStatut
-            </table>
-        </div>
-    </section>
+    <!--  Observations  -->
+    {{ include('Participer/tables/_observation_user_tab.html.twig') }}
 
     <section class="mbr-section mbr-section__container" id="buttons1-5x" style="background-color: rgb(255, 255, 255); padding-top: 20px; padding-bottom: 80px;">
         <div class="container">
             <div class="row">
                 <div class="col-xs-12">
                     <div class="text-xs-center">
-                        <a class="btn btn-info" href="/participer/envoi-observation">
+                        <a class="btn btn-info" href="{{ path('fn_participer_envoi_obs') }}">
                             Envoyer une observation
                         </a>
                     </div>

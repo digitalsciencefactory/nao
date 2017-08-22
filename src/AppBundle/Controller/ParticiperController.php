@@ -9,7 +9,7 @@ use AppBundle\Form\Type\CarteType;
 use AppBundle\Form\Type\ModificationObsType;
 use AppBundle\Form\Type\NatSignType;
 use AppBundle\Form\Type\ObservationType;
-use AppBundle\Utils\XMLGenerator;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -28,25 +28,23 @@ class ParticiperController extends Controller
      */
     public function espaceNatAction (Request $request)
     {
-        $observation = new Observation();
-        $form = $this->createForm(CarteType::class, $observation);
-        $form->handleRequest($request);
+        //Formulaire des recherche d'espèce pour la Googlemap
+        $obsForm = new Observation();
+        $form = $this->createForm(CarteType::class, $obsForm)->handleRequest($request);
 
-        XMLGenerator::initFile();
-
+        // Liste des observations pour les tableaux
         $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
         $obsTable = $obsManager->findAll();
 
-        // Formulaire de la carte des observations (Liste)
+        // Gestion de la carte des observations (Liste)
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $obsList = $obsManager->findBy(array('espece' => $observation->getEspece()));
-
-            XMLGenerator::SqlToXml($obsList);
+            //Récupère la liste des observations selon l'éspèce
+            $obsMap= $obsManager->findBy(array('espece' => $obsForm->getEspece()));
 
             return $this->render('Participer/espace_naturaliste.html.twig', array(
                 'form' => $form->createView(),
-                'obsList' => $obsList,
+                'obsMap' => $obsMap,
                 'obsTable' => $obsTable,
             ));
         }
@@ -118,20 +116,20 @@ class ParticiperController extends Controller
      */
     public function carteObsAction (Request $request)
     {
-        $observation = new Observation();
-        $form = $this->createForm(CarteType::class, $observation);
-        $form->handleRequest($request);
+        //Formulaire des recherche d'espèce pour la Googlemap
+        $obsForm = new Observation();
+        $form = $this->createForm(CarteType::class, $obsForm)->handleRequest($request);
 
-        // Formulaire de la carte des observations (Liste)
+        // Gestion de la carte des observations (Liste)
         if ($form->isSubmitted() && $form->isValid()) {
 
-            dump($observation->getEspece());
+            //Récupère la liste des observation selon l'éspèce
             $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
-            $obsList = $obsManager->findBy(array('espece' => $observation->getEspece()));
+            $obsMap = $obsManager->findBy(array('espece' => $obsForm->getEspece()));
 
             return $this->render('Participer/carte_observations.html.twig', array(
                 'form' => $form->createView(),
-                'obsList' => $obsList,
+                'obsMap' => $obsMap,
             ));
         }
 
@@ -141,80 +139,57 @@ class ParticiperController extends Controller
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @Route ("/participer/getXMLMarker/{id}", defaults={"_format"="xml"}, name="fn_map_XML")
-     */
-    public function getXMLMarkerAction(Taxref $espece)
-    {
-
-        $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
-        $datas = $obsManager->findBy(array('espece' => $espece->getId()));
-
-        return $this->render('Participer/getXML.xml.twig', array(
-            'datas' => $datas,
-        ));
-    }
-
-    /**
-     * @Route("/participer/fiche-observation/{slug}", name="fn_fiche_observation")
+     * @Route("/participer/fiche-observation/{id}", name="fn_fiche_observation")
      * @Security("has_role('ROLE_NATURALISTE')")
+     * @Method({"GET", "POST"})
      */
-    public function ficheObsAction (Request $request, $slug)
+    public function ficheObsAction (Request $request, Observation $observation)
     {
+        //Formulaire des recherche d'espèce pour la Googlemap
         $obsForm = new Observation();
-        $form = $this->createForm(ModificationObsType::class, $obsForm);
-        $form->handleRequest($request);
+        $form = $this->createForm(ModificationObsType::class, $obsForm)
+            ->handleRequest($request);
 
-        $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
-        $obs = $obsManager->findOneBy(array('id' => $slug));
 
-        XMLGenerator::SqlToXml($obsManager->findBy(array('id' => $slug)));
-
+        // Gestion de la carte des observations (Liste)
         if ($form->isSubmitted() && $form->isValid())
         {
-            $espece = $obsForm->getEspece();
+            // Récupère l'epèce selon son id
             $taxrefManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
-            $especeToSave = $taxrefManager->find($espece);
+            $especeToSave = $taxrefManager->find($obsForm->getEspece());
 
-            dump($espece);
+            //Mise à jour des données
+            $observation
+                ->setEspece($taxrefManager->find($especeToSave))
+                ->setCommNat($obsForm->getCommNat())
+                ->setDvalid(new \DateTime('NOW'))
+                ->setStatut('STATUT_VALIDE')
+                ->setNaturaliste($this->getUser());
 
-            $obs->setEspece($especeToSave);
-            $obs->setCommObs($obsForm->getCommObs());
-            $obs->setDvalid(new \DateTime('NOW'));
-            $obs->setStatut('STATUT_VALIDE');
-            $obs->setNaturaliste($this->getUser());
+            //Sauvegarde dans la base
+            $this->getDoctrine()->getManager()->flush();
 
-            $obsManager= $this->getDoctrine()->getManager();
-            $obsManager->persist($obs);
-            $obsManager->flush();
+            //Massage de confirmation
+            $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été sauvegardée.');
+
+            return $this->redirectToRoute('fn_fiche_observation', ['id' => $observation->getId()]);
         }
 
         return $this->render('Participer/fiche_observation.html.twig', array(
-            'observation' => $obs,
+            'observation' => $observation,
             'form' => $form->createView(),
         ));
     }
 
-    /**
- * @Route("/participer/valider-fiche/{slug}", name="fn_fiche_valider")
- * @Security("has_role('ROLE_NATURALISTE')")
- */
-    public function validerObsAction (Request $request, $slug)
-    {
-        return $this->redirectToRoute('fn_participer_espace_nat');
-    }
 
     /**
-     * @Route("/participer/supprimer-fiche/{slug}", name="fn_fiche_supprimer")
+     * @Route("/participer/supprimer-fiche/{id}", name="fn_fiche_supprimer")
      * @Security("has_role('ROLE_NATURALISTE')")
      */
-    public function supprimerObsAction (Request $request, $slug)
+    public function supprimerObsAction (Request $request, Observation $observation)
     {
-        $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
-        $obs = $obsManager->find($slug);
-
-        $obsManager= $this->getDoctrine()->getManager();
-        $obsManager->remove($obs);
+        $obsManager = $this->getDoctrine()->getManager();
+        $obsManager->remove($observation);
         $obsManager->flush();
 
         $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été supprimée.');
@@ -231,6 +206,10 @@ class ParticiperController extends Controller
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
+
+        //Récupère la liste des observation de l'utilisateur
+        $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
+        $obsTable = $obsManager->findBy(array('observateur' => $user));
 
         // on gère la modification du compte
         if ($form->isSubmitted() && $form->isValid()) {
@@ -261,6 +240,7 @@ class ParticiperController extends Controller
                     'pseudonyme' => $user->getPseudo(),
                     'avatar' => $userDB->getPhoto(),
                     'form' => $form->createView(),
+                    'obsTable' => $obsTable,
                 ));
 
         }
@@ -270,6 +250,7 @@ class ParticiperController extends Controller
                 'pseudonyme' => $user->getPseudo(),
                 'avatar' => $user->getPhoto(),
                 'form' => $form->createView(),
+                'obsTable' => $obsTable,
             ));
     }
 
