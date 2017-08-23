@@ -22,23 +22,32 @@
     {% endfor %}
 
     <div class="container table-wrapper" data-search="true" search-text="Rechercher :" info1-text="" info2-text="" info3-text="" info4-text="">
-        <p> Il y a {{ users|length }} naturaliste(s) en attente.</p>
+        <p> Il y a {{ total }} naturaliste(s) validés.</p>
         <div class="table-responsive positionne">
         <table class="table" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th>Date d'inscription</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
                     <th>Pseudo</th>
-                    <th>Carte naturaliste</th>
                     <th>Email</th>
-                    <th>Action</th>
+                    <th>Code postal</th>
+                    <th>Date de naissance</th>
+                    <th>Carte naturaliste</th>
+                    <th>Bannir</th>
                 </tr>
             </thead>
             <tbody>
                 {% for user in users %}
                 <tr>
                     <td>{{ user.dcree|date("d/m/Y H:i:s") }}</td>
+                    <td>{{ user.nom }}</td>
+                    <td>{{ user.prenom }}</td>
                     <td>{{ user.pseudo }}</td>
+                    <td>{{ user.mail }}</td>
+                    <td>{{ user.codePostal }}</td>
+                    <td>{{ user.ddn }}</td>
                     <td>
                         <button type="button" class="btn btn-primary btn-lg slimbtn" data-toggle="modal" data-target="#{{ user.pseudo }}">Consulter
                         </button>
@@ -63,14 +72,12 @@
 
                         {# FIN MODAL #}
                     </td>
-                    <td>{{ user.mail }}</td>
+
                     <td>
-                        <form class="left" action="/dashboard/naturalistes-refus/{{ user.id }}" method="POST">
-                            <button class="btn btn-danger slimbtn" type="submit" value="refuser">Refuser</button>
+                        <form class="left" action="/dashboard/naturalistes-bannissement/{{ user.id }}" method="POST">
+                            <button class="btn btn-danger slimbtn" type="submit" value="refuser">Bannir</button>
                         </form>
-                        <form class="right" action="/dashboard/naturalistes-validation/{{ user.id }}" method="POST">
-                            <button class="btn btn-success slimbtn" type="submit" value="valider">Valider</button>
-                        </form>
+
                     </td>
                 </tr>
 
@@ -78,6 +85,10 @@
                 {% endfor %}
             </tbody>
         </table>
+
+
+
         </div>
+        {% include("dashboard/block/_pagination.html.twig") %}
     </div>
 </section>
