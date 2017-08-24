@@ -97,7 +97,7 @@ class DashBoardController extends Controller
      */
     public function fileAction($slug)
     {
-        $path = __DIR__.'/../../../web/downloads/';
+        $path = $this->getPath().'/../../../web/downloads/';
         return $this->file($path.$slug);
     }
     /**
