@@ -1,25 +1,6 @@
 <section class="mbr-section extTable1" id="extTable1-e" style="background-color: rgb(163, 143, 132); padding-top: 40px; padding-bottom: 120px;">
 
-    {% for message in app.flashes('notice') %}
-        <div class="bg-success">
-            {{ message }}
-        </div>
-        <br />
-    {% endfor %}
-
-    {% for message in app.flashes('noticeWarning') %}
-        <div class="btn-warning">
-            {{ message }}
-        </div>
-        <br />
-    {% endfor %}
-
-    {% for message in app.flashes('noticeError') %}
-        <div class="btn-danger">
-            {{ message }}
-        </div>
-        <br />
-    {% endfor %}
+    {% include("messagesValidation.html.twig") %}
 
     <div class="container table-wrapper" data-search="true" search-text="Rechercher :" info1-text="" info2-text="" info3-text="" info4-text="">
         <p> Il y a {{ users|length }} naturaliste(s) en attente.</p>

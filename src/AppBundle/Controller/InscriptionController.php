@@ -188,9 +188,6 @@ class InscriptionController extends Controller
         $token = $request->query->get('token');
         $length = strlen($token);
 
-        $messageBag = "";
-        $classMessage = "";
-
         // vérifier qu'elles ne sont pas vides et que le token = 65 caractères
         if($mail !== null && $length == 65){
             // tenter de select le user
@@ -209,23 +206,17 @@ class InscriptionController extends Controller
                 $manager->flush();
 
                 // on crée le message à afficher
-                $messageBag = "Votre compte est validé. Vous pouvez vous identifier sur le site.";
-                $classMessage = "alert alert-success";
+                $this->addMessageBag($request,"success","inscription");
 
             } else {
-                $messageBag = "L'adresse email est inconnue ou votre compte est déjà validé.";
-                $classMessage = "alert alert-danger";
+                $this->addMessageBag($request,"warning","inscription");
             }
         } else {
-            $messageBag = "Le lien de vérification est érroné.";
-            $classMessage = "alert alert-danger";
+            $this->addMessageBag($request,"error","inscription");
 
         }
 
-        return $this->render('front/validation.html.twig', array(
-            'message' => $messageBag,
-            'classMessage' => $classMessage,
-        ));
+        return $this->render('validation.html.twig');
     }
 
     /**
@@ -237,9 +228,6 @@ class InscriptionController extends Controller
         $mail = $request->query->get('mail');
         $token = $request->query->get('token');
         $length = strlen($token);
-
-        $messageBag = "";
-        $classMessage = "";
 
         // vérifier qu'elles ne sont pas vides et que le token = 65 caractères
         if($mail !== null && $length == 65){
@@ -258,23 +246,17 @@ class InscriptionController extends Controller
                 $manager->flush();
 
                 // on crée le message à afficher
-                $messageBag = "Votre abonnement à notre newsletter est validé. Vous pouvez continuer sur le site.";
-                $classMessage = "alert alert-success";
+                $this->addMessageBag($request,"success","newsletter");
 
             } else {
-                $messageBag = "L'adresse email est inconnue ou votre compte est déjà validé.";
-                $classMessage = "alert alert-danger";
+                $this->addMessageBag($request,"warning","newsletter");
+
             }
         } else {
-            $messageBag = "Le lien de vérification est érroné.";
-            $classMessage = "alert alert-danger";
+            $this->addMessageBag($request,"error","newsletter");
 
         }
-
-        return $this->render('front/validation.html.twig', array(
-            'message' => $messageBag,
-            'classMessage' => $classMessage,
-        ));
+        return $this->render('validation.html.twig');
     }
 
 
@@ -369,5 +351,48 @@ class InscriptionController extends Controller
         $twig = $this->container->get('twig');
         $mail = new FnatMailer($mailer, $twig);
         $mail->insVerifNews($newsletter);
+    }
+
+    protected function addMessageBag($request, $etat, $sujet){
+        switch($etat){
+            case "success":
+                // tous les messages de réussites
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
+
+                switch($sujet){
+                    case "inscription":
+                        $request->getSession()->getFlashBag()->add('notice', 'Votre compte est validé. Vous pouvez vous identifier sur le site.');
+                        break;
+
+                    case "newsletter":
+                        $request->getSession()->getFlashBag()->add('notice', 'Votre abonnement à notre newsletter est validé. Vous pouvez continuer sur le site.');
+                        break;
+                }
+
+                break;
+            case "warning":
+                // tous les messages de warning
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-warning');
+
+                switch($sujet){
+                    case "inscription":
+                    case "newsletter":
+                        $request->getSession()->getFlashBag()->add('notice', 'L\'adresse email est inconnue ou votre compte est déjà validé.');
+                        break;
+                }
+                break;
+
+            case "error":
+                // tous les messages d'erreur
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-danger');
+
+                switch($sujet){
+                    case "inscription":
+                    case "newsletter":
+                        $request->getSession()->getFlashBag()->add('notice', 'Le lien de vérification est érroné.');
+                        break;
+                }
+                break;
+        }
     }
 }

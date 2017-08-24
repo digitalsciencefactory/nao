@@ -66,42 +66,14 @@ class ParticiperController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $this->getUser();
-            $espece = $observation->getEspece();
 
-            $taxrefManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
-            $especeToSave = $taxrefManager->getOneWithJoin($espece);
+            $this->saveObservationInDataBase($request, $observation);
+            $observation = new Observation();
+            $form = $this->createForm(ObservationType::class, $observation);
 
-            $observation->setEspece($especeToSave[0]);
-            // on récupère l'espèce avec son id
-
-            // On complète l'entité
-            $observation->setObservateur($user);
-            $observation->setDcree(new \DateTime('NOW'));
-
-            if($user->getRoles()[0] == "ROLE_NATURALISTE"){
-                $observation->setStatut("STATUT_VALIDE");
-                $observation->setNaturaliste($user);
-                $observation->setDvalid(new \DateTime('NOW'));
-            }
-
-        // on essaye d'insérer en base
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($observation);
-            $em->flush();
-
-        // on affiche la page envoi_observation avec le flash bag
-            if($user->getRoles()[0] == ("ROLE_NATURALISTE")) {
-                $request->getSession()->getFlashBag()->add('notice', 'Votre observation est bien enregistrée et validée.');
-            }else{
-                $request->getSession()->getFlashBag()->add('notice', 'Votre observation a bien été transmise à un naturaliste.');
-            }
-        $observation = new Observation();
-        $form = $this->createForm(ObservationType::class, $observation);
-
-        return $this->render('participer/envoi_observation.html.twig', array(
-            'form' => $form->createView(),
-        ));
+            return $this->render('participer/envoi_observation.html.twig', array(
+                'form' => $form->createView(),
+            ));
 
         }
 
@@ -271,6 +243,44 @@ class ParticiperController extends Controller
         }
         $results = Array();
         return new JsonResponse($results);
+    }
+
+    /**
+     * @param Request $request
+     * @param $observation
+     */
+    protected function saveObservationInDataBase(Request $request, $observation)
+    {
+        $user = $this->getUser();
+        $espece = $observation->getEspece();
+
+        $taxrefManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
+        $especeToSave = $taxrefManager->getOneWithJoin($espece);
+
+        $observation->setEspece($especeToSave[0]);
+        // on récupère l'espèce avec son id
+
+        // On complète l'entité
+        $observation->setObservateur($user);
+        $observation->setDcree(new \DateTime('NOW'));
+
+        if ($user->getRoles()[0] == "ROLE_NATURALISTE") {
+            $observation->setStatut("STATUT_VALIDE");
+            $observation->setNaturaliste($user);
+            $observation->setDvalid(new \DateTime('NOW'));
+        }
+
+        // on essaye d'insérer en base
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($observation);
+        $em->flush();
+
+        // on affiche la page envoi_observation avec le flash bag
+        if ($user->getRoles()[0] == ("ROLE_NATURALISTE")) {
+            $request->getSession()->getFlashBag()->add('notice', 'Votre observation est bien enregistrée et validée.');
+        } else {
+            $request->getSession()->getFlashBag()->add('notice', 'Votre observation a bien été transmise à un naturaliste.');
+        }
     }
 
 }
