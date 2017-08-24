@@ -256,7 +256,7 @@ class DashBoardController extends Controller
      */
     protected function createCsvFile($extraction, $observations)
     {
-        $path = $this->getParameter('downloads_dir');
+        $path = $this->get('kernel')->getRootDir() . '/../web/downloads/';
         // création d'un fichier csv
         $now = new \DateTime();
         $file =
