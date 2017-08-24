@@ -42,7 +42,7 @@ class DashBoardController extends Controller
                 $observations = $observationRepository->extract($extraction->getDatedebut(), $extraction->getDatefin());
                 // si il y a au moins 1 observation
                 if($observations !== null && count($observations) !== 0){
-                    $path = __DIR__.'/../../../web/downloads/';
+                    $path = $this->getPath().'/../../../web/downloads/';
                     // création d'un fichier csv
                     $now = new \DateTime();
                     $file =
