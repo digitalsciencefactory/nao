@@ -42,28 +42,10 @@ class DashBoardController extends Controller
                 $observations = $observationRepository->extract($extraction->getDatedebut(), $extraction->getDatefin());
                 // si il y a au moins 1 observation
                 if($observations !== null && count($observations) !== 0){
-                    $path = $this->getPath().'/../../../web/downloads/';
-                    // création d'un fichier csv
-                    $now = new \DateTime();
-                    $file =
-                        "FNAT_exctract_"
-                        . $now->format("Ymd_His_")
-                        . $extraction->getDatedebut()->format("Ymd")
-                        . "_"
-                        . $extraction->getDatefin()->format("Ymd")
-                        . ".csv"
-                    ;
-                    // ouverture en écriture
-                    $handle = fopen($path.$file, "w");
-                    // écriture de l'entête
-                    $entete = array("date observation", "lb nom", "nom vern", "nom vern eng", "latitude", "longitude", "commentaire observateur", "commentaire naturaliste");
-                    fputcsv($handle, $entete);
-                    // écriture de chaque ligne
-                    foreach($observations as $observation){
-                        fputcsv($handle, $observation->toArray());
-                    }
-                    // fermeture du fichier
-                    fclose($handle);
+
+                    // crée le fichier et retourne le chemin du fichier
+                    $file = $this->createCsvFile($extraction, $observations);
+
                     // notice du téléchargement
                     $request->getSession()->getFlashBag()->add('notice', 'La requête a retournée ' . count($observations) .' observation(s). Le téléchargement va commencer automatiquement.');
                     // création de la réponse html
@@ -97,7 +79,7 @@ class DashBoardController extends Controller
      */
     public function fileAction($slug)
     {
-        $path = $this->getPath().'/../../../web/downloads/';
+        $path = $this->get('kernel')->getRootDir() . '/../web/downloads/';
         return $this->file($path.$slug);
     }
     /**
@@ -150,11 +132,8 @@ class DashBoardController extends Controller
 
         $this->validateOrRefuseNat($id, "validation",$request);
 
-        $users = $this->getNatEnAttente();
-        return $this->render('dashboard/naturalistes_en_attente.html.twig',
-            array(
-                'users' => $users,
-            ));
+        return $this->redirect($_SERVER['HTTP_REFERER']);
+        //return $this->render('validation.html.twig');
     }
     /**
      * @Route("dashboard/naturalistes-refus/{id}", name="fn_dashboard_natrefus", requirements={"id": "\d+"})
@@ -164,11 +143,8 @@ class DashBoardController extends Controller
 
         $this->validateOrRefuseNat($id, "refus",$request);
 
-        $users = $this->getNatEnAttente();
-        return $this->render('dashboard/naturalistes_en_attente.html.twig',
-            array(
-                'users' => $users,
-            ));
+        return $this->redirect($_SERVER['HTTP_REFERER']);
+        //return $this->render('validation.html.twig');
     }
 
     /**
@@ -189,7 +165,10 @@ class DashBoardController extends Controller
 
                 if($action === "refus"){
                     // suppression du fichier carte
-                    unlink($this->getPath().'/../../../web/assets/fnat/naturalistes/'.$user->getCarte());
+                    $fichier = $this->get('kernel')->getRootDir() . '/../web/assets/fnat/naturalistes/' . $user->getCarte();
+                    if(file_exists($fichier)){
+                        unlink($fichier);
+                    }
                     $user->setCarte(null);
                     $userManager->persist($user);
                     $userManager->flush();
@@ -217,35 +196,45 @@ class DashBoardController extends Controller
     protected function getMessageNatValidation($level, $action,Request $request){
 
         if($level === "error") {
-            $request->getSession()->getFlashBag()->add('noticeError', 'Une erreur est survenue.');
+            $request->getSession()->getFlashBag()->add('notice', 'Une erreur est survenue.');
+            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-danger');
             return;
         }
 
-        if($action === "refus"){
-            switch($level){
+        switch($level) {
 
-                case "success":
-                    $request->getSession()->getFlashBag()->add('notice', 'L\'utilisateur a été refusé et reste observateur.');
-                    break;
+            case "success":
+                // tous les messages de réussite
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
 
-                case "warning":
-                    $request->getSession()->getFlashBag()->add('noticeWarning', 'L\'utilisateur est déjà  refusé ou n\'a pas demandé à être naturaliste');
-                    break;
+                switch ($action) {
 
-            }
+                    case "refus":
+                        $request->getSession()->getFlashBag()->add('notice', 'L\'utilisateur a été refusé et reste observateur.');
+                        break;
 
-        } else {
-            switch($level){
+                    case "validation":
+                        $request->getSession()->getFlashBag()->add('notice', 'L\'utilisateur a été validé');
+                        break;
+                }
 
-                case "success":
-                    $request->getSession()->getFlashBag()->add('notice', 'L\'utilisateur a été validé');
-                    break;
+                break;
 
-                case "warning":
-                    $request->getSession()->getFlashBag()->add('noticeWarning', 'L\'utilisateur est déjà  validé ou n\'a pas demandé à  être naturaliste');
-                    break;
+            case "warning":
+                // tous les messages de warning
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-warning');
 
-            }
+                switch ($action) {
+
+                    case "refus":
+                        $request->getSession()->getFlashBag()->add('message', 'L\'utilisateur est déjà  refusé ou n\'a pas demandé à être naturaliste');
+                        break;
+
+                    case "validation":
+                        $request->getSession()->getFlashBag()->add('noticeWarning', 'L\'utilisateur est déjà  validé ou n\'a pas demandé à  être naturaliste');
+                        break;
+                }
+
         }
     }
     /**
@@ -260,5 +249,36 @@ class DashBoardController extends Controller
         $userRepository = $manager->getRepository('AppBundle:User');
         $users = $userRepository->getNaturalistesEnAttente();
         return $users;
+    }
+
+    /**
+     * @param $extraction
+     * @param $observations
+     * @return string
+     */
+    protected function createCsvFile($extraction, $observations)
+    {
+        $path = $this->get('kernel')->getRootDir() . '/../web/downloads/';
+        // création d'un fichier csv
+        $now = new \DateTime();
+        $file =
+            "FNAT_exctract_"
+            . $now->format("Ymd_His_")
+            . $extraction->getDatedebut()->format("Ymd")
+            . "_"
+            . $extraction->getDatefin()->format("Ymd")
+            . ".csv";
+        // ouverture en écriture
+        $handle = fopen($path . $file, "w");
+        // écriture de l'entête
+        $entete = array("date observation", "lb nom", "nom vern", "nom vern eng", "latitude", "longitude", "commentaire observateur", "commentaire naturaliste");
+        fputcsv($handle, $entete);
+        // écriture de chaque ligne
+        foreach ($observations as $observation) {
+            fputcsv($handle, $observation->toArray());
+        }
+        // fermeture du fichier
+        fclose($handle);
+        return $file;
     }
 }
