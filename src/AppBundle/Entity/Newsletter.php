@@ -139,17 +139,6 @@ class Newsletter
     }
 
     /**
-    * @ORM\PostPersist()
-    * @ORM\PostUpdate()
-    */
-    private function sendToNewsList(){
-        if($this->token === null){
-
-            // TODO faire l'envoie vers mailchimp api
-        }
-    }
-
-    /**
      * @ORM\PostRemove()
      */
     private function eraseFromNewsList(){
