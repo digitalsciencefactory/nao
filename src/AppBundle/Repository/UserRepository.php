@@ -10,8 +10,28 @@ namespace AppBundle\Repository;
  */
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
+    /* *** MIXTE *** */
 
-    /** NATURALISTES */
+    /**
+     *  Retrouve un utilisateur actif avec son id
+     *  ou renvoi un tableau vide
+     * @param $id
+     * @return array
+     */
+    public function getUserToBan($id){
+        $qb = $this->createQueryBuilder('a')
+            ->select('a')
+            ->andWhere('a.id = :id')
+            ->setParameter('id', $id)
+            ->andWhere('a.statut = :statut')
+        ->setParameter('statut', "STATUT_ACTIF");
+
+        return $qb->getQuery()->getArrayResult();
+    }
+
+    /* *** OBSERVATEURS ***  */
+
+    /* *** NATURALISTES *** */
 
     /**
      * @return mixed
