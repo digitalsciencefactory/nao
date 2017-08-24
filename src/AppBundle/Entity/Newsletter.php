@@ -138,10 +138,4 @@ class Newsletter
         return $this->dcree;
     }
 
-    /**
-     * @ORM\PostRemove()
-     */
-    private function eraseFromNewsList(){
-        // TODO utiliser l'api de mailchimp pour supprimer l'adresse de la liste
-    }
 }
