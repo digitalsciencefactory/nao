@@ -189,7 +189,7 @@ class DashBoardController extends Controller
 
                 if($action === "refus"){
                     // suppression du fichier carte
-                    unlink(__DIR__.'/../../../web/assets/fnat/naturalistes/'.$user->getCarte());
+                    unlink($this->getPath().'/../../../web/assets/fnat/naturalistes/'.$user->getCarte());
                     $user->setCarte(null);
                     $userManager->persist($user);
                     $userManager->flush();
