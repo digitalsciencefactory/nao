@@ -132,7 +132,7 @@ class DashBoardController extends Controller
 
         $this->validateOrRefuseNat($id, "validation",$request);
 
-        return $this->redirect($_SERVER['HTTP_REFERER']);
+        return $this->redirect($request->server['HTTP_REFERER']);
         //return $this->render('validation.html.twig');
     }
     /**
@@ -143,7 +143,7 @@ class DashBoardController extends Controller
 
         $this->validateOrRefuseNat($id, "refus",$request);
 
-        return $this->redirect($_SERVER['HTTP_REFERER']);
+        return $this->redirect($request->server['HTTP_REFERER']);
         //return $this->render('validation.html.twig');
     }
 
