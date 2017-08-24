@@ -8,6 +8,9 @@ imports:
 parameters:
     locale: en
 
+session:
+    name: fnatcookies
+    
 framework:
     #esi: ~
     #translator: { fallbacks: ['%locale%'] }
