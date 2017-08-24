@@ -155,8 +155,6 @@ class DashBoardController extends Controller
      */
     public function bannirAction($id = 0, Request $request){
 
-        $user = $this->getDoctrine()->getManager()->getRepository('AppBundle:User')->getUserToBan($id);
-
         $redirect = ($request->server->get('HTTP_REFERER') === null) ? $this->generateUrl("fn_dashboard_index") : $request->server->get('HTTP_REFERER');
 
         return $this->redirect($redirect);
