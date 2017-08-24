@@ -133,7 +133,6 @@ class DashBoardController extends Controller
         $this->validateOrRefuseNat($id, "validation",$request);
 
         return $this->redirect($request->server['HTTP_REFERER']);
-        //return $this->render('validation.html.twig');
     }
     /**
      * @Route("dashboard/naturalistes-refus/{id}", name="fn_dashboard_natrefus", requirements={"id": "\d+"})
@@ -144,7 +143,6 @@ class DashBoardController extends Controller
         $this->validateOrRefuseNat($id, "refus",$request);
 
         return $this->redirect($request->server['HTTP_REFERER']);
-        //return $this->render('validation.html.twig');
     }
 
     /**
