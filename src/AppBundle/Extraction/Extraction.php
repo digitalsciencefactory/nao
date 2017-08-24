@@ -28,11 +28,6 @@ class Extraction
     private $datefin;
 
     /**
-     * @var Array(Extrait)
-     */
-    private $tab_extraits;
-
-    /**
      * Extraction constructor.
      */
     public function __construct()
