@@ -481,7 +481,7 @@ class Observation
 
     protected function getUploadRootDir()
     {
-        return __DIR__.'/../../../web/'.$this->getUploadDir();
+        return $this->get('kernel')->getRootDir() . '/../web/'.$this->getUploadDir();
     }
 
     /**
