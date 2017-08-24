@@ -3,10 +3,9 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Observation;
 use AppBundle\Extraction\Extraction;
 use AppBundle\Form\Type\ExtractType;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\Request;
-use ZipArchive;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -92,17 +91,18 @@ class DashBoardController extends Controller
         $userRepository = $userManager->getRepository('AppBundle:User');
 
         // on compte le nombre de naturaliste
-        $nombre = $userRepository->howManyNat();
+        $nombre =  $userRepository->howManyNat();
 
         // on compte la pagination nécessaire
-        $nombrePageMax = (int) ceil($nombre / 10);
+        $nombrePageMax = ($nombre === "0") ? 1 : (int) ceil($nombre / 10.0);
 
         if($page > $nombrePageMax){
             $page = $nombrePageMax;
         }
 
         // on récupère le bon nombre de naturaliste
-        $naturalistes = $userRepository->getNatByOffset(10,10 * ($page -1));
+        $calcul = (10 * ($page - 1));
+        $naturalistes = $userRepository->getNatByOffset(10,$calcul);
 
 
         return $this->render('dashboard/naturalistes.html.twig',
@@ -132,7 +132,9 @@ class DashBoardController extends Controller
 
         $this->validateOrRefuseNat($id, "validation",$request);
 
-        return $this->redirect($request->server['HTTP_REFERER']);
+        $redirect = ($request->server->get('HTTP_REFERER') === null) ? $this->generateUrl("fn_dashboard_natavalid") : $request->server->get('HTTP_REFERER');
+
+        return $this->redirect($redirect);
     }
     /**
      * @Route("dashboard/naturalistes-refus/{id}", name="fn_dashboard_natrefus", requirements={"id": "\d+"})
@@ -142,7 +144,20 @@ class DashBoardController extends Controller
 
         $this->validateOrRefuseNat($id, "refus",$request);
 
-        return $this->redirect($request->server['HTTP_REFERER']);
+        $redirect = ($request->server->get('HTTP_REFERER') === null) ? $this->generateUrl("fn_dashboard_natavalid") : $request->server->get('HTTP_REFERER');
+
+        return $this->redirect($redirect);
+    }
+
+    /**
+     * @Route("dashboard/bannir/{id}", name="fn_dashboard_bannir", requirements={"id": "\d+"})
+     * Tente de bannir un utilisateur
+     */
+    public function bannirAction($id = 0, Request $request){
+
+        $redirect = ($request->server->get('HTTP_REFERER') === null) ? $this->generateUrl("fn_dashboard_index") : $request->server->get('HTTP_REFERER');
+
+        return $this->redirect($redirect);
     }
 
     /**
@@ -256,7 +271,7 @@ class DashBoardController extends Controller
      */
     protected function createCsvFile($extraction, $observations)
     {
-        $path = $this->get('kernel')->getRootDir() . '/../web/downloads/';
+        $path = $this->getParameter('downloads_dir');
         // création d'un fichier csv
         $now = new \DateTime();
         $file =

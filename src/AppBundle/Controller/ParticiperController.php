@@ -256,9 +256,20 @@ class ParticiperController extends Controller
 
         $taxrefManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
         $especeToSave = $taxrefManager->getOneWithJoin($espece);
+        if (null !== $observation->getFile()) {
+            $name = substr(bin2hex(random_bytes(200)),0,100) . "." . $observation->getFile()->getClientOriginalExtension();
 
-        $observation->setEspece($especeToSave[0]);
+            $name = Date("yyyy-mm-dd") . "_" . $name;
+            // On déplace le fichier envoyé dans le répertoire de notre choix
+            $observation->getFile()->move($this->getParameter('photos_dir'), $name);
+
+            // On sauvegarde le nom de fichier dans notre attribut $url
+            $observation->setPhoto($name);
+        }
+
+
         // on récupère l'espèce avec son id
+        $observation->setEspece($especeToSave[0]);
 
         // On complète l'entité
         $observation->setObservateur($user);

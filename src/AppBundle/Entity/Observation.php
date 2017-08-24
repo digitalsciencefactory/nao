@@ -453,38 +453,6 @@ class Observation
     }
 
     /**
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
-    public function upload()
-    {
-        // Si jamais il n'y a pas de fichier on ne fait rien
-        if (null === $this->file) {
-            return;
-        }
-
-        $name = substr(bin2hex(random_bytes(200)),0,100) . "." . $this->file->getClientOriginalExtension();
-
-        $name = Date("yyyy-mm-dd") . "_" . $name;
-        // On déplace le fichier envoyé dans le répertoire de notre choix
-        $this->file->move($this->getUploadRootDir(), $name);
-
-        // On sauvegarde le nom de fichier dans notre attribut $url
-        $this->photo = $name;
-
-    }
-
-    public function getUploadDir()
-    {
-        return 'assets/fnat/observations';
-    }
-
-    protected function getUploadRootDir()
-    {
-        return $this->get('kernel')->getRootDir() . '/../web/'.$this->getUploadDir();
-    }
-
-    /**
      * @return mixed
      */
     public function getEspeceTxt()

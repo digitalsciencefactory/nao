@@ -316,6 +316,16 @@ class InscriptionController extends Controller
      */
     protected function saveSignUpObs(UserPasswordEncoderInterface $encoder, $user)
     {
+        // gestion de la carte pro
+        $name = substr(bin2hex(random_bytes(30)),0,25) . "." . $user->getFile()->getClientOriginalExtension();
+
+        if (null !== $user->getFile()) {
+            // On déplace le fichier envoyé dans le répertoire de notre choix
+            $user->getFile()->move($this->getParameter('carte_pro_dir'), $name);
+
+            $user->setCarte($name);
+        }
+
         $user->setRoles(array('ROLE_OBSERVATEUR'));
         $user->setDcree(new \DateTime());
         $user->setStatut('STATUT_INACTIF');

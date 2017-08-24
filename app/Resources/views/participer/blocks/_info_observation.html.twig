@@ -16,9 +16,9 @@
                         <strong>Observation prise par: </strong> {{ observation.observateur.mail }}
                         <br>
                         <strong>Remarques: </strong>
-                        {% if observation.commObs is defined %}
+
                             {{ observation.commObs }}
-                        {% endif %}
+
                         <br>
                         {% if observation.statut == 'STATUT_VALIDE' %}
                             <strong>Observation validée par: </strong> {{ observation.observateur.mail }}
