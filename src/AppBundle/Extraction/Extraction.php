@@ -2,7 +2,6 @@
 namespace AppBundle\Extraction;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Class Extraction
@@ -71,15 +70,9 @@ class Extraction
     /* METHODES */
 
     /**
-     * @Assert\Callback
+     * @return bool
      */
-    public function validate(ExecutionContextInterface $context, $payload)
-    {
-        if($this->datedebut > $this->datefin){
-            $context->buildViolation('La date de début doit être antérieur à la date de fin.')
-                ->atPath('dateDebut')
-                ->addViolation();
-        }
+    public function datefinApresDatedebut(){
+        return $this->datedebut <= $this->datefin;
     }
 }
-
