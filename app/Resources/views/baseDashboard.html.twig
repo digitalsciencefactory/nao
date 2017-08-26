@@ -39,12 +39,8 @@
 
 <!--  menu -->
 {% block navbar %}
-
-    {% if is_granted('ROLE_ADMIN') %}
+    
         {% include('dashboard/menu/menu-administrateur.html.twig') %}
-    {%  else %}
-        {% include('dashboard/menu/menu-naturaliste.html.twig') %}
-    {% endif %}
 
 {% endblock %}
 
