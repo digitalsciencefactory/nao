@@ -1,5 +1,5 @@
 <?php
-namespace AppBunble\Service;
+namespace AppBundle\Service;
 
 use AppBundle\Extraction\Extraction;
 use Doctrine\ORM\EntityManager;
