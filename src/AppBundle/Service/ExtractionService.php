@@ -4,7 +4,8 @@ namespace AppBundle\Service;
 use AppBundle\Extraction\Extraction;
 use Doctrine\ORM\EntityManager;
 use SensioLabs\Security\Exception\RuntimeException;
-use Symfony\Component\DependencyInjection\Dump\Container;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class ExtractionService
@@ -14,18 +15,14 @@ class ExtractionService
      */
     private $em;
 
-    /**
-     * @var Container
-     */
-    private $container;
+
 
     /**
      * ExtractionService constructor.
      */
-    public function __construct(EntityManager $em, Container $container)
+    public function __construct(EntityManager $em)
     {
         $this->em = $em;
-        $this->container = $container;
     }
 
     public function getObservationsDatees(Extraction $extraction){
@@ -46,10 +43,11 @@ class ExtractionService
     /**
      * @param Extraction $extraction
      * @param array $observations
-     * @param string $path
+     * @param $path
+     * @param array $entete
      * @return string
      */
-    public function generateCsv(Extraction $extraction, array $observations, $path, $entete){
+    public function generateCsv(Extraction $extraction, array $observations, $path, array $entete){
 
 
         // création d'un fichier csv
