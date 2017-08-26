@@ -23,8 +23,8 @@ security:
         - { path: ^/connexion, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/participer, roles: ROLE_OBSERVATEUR }
         - { path: ^/participer/espace-naturaliste, roles: ROLE_NATURALISTE }
-        - { path: ^/dashboard$, roles: ROLE_NATURALISTE }
-        - { path: ^/dashboard/extraction-donnees, roles: ROLE_NATURALISTE }
+        - { path: ^/participer/extraction-donnees, roles: ROLE_NATURALISTE }
+        - { path: ^/dashboard, roles: ROLE_ADMIN }
 
 
     providers:
