@@ -9,6 +9,9 @@ use AppBundle\Form\Type\CarteType;
 use AppBundle\Form\Type\ModificationObsType;
 use AppBundle\Form\Type\NatSignType;
 use AppBundle\Form\Type\ObservationType;
+use AppBundle\Service\ExtractionService;
+use AppBundle\Extraction\Extraction;
+use AppBundle\Form\Type\ExtractType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -239,9 +242,10 @@ class ParticiperController extends Controller
             $search = $request->get('search');
             $repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
             $results = $repository->getByAutoComplete($search);
-            return new JsonResponse($results);
+        return new JsonResponse($results);
         }
         $results = Array();
+
         return new JsonResponse($results);
     }
 
@@ -292,6 +296,46 @@ class ParticiperController extends Controller
         } else {
             $request->getSession()->getFlashBag()->add('notice', 'Votre observation a bien été transmise à un naturaliste.');
         }
+    }
+
+    /**
+     * @Route("/participer/extraction-donnees", name="fn_participer_bdd")
+     * @Security("has_role('ROLE_NATURALISTE')")
+     */
+    public function bddAction(Request $request, ExtractionService $extractionService){
+        $extraction = new Extraction();
+        $file = "";
+        $form = $this->createForm(ExtractType::class, $extraction);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+
+            try {
+                $observations = $extractionService->getObservationsDatees($extraction);
+                $file = $extractionService->generateCsv($extraction,$observations, $this->getParameter('downloads_dir'),$this->getParameter('entete_csv_extract'));
+
+                $request->getSession()->getFlashBag()->add('notice', 'La requête a retournée ' . count($observations) .' observation(s). Le téléchargement va commencer automatiquement.');
+
+                // création de la réponse html
+                $response = $this->render('dashboard/extraction.html.twig', array(
+                    'fichierExtract' => $file, // file est le string du chemin du fichier
+                    'form' => $form->createView(),
+                ));
+
+                // création du refresh dans le header pour déclencher le download du fichier
+                $response->headers->set('Refresh', '2; url='.$this->generateUrl('fn_dashboard_extract', array('slug' => $file)));
+
+                // envoi de la double réponse
+                return $response;
+            } catch(\RuntimeException $re){
+                $request->getSession()->getFlashBag()->add('notice', $re->getMessage());
+            }
+
+        }
+        return $this->render('participer/extraction.html.twig', array(
+            'fichierExtract' => $file,
+            'form' => $form->createView(),
+        ));
     }
 
 }

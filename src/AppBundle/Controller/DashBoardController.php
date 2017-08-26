@@ -2,8 +2,7 @@
 namespace AppBundle\Controller;
 use AppBundle\Service\ExtractionService;
 use AppBundle\Entity\Observation;
-use AppBundle\Extraction\Extraction;
-use AppBundle\Form\Type\ExtractType;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Form\FormError;
@@ -21,46 +20,7 @@ class DashBoardController extends Controller
     public function indexAction(){
         return $this->render('dashboard/accueil.html.twig');
     }
-    /**
-     * @Route("/dashboard/extraction-donnees", name="fn_dashboard_bdd")
-     * @Route("/dashboard/extraction-donnees")
-     * @Security("has_role('ROLE_NATURALISTE')")
-     */
-    public function bddAction(Request $request, ExtractionService $extractionService){
-        $extraction = new Extraction();
-        $file = "";
-        $form = $this->createForm(ExtractType::class, $extraction);
-        $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
-
-            try {
-                $observations = $extractionService->getObservationsDatees($extraction);
-                $file = $extractionService->generateCsv($extraction,$observations, $this->getParameter('downloads_dir'),$this->getParameter('entete_csv_extract'));
-
-                $request->getSession()->getFlashBag()->add('notice', 'La requête a retournée ' . count($observations) .' observation(s). Le téléchargement va commencer automatiquement.');
-
-                // création de la réponse html
-                $response = $this->render('dashboard/extraction.html.twig', array(
-                    'fichierExtract' => $file, // file est le string du chemin du fichier
-                    'form' => $form->createView(),
-                ));
-
-                // création du refresh dans le header pour déclencher le download du fichier
-                $response->headers->set('Refresh', '2; url='.$this->generateUrl('fn_dashboard_extract', array('slug' => $file)));
-
-                // envoi de la double réponse
-                return $response;
-            } catch(\RuntimeException $re){
-                $request->getSession()->getFlashBag()->add('notice', $re->getMessage());
-            }
-
-        }
-        return $this->render('dashboard/extraction.html.twig', array(
-            'fichierExtract' => $file,
-            'form' => $form->createView(),
-        ));
-    }
     /**
      * @Route("/dashboard/extract/{slug}", name="fn_dashboard_extract")
      * @Security("has_role('ROLE_NATURALISTE')")

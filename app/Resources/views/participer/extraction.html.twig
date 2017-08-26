@@ -1,6 +1,6 @@
 {# app/Resources/views/front/accueil.html.twig #}
 
-{% extends "baseDashboard.html.twig" %}
+{% extends "base.html.twig" %}
 
 
 {% block title %}
@@ -13,12 +13,13 @@
 {% endblock stylesheets %}
 
 {% block body %}
-    {{  parent() }}
 
     {# bloc explications de la page #}
-    <section class="mbr-section" id="content5-13" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 0px;">
+    <section class="mbr-section mbr-after-navbar" id="content5-2o" style="padding-top: 120px; padding-bottom: 40px;">
         <div class="container">
-            <h3 class="mbr-section-title display-2">Base de données observations&nbsp;<br></h3>
+            <h3 class="mbr-section-title display-2">
+                Base de données observations
+            </h3>
             <div class="lead">
                 <p>
                     <strong>Le formulaire ci dessous permet d'extraire, au format csv, les observations validées sur un temps donné.</strong>
@@ -29,20 +30,16 @@
             </div>
         </div>
     </section>
+
     {# fin bloc explications de la page #}
 
     {# bloc formulaire de recherche #}
-    <section class="mbr-section" id="form2-14" style="background-color: rgb(163, 143, 132); padding-top: 40px; padding-bottom: 0px;">
-        <div class="mbr-section mbr-section__container mbr-section__container--middle">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xs-12 text-xs-center">
-                        <h3 class="mbr-section-title display-2">Extraction par date</h3>
-
-                    </div>
-                </div>
-            </div>
-        </div>
+<section class="mbr-section extTable1" id="extTable1-2t" style="background-color: rgb(105, 176, 171); padding-top: 40px; padding-bottom: 120px;">
+    <div class="container">
+        <h3 class="mbr-section-title display-2">
+            Extraction par date
+        </h3>
+    </div>
         <div class="mbr-section mbr-section-nopadding">
             <div class="container">
                 <div class="row">
@@ -68,19 +65,19 @@
                             </div>
                         {% endif %}
 
-                        <div  id="sandbox-container" class="mbr-subscribe mbr-subscribe-dark">
+                            <div  id="sandbox-container" class="col-xs-12">
                             {{ form_errors(form.datedebut) }}
                                 {{ form_widget(form.datedebut, {'attr': {'class': 'form-control js-datepicker', 'placeholder': 'Du'}}) }}
                             </div>
 
-                            <br />
+                            <div class="col-xs-12">&nbsp;</div>
 
-                            <div id="sandbox-container2" class="mbr-subscribe mbr-subscribe-dark">
+                            <div id="sandbox-container2" class="col-xs-12">
                                 {{ form_errors(form.datefin) }}
                                 {{ form_widget(form.datefin, {'attr': {'class': 'form-control js-datepicker', 'placeholder': 'au'}}) }}
                             </div>
 
-                            <br />
+                        <div class="col-xs-12">&nbsp;</div>
 
                             <div class="col-xs-12">
                                 {{ form_widget(form.extraire,{'attr':{ 'class': 'btn btn-info' }} ) }}
