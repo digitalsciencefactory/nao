@@ -33,6 +33,9 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
+    fnat.extractionservice:
+        class: AppBundle\Service\ExtractionService
+
     # add more services, or override services that need manual wiring
     # AppBundle\Service\ExampleService:
     #     arguments:

@@ -1,6 +1,6 @@
 <?php
 namespace AppBundle\Controller;
-use AppBunble\Service\ExtractionService;
+use AppBundle\Service\ExtractionService;
 use AppBundle\Entity\Observation;
 use AppBundle\Extraction\Extraction;
 use AppBundle\Form\Type\ExtractType;

@@ -16,7 +16,7 @@ class FnatMailer
   private $mailer;
 
     /**
-     * @var Environment
+     * @var Env ironment
      */
   private $twig;
 
