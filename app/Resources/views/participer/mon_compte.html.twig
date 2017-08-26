@@ -92,7 +92,7 @@
 
                     {% if form_errors(form.prenom) != null %}
                         <div class="form-group">
-                            <div class="col-sm-12 bg-danger">{% form_errors(form.prenom) %}
+                            <div class="col-sm-12 bg-danger">{{ form_errors(form.prenom) }}
                             </div>
                         </div>
                     {% endif %}
