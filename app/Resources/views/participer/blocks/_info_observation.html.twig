@@ -26,9 +26,7 @@
                             <strong>Observation validée le: </strong>  {{ observation.dvalid|date('d/m/Y') }}
                             <br>
                             <strong>Commentaire naturaliste: </strong>
-                                {% if observation.commNat is defined %}
-                                    {{ observation.commNat }}
-                                {% endif %}
+                                    {{ observation.commNat|default("") }}
                             {% else %}
                             <strong> Observation en attente de validation  </strong>
                         {% endif %}
@@ -42,9 +40,7 @@
                     <div class="lead">
                         <h4 class="text-white">Informations complémentaires</h4>
                         <strong>Nom vernaculaire: </strong>
-                            {% if observation.espece.nomVern is defined %}
-                                {{ observation.espece.nomVern }}
-                            {% endif %}
+                                {{ observation.espece.nomVern|default("") }}
                         <br>
                         <strong>Nom vernaculaire anglais: </strong>
                             {% if observation.espece.nomVernEng is defined %}
@@ -52,21 +48,14 @@
                             {% endif %}
                         <br>
                         <strong>Ordre / Famille:</strong>
-                        {% if observation.espece.ordre is defined %}
-                            {{ observation.espece.ordre }}
-                        {% endif %} /
-                        {% if observation.espece.famille is defined %}
-                            {{ observation.espece.famille }}
-                        {% endif %}
+                            {{ observation.espece.ordre|default("") }}
+                        /
+                            {{ observation.espece.famille|default("") }}
                         <br>
                         <strong>Habitat:</strong>
-                        {% if observation.espece.habitat.lbHabitat is defined %}
-                            {{ observation.espece.habitat.lbHabitat }}
-                        {% endif %}
+                            {{ observation.espece.habitat.lbHabitat|default("") }}
                         <br>
-                        {% if observation.espece.habitat.rmHabitat is defined %}
-                            {{ observation.espece.habitat.rmHabitat}}
-                        {% endif %}
+                            {{ observation.espece.habitat.rmHabitat|default("")}}
                         <br>
                         <strong>Référence:</strong>
                         {% if observation.espece.url is defined %}
@@ -74,9 +63,7 @@
                         {% endif %}
                         <br>
                         <strong>Auteur:</strong>
-                        {% if observation.espece.lbauteur is defined %}
-                            {{ observation.espece.lbauteur }}
-                        {% endif %}
+                            {{ observation.espece.lbauteur|default("") }}
 
                     </div>
                 </div>
