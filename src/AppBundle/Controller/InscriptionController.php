@@ -38,11 +38,11 @@ class InscriptionController extends Controller
             $request->getSession()->getFlashBag()->add('noticenews', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $newsletter = new Newsletter();
             $formn = $this->createForm(NewsletterType::class, $newsletter);
-            return $this->render('Front/qui-sommes-nous.html.twig', array(
+            return $this->render('front/qui-sommes-nous.html.twig', array(
                 'formn' => $formn->createView(),
             ));
         }
-        return $this->render('Front/qui-sommes-nous.html.twig', array(
+        return $this->render('front/qui-sommes-nous.html.twig', array(
             'formn' => $formn->createView(),
         ));
     }
@@ -69,10 +69,10 @@ class InscriptionController extends Controller
             $form = $this->createForm(ContactType::class, $contact);
             $request->getSession()->getFlashBag()->add('notice', 'Formulaire envoyé avec succès.');
 
-            return $this->render('Front/contact.html.twig', array('form' => $form->createView(),));
+            return $this->render('front/contact.html.twig', array('form' => $form->createView(),));
         }
 
-        return $this->render('Front/contact.html.twig', array('form' => $form->createView(),));
+        return $this->render('front/contact.html.twig', array('form' => $form->createView(),));
     }
 
     /**
@@ -98,7 +98,7 @@ class InscriptionController extends Controller
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $user = new User();
             $form = $this->createForm(ObsSignType::class, $user);
-            return $this->render('Front/inscription-observateur.html.twig', array(
+            return $this->render('front/inscription-observateur.html.twig', array(
                 'form' => $form->createView(),
                 'formn' => $formn->createView(),
             ));
@@ -114,13 +114,13 @@ class InscriptionController extends Controller
             $request->getSession()->getFlashBag()->add('noticenews', 'Votre inscription à notre Newsletter été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $newsletter = new Newsletter();
             $formn = $this->createForm(NewsletterType::class, $newsletter);
-            return $this->render('Front/inscription-observateur.html.twig', array(
+            return $this->render('front/inscription-observateur.html.twig', array(
                 'formn' => $formn->createView(),
                 'form' => $form->createView(),
             ));
         }
 
-        return $this->render('Front/inscription-observateur.html.twig', array(
+        return $this->render('front/inscription-observateur.html.twig', array(
             'formn' => $formn->createView(),
             'form' => $form->createView(),
         ));
@@ -150,7 +150,7 @@ class InscriptionController extends Controller
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $user = new User();
             $form = $this->createForm(NatSignType::class, $user);
-            return $this->render('Front/inscription-naturaliste.html.twig', array(
+            return $this->render('front/inscription-naturaliste.html.twig', array(
                 'form' => $form->createView(),
                 'formn' => $formn->createView(),
             ));
@@ -166,13 +166,13 @@ class InscriptionController extends Controller
             $request->getSession()->getFlashBag()->add('noticenews', 'Votre inscription à notre Newsletter a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $newsletter = new Newsletter();
             $formn = $this->createForm(NewsletterType::class, $newsletter);
-            return $this->render('Front/inscription-naturaliste#newsletter.html.twig', array(
+            return $this->render('front/inscription-naturaliste#newsletter.html.twig', array(
                 'formn' => $formn->createView(),
                 'form' => $form->createView(),
             ));
         }
 
-        return $this->render('Front/inscription-naturaliste.html.twig', array(
+        return $this->render('front/inscription-naturaliste.html.twig', array(
             'formn' => $formn->createView(),
             'form' => $form->createView(),
         ));
@@ -187,9 +187,6 @@ class InscriptionController extends Controller
         $mail = $request->query->get('mail');
         $token = $request->query->get('token');
         $length = strlen($token);
-
-        $messageBag = "";
-        $classMessage = "";
 
         // vérifier qu'elles ne sont pas vides et que le token = 65 caractères
         if($mail !== null && $length == 65){
@@ -209,23 +206,17 @@ class InscriptionController extends Controller
                 $manager->flush();
 
                 // on crée le message à afficher
-                $messageBag = "Votre compte est validé. Vous pouvez vous identifier sur le site.";
-                $classMessage = "alert alert-success";
+                $this->addMessageBag($request,"success","inscription");
 
             } else {
-                $messageBag = "L'adresse email est inconnue ou votre compte est déjà validé.";
-                $classMessage = "alert alert-danger";
+                $this->addMessageBag($request,"warning","inscription");
             }
         } else {
-            $messageBag = "Le lien de vérification est érroné.";
-            $classMessage = "alert alert-danger";
+            $this->addMessageBag($request,"error","inscription");
 
         }
 
-        return $this->render('Front/validation.html.twig', array(
-            'message' => $messageBag,
-            'classMessage' => $classMessage,
-        ));
+        return $this->render('validation.html.twig');
     }
 
     /**
@@ -237,9 +228,6 @@ class InscriptionController extends Controller
         $mail = $request->query->get('mail');
         $token = $request->query->get('token');
         $length = strlen($token);
-
-        $messageBag = "";
-        $classMessage = "";
 
         // vérifier qu'elles ne sont pas vides et que le token = 65 caractères
         if($mail !== null && $length == 65){
@@ -258,23 +246,17 @@ class InscriptionController extends Controller
                 $manager->flush();
 
                 // on crée le message à afficher
-                $messageBag = "Votre abonnement à notre newsletter est validé. Vous pouvez continuer sur le site.";
-                $classMessage = "alert alert-success";
+                $this->addMessageBag($request,"success","newsletter");
 
             } else {
-                $messageBag = "L'adresse email est inconnue ou votre compte est déjà validé.";
-                $classMessage = "alert alert-danger";
+                $this->addMessageBag($request,"warning","newsletter");
+
             }
         } else {
-            $messageBag = "Le lien de vérification est érroné.";
-            $classMessage = "alert alert-danger";
+            $this->addMessageBag($request,"error","newsletter");
 
         }
-
-        return $this->render('Front/validation.html.twig', array(
-            'message' => $messageBag,
-            'classMessage' => $classMessage,
-        ));
+        return $this->render('validation.html.twig');
     }
 
 
@@ -301,7 +283,7 @@ class InscriptionController extends Controller
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $user = new User();
             $form = $this->createForm(ObsSignType::class, $user);
-            return $this->render('Front/kit_observation.html.twig', array(
+            return $this->render('front/kit_observation.html.twig', array(
                 'form' => $form->createView(),
                 'formn' => $formn->createView(),
             ));
@@ -317,12 +299,12 @@ class InscriptionController extends Controller
             $request->getSession()->getFlashBag()->add('noticenews', 'Votre inscription à notre Newsletter a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $newsletter = new Newsletter();
             $formn = $this->createForm(NewsletterType::class, $newsletter);
-            return $this->render('Front/kit_observation.html.twig', array(
+            return $this->render('front/kit_observation.html.twig', array(
                 'formn' => $formn->createView(),
                 'form' => $form->createView(),
             ));
         }
-        return $this->render('Front/kit_observation.html.twig', array(
+        return $this->render('front/kit_observation.html.twig', array(
             'formn' => $formn->createView(),
             'form' => $form->createView(),
         ));
@@ -334,6 +316,16 @@ class InscriptionController extends Controller
      */
     protected function saveSignUpObs(UserPasswordEncoderInterface $encoder, $user)
     {
+        // gestion de la carte pro
+        $name = substr(bin2hex(random_bytes(30)),0,25) . "." . $user->getFile()->getClientOriginalExtension();
+
+        if (null !== $user->getFile()) {
+            // On déplace le fichier envoyé dans le répertoire de notre choix
+            $user->getFile()->move($this->getParameter('carte_pro_dir'), $name);
+
+            $user->setCarte($name);
+        }
+
         $user->setRoles(array('ROLE_OBSERVATEUR'));
         $user->setDcree(new \DateTime());
         $user->setStatut('STATUT_INACTIF');
@@ -369,5 +361,48 @@ class InscriptionController extends Controller
         $twig = $this->container->get('twig');
         $mail = new FnatMailer($mailer, $twig);
         $mail->insVerifNews($newsletter);
+    }
+
+    protected function addMessageBag($request, $etat, $sujet){
+        switch($etat){
+            case "success":
+                // tous les messages de réussites
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
+
+                switch($sujet){
+                    case "inscription":
+                        $request->getSession()->getFlashBag()->add('notice', 'Votre compte est validé. Vous pouvez vous identifier sur le site.');
+                        break;
+
+                    case "newsletter":
+                        $request->getSession()->getFlashBag()->add('notice', 'Votre abonnement à notre newsletter est validé. Vous pouvez continuer sur le site.');
+                        break;
+                }
+
+                break;
+            case "warning":
+                // tous les messages de warning
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-warning');
+
+                switch($sujet){
+                    case "inscription":
+                    case "newsletter":
+                        $request->getSession()->getFlashBag()->add('notice', 'L\'adresse email est inconnue ou votre compte est déjà validé.');
+                        break;
+                }
+                break;
+
+            case "error":
+                // tous les messages d'erreur
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-danger');
+
+                switch($sujet){
+                    case "inscription":
+                    case "newsletter":
+                        $request->getSession()->getFlashBag()->add('notice', 'Le lien de vérification est érroné.');
+                        break;
+                }
+                break;
+        }
     }
 }

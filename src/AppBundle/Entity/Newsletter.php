@@ -138,21 +138,4 @@ class Newsletter
         return $this->dcree;
     }
 
-    /**
-    * @ORM\PostPersist()
-    * @ORM\PostUpdate()
-    */
-    private function sendToNewsList(){
-        if($this->token === null){
-
-            // TODO faire l'envoie vers mailchimp api
-        }
-    }
-
-    /**
-     * @ORM\PostRemove()
-     */
-    private function eraseFromNewsList(){
-        // TODO utiliser l'api de mailchimp pour supprimer l'adresse de la liste
-    }
 }

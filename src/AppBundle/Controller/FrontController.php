@@ -12,14 +12,14 @@ class FrontController extends Controller
      * @Route("/accueil")
      */
     public function indexAction(){
-        return $this->render('Front/accueil.html.twig');
+        return $this->render('front/accueil.html.twig');
     }
 
     /**
      * @Route("/inscription", name="fn_front_inscription")
      */
     public function inscriptionAction (){
-        return $this->render('Front/inscription.html.twig');
+        return $this->render('front/inscription.html.twig');
     }
 
     /**
@@ -40,7 +40,7 @@ class FrontController extends Controller
         // (mauvais mot de passe par exemple)
         $authenticationUtils = $this->get('security.authentication_utils');
 
-        return $this->render('Front/connexion.html.twig', array(
+        return $this->render('front/connexion.html.twig', array(
             'last_username' => $authenticationUtils->getLastUsername(),
             'error'         => $authenticationUtils->getLastAuthenticationError(),
         ));

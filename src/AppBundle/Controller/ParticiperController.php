@@ -9,6 +9,9 @@ use AppBundle\Form\Type\CarteType;
 use AppBundle\Form\Type\ModificationObsType;
 use AppBundle\Form\Type\NatSignType;
 use AppBundle\Form\Type\ObservationType;
+use AppBundle\Service\ExtractionService;
+use AppBundle\Extraction\Extraction;
+use AppBundle\Form\Type\ExtractType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -42,14 +45,14 @@ class ParticiperController extends Controller
             //Récupère la liste des observations selon l'éspèce
             $obsMap= $obsManager->findBy(array('espece' => $obsForm->getEspece()));
 
-            return $this->render('Participer/espace_naturaliste.html.twig', array(
+            return $this->render('participer/espace_naturaliste.html.twig', array(
                 'form' => $form->createView(),
                 'obsMap' => $obsMap,
                 'obsTable' => $obsTable,
             ));
         }
 
-        return $this->render('Participer/espace_naturaliste.html.twig', array(
+        return $this->render('participer/espace_naturaliste.html.twig', array(
             'form' => $form->createView(),
             'obsTable' => $obsTable,
         ));
@@ -66,46 +69,18 @@ class ParticiperController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $this->getUser();
-            $espece = $observation->getEspece();
 
-            $taxrefManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
-            $especeToSave = $taxrefManager->getOneWithJoin($espece);
+            $this->saveObservationInDataBase($request, $observation);
+            $observation = new Observation();
+            $form = $this->createForm(ObservationType::class, $observation);
 
-            $observation->setEspece($especeToSave[0]);
-            // on récupère l'espèce avec son id
-
-            // On complète l'entité
-            $observation->setObservateur($user);
-            $observation->setDcree(new \DateTime('NOW'));
-
-            if($user->getRoles()[0] == "ROLE_NATURALISTE"){
-                $observation->setStatut("STATUT_VALIDE");
-                $observation->setNaturaliste($user);
-                $observation->setDvalid(new \DateTime('NOW'));
-            }
-
-        // on essaye d'insérer en base
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($observation);
-            $em->flush();
-
-        // on affiche la page envoi_observation avec le flash bag
-            if($user->getRoles()[0] == ("ROLE_NATURALISTE")) {
-                $request->getSession()->getFlashBag()->add('notice', 'Votre observation est bien enregistrée et validée.');
-            }else{
-                $request->getSession()->getFlashBag()->add('notice', 'Votre observation a bien été transmise à un naturaliste.');
-            }
-        $observation = new Observation();
-        $form = $this->createForm(ObservationType::class, $observation);
-
-        return $this->render('Participer/envoi_observation.html.twig', array(
-            'form' => $form->createView(),
-        ));
+            return $this->render('participer/envoi_observation.html.twig', array(
+                'form' => $form->createView(),
+            ));
 
         }
 
-        return $this->render('Participer/envoi_observation.html.twig', array(
+        return $this->render('participer/envoi_observation.html.twig', array(
             'form' => $form->createView(),
         ));
     }
@@ -127,13 +102,13 @@ class ParticiperController extends Controller
             $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
             $obsMap = $obsManager->findBy(array('espece' => $obsForm->getEspece()));
 
-            return $this->render('Participer/carte_observations.html.twig', array(
+            return $this->render('participer/carte_observations.html.twig', array(
                 'form' => $form->createView(),
                 'obsMap' => $obsMap,
             ));
         }
 
-        return $this->render('Participer/carte_observations.html.twig', array(
+        return $this->render('participer/carte_observations.html.twig', array(
             'form' => $form->createView(),
         ));
     }
@@ -189,7 +164,7 @@ class ParticiperController extends Controller
             return $this->redirectToRoute('fn_fiche_observation', ['id' => $observation->getId()]);
         }
 
-        return $this->render('Participer/fiche_observation.html.twig', array(
+        return $this->render('participer/fiche_observation.html.twig', array(
             'observation' => $observation,
             'form' => $form->createView(),
         ));
@@ -266,7 +241,7 @@ class ParticiperController extends Controller
             $form = $this->createForm(UserType::class, $userDB);
 
             $request->getSession()->getFlashBag()->add('notice', 'Votre profil a été mis à jour..');
-            return $this->render('Participer/mon_compte.html.twig',
+            return $this->render('participer/mon_compte.html.twig',
                 array(
                     'pseudonyme' => $user->getPseudo(),
                     'avatar' => $userDB->getPhoto(),
@@ -276,7 +251,7 @@ class ParticiperController extends Controller
 
         }
 
-        return $this->render('Participer/mon_compte.html.twig',
+        return $this->render('participer/mon_compte.html.twig',
             array(
                 'pseudonyme' => $user->getPseudo(),
                 'avatar' => $user->getPhoto(),
@@ -298,10 +273,100 @@ class ParticiperController extends Controller
             $search = $request->get('search');
             $repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
             $results = $repository->getByAutoComplete($search);
-            return new JsonResponse($results);
+        return new JsonResponse($results);
         }
         $results = Array();
+
         return new JsonResponse($results);
+    }
+
+    /**
+     * @param Request $request
+     * @param $observation
+     */
+    protected function saveObservationInDataBase(Request $request, $observation)
+    {
+        $user = $this->getUser();
+        $espece = $observation->getEspece();
+
+        $taxrefManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
+        $especeToSave = $taxrefManager->getOneWithJoin($espece);
+        if (null !== $observation->getFile()) {
+            $name = substr(bin2hex(random_bytes(200)),0,100) . "." . $observation->getFile()->getClientOriginalExtension();
+
+            $name = Date("yyyy-mm-dd") . "_" . $name;
+            // On déplace le fichier envoyé dans le répertoire de notre choix
+            $observation->getFile()->move($this->getParameter('photos_dir'), $name);
+
+            // On sauvegarde le nom de fichier dans notre attribut $url
+            $observation->setPhoto($name);
+        }
+
+
+        // on récupère l'espèce avec son id
+        $observation->setEspece($especeToSave[0]);
+
+        // On complète l'entité
+        $observation->setObservateur($user);
+        $observation->setDcree(new \DateTime('NOW'));
+
+        if ($user->getRoles()[0] == "ROLE_NATURALISTE") {
+            $observation->setStatut("STATUT_VALIDE");
+            $observation->setNaturaliste($user);
+            $observation->setDvalid(new \DateTime('NOW'));
+        }
+
+        // on essaye d'insérer en base
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($observation);
+        $em->flush();
+
+        // on affiche la page envoi_observation avec le flash bag
+        if ($user->getRoles()[0] == ("ROLE_NATURALISTE")) {
+            $request->getSession()->getFlashBag()->add('notice', 'Votre observation est bien enregistrée et validée.');
+        } else {
+            $request->getSession()->getFlashBag()->add('notice', 'Votre observation a bien été transmise à un naturaliste.');
+        }
+    }
+
+    /**
+     * @Route("/participer/extraction-donnees", name="fn_participer_bdd")
+     * @Security("has_role('ROLE_NATURALISTE')")
+     */
+    public function bddAction(Request $request, ExtractionService $extractionService){
+        $extraction = new Extraction();
+        $file = "";
+        $form = $this->createForm(ExtractType::class, $extraction);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+
+            try {
+                $observations = $extractionService->getObservationsDatees($extraction);
+                $file = $extractionService->generateCsv($extraction,$observations, $this->getParameter('downloads_dir'),$this->getParameter('entete_csv_extract'));
+
+                $request->getSession()->getFlashBag()->add('notice', 'La requête a retournée ' . count($observations) .' observation(s). Le téléchargement va commencer automatiquement.');
+
+                // création de la réponse html
+                $response = $this->render('dashboard/extraction.html.twig', array(
+                    'fichierExtract' => $file, // file est le string du chemin du fichier
+                    'form' => $form->createView(),
+                ));
+
+                // création du refresh dans le header pour déclencher le download du fichier
+                $response->headers->set('Refresh', '2; url='.$this->generateUrl('fn_dashboard_extract', array('slug' => $file)));
+
+                // envoi de la double réponse
+                return $response;
+            } catch(\RuntimeException $re){
+                $request->getSession()->getFlashBag()->add('notice', $re->getMessage());
+            }
+
+        }
+        return $this->render('participer/extraction.html.twig', array(
+            'fichierExtract' => $file,
+            'form' => $form->createView(),
+        ));
     }
 
 }
