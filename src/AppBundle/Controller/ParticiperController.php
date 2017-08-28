@@ -143,7 +143,7 @@ class ParticiperController extends Controller
      * @Security("has_role('ROLE_NATURALISTE')")
      * @Method({"GET", "POST"})
      */
-    public function ficheObsAction (Request $request, Observation $observation)
+    public function ficheObsAction (Request $request, Observation $observation, \Swift_Mailer $mailer)
     {
         //Formulaire des recherche d'espèce pour la Googlemap
         $obsForm = new Observation();
@@ -169,7 +169,21 @@ class ParticiperController extends Controller
             //Sauvegarde dans la base
             $this->getDoctrine()->getManager()->flush();
 
-            //Massage de confirmation
+            //Envoie du mail de confirmation
+            $message = (new \Swift_Message('Observation validée'))
+                ->setFrom($this->getUser()->getMail())
+                ->setTo($observation->getObservateur()->getMail())
+                ->setBody(
+                    $this->renderView(
+                        'mail/obs.validation.html.twig',
+                        array('observation' => $observation)
+                    ),
+                    'text/html'
+                )
+            ;
+            $mailer->send($message);
+
+            //Message de confirmation
             $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été sauvegardée.');
 
             return $this->redirectToRoute('fn_fiche_observation', ['id' => $observation->getId()]);
@@ -186,11 +200,28 @@ class ParticiperController extends Controller
      * @Route("/participer/supprimer-fiche/{id}", name="fn_fiche_supprimer")
      * @Security("has_role('ROLE_NATURALISTE')")
      */
-    public function supprimerObsAction (Request $request, Observation $observation)
+    public function supprimerObsAction (Request $request, Observation $observation, \Swift_Mailer $mailer)
     {
-        $obsManager = $this->getDoctrine()->getManager();
-        $obsManager->remove($observation);
-        $obsManager->flush();
+
+        $message = (new \Swift_Message('Observation supprimée'))
+            ->setFrom($this->getUser()->getMail())
+            ->setTo($observation->getObservateur()->getMail())
+            ->setBody(
+                $this->renderView(
+                    'mail/obs.suppression.html.twig',
+                    array('observation' => $observation)
+                ),
+                'text/html'
+            )
+        ;
+
+        $mailer->send($message);
+
+        //$obsManager = $this->getDoctrine()->getManager();
+        //$obsManager->remove($observation);
+        //$obsManager->flush();
+
+        $mailer->send($message);
 
         $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été supprimée.');
 
