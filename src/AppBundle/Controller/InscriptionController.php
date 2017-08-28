@@ -144,7 +144,7 @@ class InscriptionController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 
             // on gère l'inscription de l'observateur
-            $this->saveSignUpObs($encoder, $user);
+            $this->saveSignUpNat($encoder, $user);
 
             // on affiche la page de inscription avec le flash bag
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
@@ -314,7 +314,33 @@ class InscriptionController extends Controller
      * @param UserPasswordEncoderInterface $encoder
      * @param $user
      */
-    protected function saveSignUpObs(UserPasswordEncoderInterface $encoder, $user)
+    protected function saveSignUpobs(UserPasswordEncoderInterface $encoder, $user)
+    {
+
+        $user->setRoles(array('ROLE_OBSERVATEUR'));
+        $user->setDcree(new \DateTime());
+        $user->setStatut('STATUT_INACTIF');
+        // hash du mot de passe
+        $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
+        // création du token de vérifiction d'inscription
+        $length = 65;
+        $user->setToken(substr(bin2hex(random_bytes($length)), 0, 65));
+        // essayer d'insérer en base
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
+        // mail de confirmation d'inscription
+        $mailer = $this->container->get('mailer');
+        $twig = $this->container->get('twig');
+        $mail = new FnatMailer($mailer, $twig);
+        $mail->insVerifObs($user);
+    }
+
+    /**
+     * @param UserPasswordEncoderInterface $encoder
+     * @param $user
+     */
+    protected function saveSignUpNat(UserPasswordEncoderInterface $encoder, $user)
     {
         // gestion de la carte pro
         $name = substr(bin2hex(random_bytes(30)),0,25) . "." . $user->getFile()->getClientOriginalExtension();
