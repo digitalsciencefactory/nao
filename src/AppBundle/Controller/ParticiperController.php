@@ -100,9 +100,9 @@ class ParticiperController extends Controller
         // Gestion de la carte des observations (Liste)
         if ($form->isSubmitted() && $form->isValid()) {
 
-            //Récupère la liste des observation selon l'éspèce
+            //Récupère la liste des observationspour la Map
             $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
-            $obsMap = $obsManager->findBy(array('espece' => $obsForm->getEspece()));
+            $obsMap= $obsManager->findBy(array('espece' => $obsForm->getEspece()));
 
             return $this->render('participer/carte_observations.html.twig', array(
                 'form' => $form->createView(),
@@ -128,10 +128,6 @@ class ParticiperController extends Controller
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            // Récupère l'epèce selon son id pour la mise à jour
-            $taxrefManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
-            $especeToSave = $taxrefManager->find($obsForm->getEspece());
-
             //Préparation du mail de confirmation
             $message = (new \Swift_Message('Observation examinée'))
                 ->setFrom($this->getUser()->getMail())
@@ -140,12 +136,9 @@ class ParticiperController extends Controller
             //Traitement du formulaire
             if ($form->get('valider')->isClicked()) {
 
-                //Sélection du message de confirmation
-                $message->setBody( $this->renderView(
-                        'mail/obs.validation.html.twig',
-                        array('observation' => $observation)),
-                    'text/html');
-                $mailer->send($message);
+                // Récupère l'epèce selon son id pour la mise à jour
+                $taxrefManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
+                $especeToSave = $taxrefManager->find($obsForm->getEspece());
 
                 //Mise à jour des données
                 $observation
@@ -157,21 +150,25 @@ class ParticiperController extends Controller
 
                 $this->getDoctrine()->getManager()->flush();
 
+                //Sélection du message du mail
+                $message->setBody( $this->renderView(
+                        'mail/obs.validation.html.twig',
+                        array('observation' => $observation)),
+                    'text/html');
+
                 //Message de confirmation
+                $mailer->send($message);
                 $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été sauvegardée.');
 
                 return $this->redirectToRoute('fn_fiche_observation', ['id' => $observation->getId()]);
             }
             else
             {
-                $observation->setCommNat($obsForm->getCommNat());
-
-                //Sélection du message de confirmation
+                //Sélection du message du mail
                 $message->setBody( $this->renderView(
                     'mail/obs.suppression.html.twig',
                     array('observation' => $observation)),
                     'text/html');
-                $mailer->send($message);
 
                 //Suppression de l'observation
                 $obsManager = $this->getDoctrine()->getManager();
@@ -183,15 +180,15 @@ class ParticiperController extends Controller
                 $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été supprimée.');
 
                 return $this->redirectToRoute('fn_participer_espace_nat');
+
             }
         }
-
         return $this->render('participer/fiche_observation.html.twig', array(
             'observation' => $observation,
             'form' => $form->createView(),
         ));
     }
-    
+
     /**
      * @Route("/participer/mon-compte", name="fn_participer_profil")
      */
@@ -356,5 +353,6 @@ class ParticiperController extends Controller
             'form' => $form->createView(),
         ));
     }
+
 
 }

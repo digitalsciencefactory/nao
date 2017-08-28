@@ -5,3 +5,4 @@ var/
 app/config/parameters.yml
 vendor/
 web/assets/fnat/
+web/.DS_Store
