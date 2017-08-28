@@ -17,6 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\Type\UserType;
@@ -71,6 +72,7 @@ class ParticiperController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 
             $this->saveObservationInDataBase($request, $observation);
+
             $observation = new Observation();
             $form = $this->createForm(ObservationType::class, $observation);
 
@@ -98,9 +100,9 @@ class ParticiperController extends Controller
         // Gestion de la carte des observations (Liste)
         if ($form->isSubmitted() && $form->isValid()) {
 
-            //Récupère la liste des observation selon l'éspèce
+            //Récupère la liste des observationspour la Map
             $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
-            $obsMap = $obsManager->findBy(array('espece' => $obsForm->getEspece()));
+            $obsMap= $obsManager->findBy(array('espece' => $obsForm->getEspece()));
 
             return $this->render('participer/carte_observations.html.twig', array(
                 'form' => $form->createView(),
@@ -120,87 +122,71 @@ class ParticiperController extends Controller
      */
     public function ficheObsAction (Request $request, Observation $observation, \Swift_Mailer $mailer)
     {
-        //Formulaire des recherche d'espèce pour la Googlemap
         $obsForm = new Observation();
         $form = $this->createForm(ModificationObsType::class, $obsForm)
             ->handleRequest($request);
 
-
-        // Gestion de la carte des observations (Liste)
         if ($form->isSubmitted() && $form->isValid())
         {
-            // Récupère l'epèce selon son id
-            $taxrefManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
-            $especeToSave = $taxrefManager->find($obsForm->getEspece());
-
-            //Mise à jour des données
-            $observation
-                ->setEspece($taxrefManager->find($especeToSave))
-                ->setCommNat($obsForm->getCommNat())
-                ->setDvalid(new \DateTime('NOW'))
-                ->setStatut('STATUT_VALIDE')
-                ->setNaturaliste($this->getUser());
-
-            //Sauvegarde dans la base
-            $this->getDoctrine()->getManager()->flush();
-
-            //Envoie du mail de confirmation
-            $message = (new \Swift_Message('Observation validée'))
+            //Préparation du mail de confirmation
+            $message = (new \Swift_Message('Observation examinée'))
                 ->setFrom($this->getUser()->getMail())
-                ->setTo($observation->getObservateur()->getMail())
-                ->setBody(
-                    $this->renderView(
+                ->setTo($observation->getObservateur()->getMail());
+
+            //Traitement du formulaire
+            if ($form->get('valider')->isClicked()) {
+
+                // Récupère l'epèce selon son id pour la mise à jour
+                $taxrefManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
+                $especeToSave = $taxrefManager->find($obsForm->getEspece());
+
+                //Mise à jour des données
+                $observation
+                    ->setEspece($taxrefManager->find($especeToSave))
+                    ->setCommNat($obsForm->getCommNat())
+                    ->setDvalid(new \DateTime('NOW'))
+                    ->setStatut('STATUT_VALIDE')
+                    ->setNaturaliste($this->getUser());
+
+                $this->getDoctrine()->getManager()->flush();
+
+                //Sélection du message du mail
+                $message->setBody( $this->renderView(
                         'mail/obs.validation.html.twig',
-                        array('observation' => $observation)
-                    ),
-                    'text/html'
-                )
-            ;
-            $mailer->send($message);
+                        array('observation' => $observation)),
+                    'text/html');
 
-            //Message de confirmation
-            $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été sauvegardée.');
+                //Message de confirmation
+                $mailer->send($message);
+                $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été sauvegardée.');
 
-            return $this->redirectToRoute('fn_fiche_observation', ['id' => $observation->getId()]);
+                return $this->redirectToRoute('fn_fiche_observation', ['id' => $observation->getId()]);
+            }
+            else
+            {
+                //Sélection du message du mail
+                $message->setBody( $this->renderView(
+                    'mail/obs.suppression.html.twig',
+                    array('observation' => $observation)),
+                    'text/html');
+
+                //Suppression de l'observation
+                $obsManager = $this->getDoctrine()->getManager();
+                $obsManager->remove($observation);
+                $obsManager->flush();
+
+                //Message de confirmation
+                $mailer->send($message);
+                $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été supprimée.');
+
+                return $this->redirectToRoute('fn_participer_espace_nat');
+
+            }
         }
-
         return $this->render('participer/fiche_observation.html.twig', array(
             'observation' => $observation,
             'form' => $form->createView(),
         ));
-    }
-
-
-    /**
-     * @Route("/participer/supprimer-fiche/{id}", name="fn_fiche_supprimer")
-     * @Security("has_role('ROLE_NATURALISTE')")
-     */
-    public function supprimerObsAction (Request $request, Observation $observation, \Swift_Mailer $mailer)
-    {
-
-        $message = (new \Swift_Message('Observation supprimée'))
-            ->setFrom($this->getUser()->getMail())
-            ->setTo($observation->getObservateur()->getMail())
-            ->setBody(
-                $this->renderView(
-                    'mail/obs.suppression.html.twig',
-                    array('observation' => $observation)
-                ),
-                'text/html'
-            )
-        ;
-
-        $mailer->send($message);
-
-        //$obsManager = $this->getDoctrine()->getManager();
-        //$obsManager->remove($observation);
-        //$obsManager->flush();
-
-        $mailer->send($message);
-
-        $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été supprimée.');
-
-        return $this->redirectToRoute('fn_participer_espace_nat');
     }
 
     /**
@@ -229,11 +215,11 @@ class ParticiperController extends Controller
 
             // $user vient du formulaire utilisateur
             // $userDB vient de la BDD
-            $userDB->setNom($user->getNom());
-            $userDB->setPrenom($user->getPrenom());
-            $userDB->setDdn($user->getDdn());
-            $userDB->setCodePostal($user->getCodePostal());
-            $userDB->setPhoto($user->getPhoto());
+            $userDB->setNom($user->getNom())
+                ->setPrenom($user->getPrenom())
+                ->setDdn($user->getDdn())
+                ->setCodePostal($user->getCodePostal())
+                ->setPhoto($user->getPhoto());
 
             $userManager->persist($userDB);
             $userManager->flush();
@@ -248,7 +234,6 @@ class ParticiperController extends Controller
                     'form' => $form->createView(),
                     'obsTable' => $obsTable,
                 ));
-
         }
 
         return $this->render('participer/mon_compte.html.twig',
@@ -368,5 +353,6 @@ class ParticiperController extends Controller
             'form' => $form->createView(),
         ));
     }
+
 
 }

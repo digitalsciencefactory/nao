@@ -43,9 +43,7 @@
                                 {{ observation.espece.nomVern|default("") }}
                         <br>
                         <strong>Nom vernaculaire anglais: </strong>
-                            {% if observation.espece.nomVernEng is defined %}
-                                {{ observation.espece.nomVernEng }}
-                            {% endif %}
+                                {{ observation.espece.nomVernEng|default("")}}
                         <br>
                         <strong>Ordre / Famille:</strong>
                             {{ observation.espece.ordre|default("") }}
@@ -58,9 +56,7 @@
                             {{ observation.espece.habitat.rmHabitat|default("")}}
                         <br>
                         <strong>Référence:</strong>
-                        {% if observation.espece.url is defined %}
-                            <a href="{{ observation.espece.url }}" class="text-white">{{ observation.espece.url }}</a>
-                        {% endif %}
+                            <a href="{{ observation.espece.url|default("") }}" class="text-white">{{ observation.espece.url|default("") }}</a>
                         <br>
                         <strong>Auteur:</strong>
                             {{ observation.espece.lbauteur|default("") }}
