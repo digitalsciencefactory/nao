@@ -8,11 +8,15 @@
 <body>
 <p>Observation n°{{ observation.id }} validée</p>
 
-{{ observation.observateur.pseudo }},
+{{ observation.observateur.pseudo }}, <br>
 
-La validation de l'observation {observation.id} a été prise en compte et nous vous remercions de votre participation.
 
-Remarques du naturaliste :
+La validation de l'observation {{ observation.id }} a été prise en compte et nous vous remercions de votre participation.
+
+<p><strong> Espèce validée : </strong></p>
+<p>{{ observation.espece.lbNom }}</p>
+
+<p><strong> Remarques du naturaliste : </strong></p>
 <p>{{ observation.commNat }}</p>
 
 <p>Rendez-vous sur Flash Nature pour examiner de nouvelle observation :

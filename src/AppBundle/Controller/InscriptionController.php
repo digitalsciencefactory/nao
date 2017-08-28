@@ -186,10 +186,9 @@ class InscriptionController extends Controller
         // récupérer les valeurs de l'url
         $mail = $request->query->get('mail');
         $token = $request->query->get('token');
-        $length = strlen($token);
 
         // vérifier qu'elles ne sont pas vides et que le token = 65 caractères
-        if($mail !== null && $length == 65){
+        if($mail !== null && strlen($token) == 65){
             // tenter de select le user
             $manager = $this->getDoctrine()->getManager();
             $repository = $manager->getRepository('AppBundle:User');
@@ -200,8 +199,8 @@ class InscriptionController extends Controller
 
             if($user !== null){
                // update du user en supprimant le token et en le passant en actif
-                $user->setToken(null);
-                $user->setStatut("STATUT_ACTIF");
+                $user->setToken(null)
+                    ->setStatut("STATUT_ACTIF");
                 $manager->persist($user);
                 $manager->flush();
 
