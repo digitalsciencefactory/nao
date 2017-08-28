@@ -18,7 +18,7 @@ class ObservationRepository extends \Doctrine\ORM\EntityRepository
     public function getEspeceWithJoin($espece){
         $qb = $this
             ->createQueryBuilder('a')
-            ->select('a')
+            ->addselect('a')
             ->leftJoin('a.espece', 'espece')
             ->addSelect('espece')
             ->leftJoin('espece.rang', 'rang')
@@ -97,4 +97,43 @@ class ObservationRepository extends \Doctrine\ORM\EntityRepository
             ;
     }
 
+    /**
+     * Retourne les taxons en et leur nombre dans les observations
+     *
+     * @param string $recherche
+     * @return array
+     */
+    public function getByAutoComplete($recherche){
+        //$qb = $this->_em->createQuery('select count(o.id) as occurence, t.id, t.lb_nom, t.nom_vern, t.nom_vern_eng from AppBundle\Entity\Observation o right join AppBundle:Taxref t with o.espece_id = t.id WHERE t.lbNom like \'%'.$recherche.'%\' OR t.nomVern like \'%'.$recherche.'%\' OR t.nomVernEng like \'%'.$recherche.'%\' group by t.id' );
+         /*   ->from('AppBundle:Observation', 'o')
+        ->leftJoin('AppBundle:Taxref', 'a') // left join inversé = right join
+                ->from('AppBundle:Taxref', 't')
+        ->addSelect('count(o.id) as occurence')
+        ->addSelect('t.id')
+        ->addSelect('t.lbNom')
+        ->addSelect('t.nomVern')
+        ->addSelect('t.nomVernEng')*/
+        //$qb->where('t.lbNom like :search OR t.nomVern like :search OR t.nomVernEng like :search');
+        //->andWhere('o.statut = :statut')*/
+        //$qb->groupBy('t.id');
+        //$qb->setParameter('search', $recherche);
+        //->setParameter('libelle', "occurence")
+       // ->setParameter('statut', "STATUT_VALIDE");*/
+
+        $qb = $this->createQueryBuilder('o')
+            ->addSelect('count(o.id) as occurence')
+            ->leftJoin('o.espece', 't')
+            ->addSelect('t.id')
+            ->addSelect('t.lbNom')
+            ->addSelect('t.nomVern')
+            ->addSelect('t.nomVernEng')
+            ->groupBy('o.id')
+
+        ;
+
+        $query = $qb->getQuery();
+
+        return $query->getArrayResult();
+
+    }
 }
