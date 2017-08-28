@@ -33,25 +33,13 @@
                             <a class="nav-link link dropdown-toggle" href="" data-toggle="dropdown-submenu" aria-expanded="false">Participer</a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="/participer/envoi-observation">Envoi d'observation</a>
-                                <a class="dropdown-item" href="/participer/carte-des-observations">Carte des observations</a>
+                                <a class="dropdown-item" href="/participer/carte-des-observations">Carte des observations validées</a>
+                                {% if is_granted('ROLE_NATURALISTE') %}
+                                    <a class="dropdown-item" href="/participer/espace-naturaliste">Observation à valider</a>
+                                    <a class="dropdown-item" href="/participer/extraction-donnees">Extraction des données</a>
+                                {% endif %}
                             </div>
                         </li>
-
-                        {% if is_granted('ROLE_NATURALISTE') %}
-                            <li class="nav-item dropdown">
-                                <a class="nav-link link dropdown-toggle" href="" data-toggle="dropdown-submenu" aria-expanded="false">
-                                    Espace Naturaliste
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/participer/espace-naturaliste">
-                                        Les observations</a>
-                                    <a class="dropdown-item" href="/dashboard/extraction-donnees">
-                                        Base de données
-                                    </a>
-                                </div>
-
-                            </li>
-                        {% endif %}
 
                         <li class="nav-item dropdown">
                             <a class="nav-link link dropdown-toggle" href="" data-toggle="dropdown-submenu" aria-expanded="false">Infos pratiques</a>

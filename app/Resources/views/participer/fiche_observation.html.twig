@@ -1,0 +1,36 @@
+{# app/Resources/views/front/fiche_observationhtml.twig #}
+
+{% extends "participer/observation_base.html.twig" %}
+
+{% block title %}
+    Fiche {{ observation.id }} - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+    <!--  Information sur l'observation -->
+    {{ include('participer/blocks/_info_observation.html.twig') }}
+
+    <!--  Formulaire de modification -->
+    {% if is_granted('ROLE_NATURALISTE') %}
+        {% if observation.statut == 'STATUT_EN_ATTENTE'%}
+            {{ include('participer/forms/_modif_observation_form.html.twig') }}
+        {% endif %}
+    {% endif %}
+
+    <!--  Carte des observations valides par espèce -->
+    {{ include('participer/blocks/_carte_observation_fiche.html.twig') }}
+
+    <!--  Blocks -->
+    {{ include('front/blocks/_follow.html.twig') }}
+
+{% endblock body %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <!-- google maps -->
+    <script src="{{ asset('assets/fnat/js/googlemaps_carte_observation.js') }}" ></script>
+
+{% endblock javascripts %}
+

@@ -1,0 +1,126 @@
+{# app/Resources/views/front/accueil.html.twig #}
+
+{% extends "base.html.twig" %}
+
+
+{% block title %}
+    Extraction de données - {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.css">
+{% endblock stylesheets %}
+
+{% block body %}
+
+    {# bloc explications de la page #}
+    <section class="mbr-section mbr-after-navbar" id="content5-2o" style="padding-top: 120px; padding-bottom: 40px;">
+        <div class="container">
+            <h3 class="mbr-section-title display-2">
+                Base de données observations
+            </h3>
+            <div class="lead">
+                <p>
+                    <strong>Le formulaire ci dessous permet d'extraire, au format csv, les observations validées sur un temps donné.</strong>
+                </p>
+                <p>
+                    <strong>En cas de problématique technique : assistance@digitalsciencefactory.com</strong>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    {# fin bloc explications de la page #}
+
+    {# bloc formulaire de recherche #}
+<section class="mbr-section extTable1" id="extTable1-2t" style="background-color: rgb(105, 176, 171); padding-top: 40px; padding-bottom: 120px;">
+    <div class="container">
+        <h3 class="mbr-section-title display-2">
+            Extraction par date
+        </h3>
+    </div>
+        <div class="mbr-section mbr-section-nopadding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-10 col-lg-offset-1" data-form-type="formoid">
+
+                        {{ form_start(form) }}
+                        {% for message in app.flashes('notice') %}
+                            <div class="btn-success">
+                                {{ message }}
+                            </div>
+                            <br />
+                        {% endfor %}
+                        {% if fichierExtract %}
+                            <div class="btn-success">
+                                Si le téléchargement ne démarre pas au bout de 5 secondes, le fichier est disponible  <a href="/dashboard/extract/{{   fichierExtract }}" target="_blank">ici</a>.
+                            </div>
+                            <br />
+                        {% endif %}
+
+                        {% if form_errors(form) %}
+                            <div class="alert alert-danger">
+                                {{ form_errors(form) }}
+                            </div>
+                        {% endif %}
+
+                            <div  id="sandbox-container" class="col-xs-12">
+                            {{ form_errors(form.datedebut) }}
+                                {{ form_widget(form.datedebut, {'attr': {'class': 'form-control js-datepicker', 'placeholder': 'Du'}}) }}
+                            </div>
+
+                            <div class="col-xs-12">&nbsp;</div>
+
+                            <div id="sandbox-container2" class="col-xs-12">
+                                {{ form_errors(form.datefin) }}
+                                {{ form_widget(form.datefin, {'attr': {'class': 'form-control js-datepicker', 'placeholder': 'au'}}) }}
+                            </div>
+
+                        <div class="col-xs-12">&nbsp;</div>
+
+                            <div class="col-xs-12">
+                                {{ form_widget(form.extraire,{'attr':{ 'class': 'btn btn-info' }} ) }}
+                            </div>
+                        {{ form_rest(form) }}
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {# fin bloc formulaire de recherche #}
+{% endblock body %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <!-- Date picker -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+
+    <script>
+    $('#sandbox-container input').datepicker({
+        format: "dd/mm/yyyy",
+        weekStart: 1,
+        endDate: "Today",
+        language: "fr",
+        daysOfWeekHighlighted: "0",
+        calendarWeeks: true,
+        autoclose: true,
+        todayHighlight: true
+    });
+    </script>
+    <script>
+        $('#sandbox-container2 input').datepicker({
+            format: "dd/mm/yyyy",
+            weekStart: 1,
+            endDate: "Today",
+            language: "fr",
+            daysOfWeekHighlighted: "0",
+            calendarWeeks: true,
+            autoclose: true,
+            todayHighlight: true
+        });
+    </script>
+
+{% endblock javascripts %}

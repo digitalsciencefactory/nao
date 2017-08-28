@@ -2,6 +2,10 @@
 # https://symfony.com/doc/current/service_container.html
 parameters:
     #parameter_name: value
+    web_dir: "%kernel.root_dir%/../web"
+    carte_pro_dir: "%web_dir%/fnat/naturalistes/"
+    downloads_dir: "%web_dir%/fnat/downloads/"
+    photos_dir: "%web_dir%/fnat/photos/"
 
 services:
     # default configuration for services in *this* file
@@ -29,7 +33,12 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
+    fnat.extractionservice:
+        class: AppBundle\Service\ExtractionService
+
     # add more services, or override services that need manual wiring
     # AppBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
+    utils.files:
+        class: AppBundle\Utils\FilesUtils

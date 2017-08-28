@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="col-xs-12 col-md-2">
+        {% if(page - 1) > 0 %}
+            <form action="/dashboard/naturalistes/{{ page - 1 }}" method="POST">
+                <button type="submit" class="btn btn-info">Précédents</button>
+            </form>
+        {% else %}
+            <form action="#" method="POST">
+                <button type="button" class="btn btn-black" disabled="disabled">Précédents</button>
+            </form>
+        {% endif %}</div>
+    <div class="hidden-xs col-md-4">
+        &nbsp;
+    </div>
+    <div class="hidden-xs col-md-4">
+        &nbsp;
+    </div>
+    <div class="col-xs-12 col-md-2">
+        {% if(page + 1) <= pages %}
+            <form action="/dashboard/naturalistes/{{ page + 1 }}" method="POST">
+                <button type="submit" class="btn btn-info">Suivants</button>
+            </form>
+        {% else %}
+            <form action="#" method="POST">
+                <button type="button" class="btn btn-black" disabled="disabled">Suivants</button>
+            </form>
+        {% endif %}
