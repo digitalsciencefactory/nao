@@ -13,6 +13,25 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
     /* *** MIXTE *** */
 
     /**
+     * @param bool $naturaliste
+     * @return int
+     */
+    public function howMany($naturaliste){
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('count(a.id)');
+        $qb->andWhere('a.roles = :role');
+        if($naturaliste) {
+            $qb->setParameter('role', "a:1:{i:0;s:16:\"ROLE_NATURALISTE\";}");
+        } else {
+            $qb->setParameter('role', "a:1:{i:0;s:16:\"ROLE_OBSERVATEUR\";}");
+            $qb->andWhere('a.statut = :statut');
+            $qb->setParameter('statut', "STATUT_VALIDE");
+        }
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
      *  Retrouve un utilisateur actif avec son id
      *  ou renvoi un tableau vide
      * @param $id
@@ -29,37 +48,28 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
         return $qb->getQuery()->getArrayResult();
     }
 
-    /* *** OBSERVATEURS ***  */
-
-    /* *** NATURALISTES *** */
-
-    /**
-     * @return mixed
-     */
-    public function howManyNat(){
-        $qb = $this->createQueryBuilder('a');
-        $qb->select('count(a.id)');
-        $qb->andWhere('a.roles = :role');
-        $qb->setParameter('role', "a:1:{i:0;s:16:\"ROLE_NATURALISTE\";}");
-
-        return $qb->getQuery()->getSingleScalarResult();
-    }
     /**
      * Retourne $limit naturaliste en commenceant par le $offset
-     * @param $limit
-     * @param $offset
+     * @param int $limit
+     * @param int $offset
+     * @param bool $naturaliste
      * @return array
      */
-    public function getNatByOffset($limit,$offset){
+    public function getUserByOffset($limit,$offset,$naturaliste){
         $qb = $this
             ->createQueryBuilder('a')
             ->select('a')
-            ->andWhere('a.roles = :role')
-            ->setParameter('role', "a:1:{i:0;s:16:\"ROLE_NATURALISTE\";}")
-            ->setFirstResult( $offset )
-            ->setMaxResults( $limit )
-            ->orderBy("a.id","ASC")
-            ;
+            ->andWhere('a.roles = :role');
+        if($naturaliste) {
+             $qb->setParameter('role', "a:1:{i:0;s:16:\"ROLE_NATURALISTE\";}");
+        } else {
+            $qb->setParameter('role', "a:1:{i:0;s:16:\"ROLE_OBSERVATEUR\";}");
+            $qb->andWhere('a.statut = :statut');
+            $qb->setParameter('statut', "STATUT_VALIDE");
+        }
+            $qb->setFirstResult( $offset );
+            $qb->setMaxResults( $limit );
+            $qb->orderBy("a.id","ASC");
 
         return $qb
             ->getQuery()
@@ -67,22 +77,30 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
             ;
     }
     /**
+     * @param bool $naturaliste
      * @return array
      */
-    public function getNaturalistesEnAttente(){
+
+    public function getUserEnAttente($naturaliste){
         $qb = $this
             ->createQueryBuilder('a')
             ->select('a')
-            ->andWhere('a.carte is not null')
-            ->andWhere('a.roles = :role')
-            ->setParameter('role', "a:1:{i:0;s:16:\"ROLE_OBSERVATEUR\";}");
+            ->andWhere('a.roles = :role');
+
+            if($naturaliste) {
+                $qb->andWhere('a.carte is not null');
+                $qb->setParameter('role', "a:1:{i:0;s:16:\"ROLE_OBSERVATEUR\";}");
+            } else {
+                $qb->setParameter('role', "a:1:{i:0;s:16:\"ROLE_OBSERVATEUR\";}");
+                $qb->andWhere('a.statut = :statut');
+                $qb->setParameter('statut', "STATUT_INACTIF");
+            }
 
         return $qb
             ->getQuery()
             ->getResult()
             ;
     }
-
     /**
      * Retourne un (futur) naturaliste ou null si on ne le trouve pas
      * @param $id
