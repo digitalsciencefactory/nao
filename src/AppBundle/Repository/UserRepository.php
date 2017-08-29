@@ -20,12 +20,13 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('a');
         $qb->select('count(a.id)');
         $qb->andWhere('a.roles = :role');
+        $qb->andWhere('a.statut = :statut');
+        $qb->setParameter('statut', "STATUT_ACTIF");
         if($naturaliste) {
             $qb->setParameter('role', "a:1:{i:0;s:16:\"ROLE_NATURALISTE\";}");
         } else {
             $qb->setParameter('role', "a:1:{i:0;s:16:\"ROLE_OBSERVATEUR\";}");
-            $qb->andWhere('a.statut = :statut');
-            $qb->setParameter('statut', "STATUT_VALIDE");
+
         }
 
         return $qb->getQuery()->getSingleScalarResult();
@@ -60,12 +61,13 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
             ->createQueryBuilder('a')
             ->select('a')
             ->andWhere('a.roles = :role');
+        $qb->andWhere('a.statut = :statut');
+        $qb->setParameter('statut', "STATUT_ACTIF");
         if($naturaliste) {
              $qb->setParameter('role', "a:1:{i:0;s:16:\"ROLE_NATURALISTE\";}");
         } else {
             $qb->setParameter('role', "a:1:{i:0;s:16:\"ROLE_OBSERVATEUR\";}");
-            $qb->andWhere('a.statut = :statut');
-            $qb->setParameter('statut', "STATUT_VALIDE");
+
         }
             $qb->setFirstResult( $offset );
             $qb->setMaxResults( $limit );
