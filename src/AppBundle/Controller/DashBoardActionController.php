@@ -1,5 +1,6 @@
 <?php
 namespace AppBundle\Controller;
+use AppBundle\Mailer\FnatMailer;
 use AppBundle\Service\DashboardService;
 use AppBundle\Service\ExtractionService;
 use AppBundle\Entity\Observation;
@@ -11,17 +12,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-class DashBoardController extends Controller
+class DashBoardActionController extends Controller
 {
-    /**
-     * @Route("/dashboard", name="fn_dashboard_index")
-     * @Route("/dashboard/")
-     * @Security("has_role('ROLE_ADMIN')")
-     */
-    public function indexAction(){
-        return $this->render('dashboard/accueil.html.twig');
-    }
-
     /**
      * @Route("/dashboard/extract/{slug}", name="fn_dashboard_extract")
      * @Security("has_role('ROLE_NATURALISTE')")
@@ -32,48 +24,6 @@ class DashBoardController extends Controller
     {
         $path = $this->getParameter("downloads_dir");
         return $this->file($path.$slug);
-    }
-
-    /**
-     * @Route("dashboard/naturalistes/{page}", name="fn_dashboard_naturalistes", requirements={"page": "\d+"})
-     * Liste les naturalistes par page
-     */
-    public function naturalistesAction($page = 1, DashboardService $dashboardService){
-
-        return $this->listerUser($page, $dashboardService, true);
-    }
-
-    /**
-     * @Route("dashboard/observateurs/{page}", name="fn_dashboard_observateurs", requirements={"page": "\d+"})
-     * Liste les naturalistes par page
-     */
-    public function observateursAction($page = 1, DashboardService $dashboardService){
-
-        return $this->listerUser($page, $dashboardService, false);
-    }
-
-    /**
-     * @Route("/dashboard/naturalistes-a-valider", name="fn_dashboard_natavalid")
-     * Liste les naturalistes à  valider et permet de les valider ou refuser
-     */
-    public function natEnAttenteAction(){
-        $users = $this->getUserEnAttente(true);
-        return $this->render('dashboard/naturalistes_en_attente.html.twig',
-            array(
-                'users' => $users,
-            ));
-    }
-
-    /**
-     * @Route("/dashboard/observateurs-a-valider", name="fn_dashboard_nobsavalid")
-     * Liste les naturalistes à  valider et permet de les valider ou refuser
-     */
-    public function obsEnAttenteAction(){
-        $users = $this->getUserEnAttente(false);
-        return $this->render('dashboard/observateurs_en_attente.html.twig',
-            array(
-                'users' => $users,
-            ));
     }
 
     /**
@@ -143,23 +93,6 @@ class DashBoardController extends Controller
     }
 
     /**
-     * @Route("dashboard/bannis", name="bannis")
-     */
-    public function listerBannisAction(){
-        $userRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:User');
-
-        $users = $userRepository->findBy(array(
-           'statut' => 'STATUT_BANNI',
-        ));
-
-        return $this->render('dashboard/bannis.html.twig',
-            array(
-                'users' => $users,
-            ));
-
-    }
-
-    /**
      * @Route("dashboard/bannir/{id}", name="fn_dashboard_bannir", requirements={"id": "\d+"})
      * Tente de bannir un utilisateur
      */
@@ -174,8 +107,7 @@ class DashBoardController extends Controller
                'statut' => "STATUT_ACTIF"
             ));
             if($user === null){
-                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-warning');
-                $request->getSession()->getFlashBag()->add('message', 'L\'utilisateur est déjà bloqué, inactif ou inconnu');
+                $this->setMessageFlashBag("warning", 'L\'utilisateur est déjà bloqué, inactif ou inconnu', $request);
 
             } else {
                 $user->setStatut("STATUT_BANNI");
@@ -183,8 +115,7 @@ class DashBoardController extends Controller
                 $userManager->persist($user);
                 $userManager->flush();
 
-                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
-                $request->getSession()->getFlashBag()->add('message', 'L\'utilisateur a été bloqué. Un mail vient d\'être envoyé pour le prévenir');
+                $this->setMessageFlashBag("success", 'L\'utilisateur a été bloqué. Un mail vient d\'être envoyé pour le prévenir.', $request);
 
                 $mail = $this->getMailer();
                 $mail->banUser($user);
@@ -211,8 +142,7 @@ class DashBoardController extends Controller
                 'statut' => "STATUT_BANNI"
             ));
             if ($user === null) {
-                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-warning');
-                $request->getSession()->getFlashBag()->add('message', 'L\'utilisateur est déjà débloqué, actif  ou inconnu');
+                $this->setMessageFlashBag("warning", 'L\'utilisateur est déjà débloqué, actif  ou inconnu.', $request);
 
             } else {
                 $user->setStatut("STATUT_ACTIF");
@@ -220,14 +150,46 @@ class DashBoardController extends Controller
                 $userManager->persist($user);
                 $userManager->flush();
 
-                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
-                $request->getSession()->getFlashBag()->add('message', 'L\'utilisateur a été débloqué. Un mail vient d\'être envoyé pour le prévenir');
+                $this->setMessageFlashBag("success", 'L\'utilisateur a été débloqué. Un mail vient d\'être envoyé pour le prévenir.', $request);
 
                 $mail = $this->getMailer();
                 $mail->debanUser($user);
             }
         }
 
+        $redirect = ($request->server->get('HTTP_REFERER') === null) ? $this->generateUrl("fn_dashboard_index") : $request->server->get('HTTP_REFERER');
+
+        return $this->redirect($redirect);
+    }
+
+    /**
+     * @Route("dashboard/supprimer/{id}", name="fn_dashboard_supprimer", requirements={"id": "\d+"})
+     * @param int $id
+     * @param Request $request
+     */
+    public function supprimerAction($id = 0, Request $request){
+        if($id > 0) {
+            // on va chercher en base le user
+            $userManager = $this->getDoctrine()->getManager();
+            $userRepository = $userManager->getRepository('AppBundle:User');
+
+            $user = $userRepository->findOneBy(array(
+               "id" => $id,
+            ));
+
+            if($user === null){
+                $this->setMessageFlashBag("warning", 'L\'utilisateur n\'existe pas ou a déjà été supprimé.', $request);
+            } else {
+                $userManager->remove($user);
+                $userManager->flush();
+
+                $this->setMessageFlashBag("success", 'L\'utilisateur ainsi que l\'ensemble des ses observation ont été supprimés. Un mail vient d\'être envoyé pour le prévenir.', $request);
+
+                $mail = $this->getMailer();
+                $mail->delUser($user);
+
+            }
+        }
         $redirect = ($request->server->get('HTTP_REFERER') === null) ? $this->generateUrl("fn_dashboard_index") : $request->server->get('HTTP_REFERER');
 
         return $this->redirect($redirect);
@@ -246,12 +208,14 @@ class DashBoardController extends Controller
 
             // si il n'existe pas on crée un message d'erreur
             if($user === null){
-                $this->getMessageNatValidation("warning", $action,$request);
+                $this->setMessageNatValidation("warning", $action,$request);
             } else {
+
+                $mail = $this->getMailer();
 
                 if($action === "refus"){
                     // suppression du fichier carte
-                    $fichier = $this->get('kernel')->getRootDir() . '/../web/assets/fnat/naturalistes/' . $user->getCarte();
+                    $fichier = $this->getParameter("carte_pro_dir") . $user->getCarte();
                     if(file_exists($fichier)){
                         unlink($fichier);
                     }
@@ -259,19 +223,25 @@ class DashBoardController extends Controller
                     $userManager->persist($user);
                     $userManager->flush();
 
+                    $mail->insRefuseNat($user);
+
                 } else {
 
                     $user->setRoles(array('ROLE_NATURALISTE'));
                     $userManager->persist($user);
                     $userManager->flush();
+
+
+                    $mail->insValidNat($user);
+
                 }
 
-                $this->getMessageNatValidation("success",$action,$request);
+                $this->setMessageNatValidation("success",$action,$request);
 
             }
         } else {
             // message d'erreur
-            $this->getMessageNatValidation("error",$action,$request);
+            $this->setMessageNatValidation("error",$action,$request);
         }
     }
 
@@ -279,7 +249,7 @@ class DashBoardController extends Controller
      * Factorisation des messages à  enregistrer en session
      * lors de la validation et le refus d'un naturaliste
      */
-    protected function getMessageNatValidation($level, $action,Request $request){
+    protected function setMessageNatValidation($level, $action,Request $request){
 
         if($level === "error") {
             $request->getSession()->getFlashBag()->add('notice', 'Une erreur est survenue.');
@@ -323,57 +293,6 @@ class DashBoardController extends Controller
 
         }
     }
-    /**
-     * @return mixed
-     */
-    protected function getUserEnAttente($naturaliste)
-    {
-        $manager = $this
-            ->getDoctrine()
-            ->getManager();
-        $userRepository = $manager->getRepository('AppBundle:User');
-        $users = $userRepository->getUserEnAttente($naturaliste);
-        return $users;
-    }
-
-    /**
-     * @param $page
-     * @param DashboardService $dashboardService
-     * @return Response
-     */
-    protected function listerUser($page, DashboardService $dashboardService, $naturaliste)
-    {
-        $userManager = $this->getDoctrine()->getManager();
-        $userRepository = $userManager->getRepository('AppBundle:User');
-
-        // on compte le nombre de naturaliste
-        $nombre = $userRepository->howMany($naturaliste);
-
-        // on compte la pagination nécessaire
-        $nombrePageMax = $dashboardService->getPageMax($page, $nombre);
-
-        if ($page > $nombrePageMax) {
-            $page = $nombrePageMax;
-        }
-
-        // on récupère le bon nombre de naturaliste
-        $calcul = (10 * ($page - 1));
-        $naturalistes = $userRepository->getUserByOffset(10, $calcul, $naturaliste);
-
-        if($naturaliste){
-            $pageName = 'dashboard/naturalistes.html.twig';
-        } else {
-            $pageName = 'dashboard/observateurs.html.twig';
-        }
-
-        return $this->render($pageName,
-            array(
-                'total' => $nombre,
-                'page' => $page,
-                'pages' => $nombrePageMax,
-                'users' => $naturalistes,
-            ));
-    }
 
     /**
      * @return FnatMailer
@@ -386,6 +305,10 @@ class DashBoardController extends Controller
         return $mail;
     }
 
+    public function setMessageFlashBag($message, $class, Request $request){
+        $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-'.$class);
+        $request->getSession()->getFlashBag()->add('message', $message);
+    }
 }
 
 

@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
+use AppBundle\Entity\User;
 
 /**
  * ObservationRepository
@@ -135,4 +136,5 @@ class ObservationRepository extends \Doctrine\ORM\EntityRepository
         return $query->getArrayResult();
 
     }
+
 }

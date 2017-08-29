@@ -51,7 +51,7 @@ class User implements UserInterface, \Serializable
      *     minMessage = "Votre pseudonyme doit faire au moins { min } caractères",
      *     maxMessage = "Votre psudonyme ne peut exéder { max } caractères.")
      * @Assert\Regex(
-     *     pattern    = "/[azAZ0-9_]{4,20}/",
+     *     pattern    = "/^[azAZ0-9_]{4,20}$/",
      *     message    = "Votre pseudo ne peut contenir que des lettres, des chiffres et des '_'."
      * )
      */
@@ -690,5 +690,14 @@ class User implements UserInterface, \Serializable
             ) = unserialize($serialized);
     }
 
+    /**
+     * @ORM\PreRemove
+     */
+    protected function delAllDatas(){
+        foreach ($this->observations as $observation){
+
+        }
+
+    }
 
 }
