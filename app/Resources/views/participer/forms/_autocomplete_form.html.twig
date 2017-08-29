@@ -19,11 +19,11 @@
                 {% endif %}
 
                 <div class="col-xs-12 col-lg-10 col-lg-offset-1" data-form-type="formoid">
-                    <div class="mbr-subscribe mbr-subscribe-dark input-group">
+                    <div class="mbr-subscribe input-group">
                         {{ form_errors(form.espece) }}
                         {{ form_widget(form.especeTxt, {'attr': {
                             'class': 'mbr-form',
-                            'placeholder': 'Nom de l espèce',
+                            'placeholder': 'Saisir le nom de l\'espèce',
                             'data-id': 'especeId',
                             'data-url': path('fn_participer_autocomplete')
                         }
@@ -41,7 +41,7 @@
 
                         <span class="input-group-btn">
                             {{ form_widget(form.rechercher,{'attr':{
-                                'class': 'btn btn-white',
+                                'class': 'btn btn-info',
                                 'id':'drop'
                             }}
                             )
