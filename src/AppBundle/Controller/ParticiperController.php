@@ -117,7 +117,6 @@ class ParticiperController extends Controller
 
     /**
      * @Route("/participer/fiche-observation/{id}", name="fn_fiche_observation")
-     * @Security("has_role('ROLE_NATURALISTE')")
      * @Method({"GET", "POST"})
      */
     public function ficheObsAction (Request $request, Observation $observation, \Swift_Mailer $mailer)
@@ -353,6 +352,5 @@ class ParticiperController extends Controller
             'form' => $form->createView(),
         ));
     }
-
 
 }

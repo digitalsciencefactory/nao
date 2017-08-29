@@ -1,0 +1,160 @@
+{# app/Resources/views/front/connexion.html.twig #}
+
+{% extends "base.html.twig" %}
+
+
+{% block title %}
+    Conditions générales - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+    <section class="mbr-section article mbr-parallax-background" id="msg-box8-2f" style="background-image: url({{ asset('assets/images/mbr-3-2000x1333.jpg') }}); padding-top: 120px; padding-bottom: 80px;">
+        <div class="mbr-overlay" style="opacity: 0.5; background-color: rgb(34, 34, 34);">
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 text-xs-center">
+                    <h2 class="mbr-section-title display-2">
+                        Mentions légales
+                    </h2>
+                    <br>
+                    <h3 class="text-white">
+                        Site internet de Flash Nature –
+                    </h3>
+                    <p>
+                        <a href="https://flashnature.digitalsciencefactory.com">https://flashnature.digitalsciencefactory.com</a>
+                        <br>
+                        <strong>Directeur de la publication :</strong> Association NAO - Nos Amis les Oiseaux
+                        <br>
+                        <strong>Responsable éditorial : </strong> Association NAO - Nos Amis les Oiseaux
+                    </p>
+                </div>
+
+                <div class="col-md-12 text-xs-left">
+                    <h3 class="text-white">
+                        Droits d’auteur
+                    </h3>
+                   <p>
+                       L’ensemble de ce site relève de la législation française et internationale sur le droit d’auteur et la propriété intellectuelle.
+                       <br>
+                       Toute copie, reproduction, représentation, adaptation, diffusion, intégrale ou partielle, du contenu du site de Flash Nature par quelque procédé que ce soit, est illicite à l’exception d’une unique copie réservée à l’usage exclusivement privé du copiste.
+                       <br>
+                       Les informations contenues dans ce site sont présentées à titre purement informatif et sont non contractuelles.
+                       <br>
+                       L’association NAO ne saurait être tenue responsable pour toute erreur ou omission dans les textes et illustrations du site. Les informations peuvent faire l’objet de modifications sans préavis.
+                       <br>
+                   </p>
+                    <p>
+                        Néanmoins, par principe sont autorisés, sans accord express préalable :
+                    </p>
+                    <ul class="text-white">
+                        <li>
+                            la citation, respectant le droit moral de l’auteur par l’indication de son nom et de la source. La multiplication des citations est considérée comme une œuvre dérivée, et donc soumise à l’accord préalable de l’auteur ou de l’ayant droit ;
+                        </li>
+                        <li>
+                            la création d’un lien, à la condition impérative que ce lien ouvre une nouvelle fenêtre du navigateur et que la page atteinte par le lien ne soit pas imbriquée à l’intérieur d’autres pages, en particulier par voie de cadres (ou « frames »), appartenant au site appelant que cette ou ces page(s) apparaisse(nt) dans une page entière sous l’URL «https://flashnature.digitalsciencefactory.com ».
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-md-12 text-xs-left">
+                    <h3 class="text-white">
+                        Crédits photos
+                    </h3>
+                    <p>
+                        Toute utilisation, reproduction d’une photographie ne pourra se faire sans l’accord de l’association NAO.
+                    </p>
+                </div>
+
+                <div class="col-md-12 text-xs-left">
+                    <h3 class="text-white">
+                        Avertissements
+                    </h3>
+                    <p>
+                        Il appartient à l’utilisateur de ce site de prendre toutes les mesures appropriées de façon à protéger ses propres données et/ou logiciels de la contamination par d’éventuels virus circulant sur le réseau Internet.
+                        <br>
+                        De manière générale, l’association NAO décline toute responsabilité à un éventuel dommage survenu pendant la consultation du présent site.
+                        <br>
+                        Les liens proposés vers d’autres sites sont communiqués à titre indicatif et ne sauraient engager la responsabilité de l’association NAO, tant en ce qui concerne les contenus que les conditions d’accès.
+                    </p>
+                </div>
+
+                <div class="col-md-12 text-xs-left">
+                    <h3 class="text-white">
+                        Cookies
+                    </h3>
+                    <p>
+                        L’utilisateur est informé que lors de ses visites sur le site, un cookie peut s’installer automatiquement sur son logiciel de navigation.
+                        <br>
+                        Le cookie est un bloc de données qui ne permet pas d’identifier les utilisateurs mais sert à enregistrer des informations relatives à la navigation de celui-ci sur le site.
+                        <br>
+                        Le paramétrage du logiciel de navigation permet d’informer de la présence de cookie.
+                    </p>
+                </div>
+
+                <div class="col-md-12 text-xs-left">
+                    <h3 class="text-white">
+                        Protection des données personnelles
+                    </h3>
+                    <p>
+                        Conformément à la Loi Informatique et Libertés (Loi n° 78-17 du 6 janvier 1978), nous vous informons que vous disposez d’un droit d’accès, de modification, de rectification et de suppression des données nécessaires au traitement de vos demandes de renseignement ou de documentation ou pour une inscription à une newsletter.
+                        <br>
+                        Les données que vous fournissez ne sont utilisées que pour répondre à votre demande.
+                    </p>
+                    <p>Vous pouvez l’exercer :</p>
+                    <ul class="text-white">
+
+                        <li>
+                            En adressant un courriel  : info@nao.fr ou via la rubrique « contact » du site https://flashnature.digitalsciencefactory.com/contact
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-md-12 text-xs-left">
+                    <h3 class="text-white">
+                        Site développé par :
+                    </h3>
+                    <p>
+                         Digital Science Factory<br>
+                        24 rue des geeks <br>
+                        75 010 Paris <br>
+                        Tél : 01 40 69 22 99 <br>
+                        courriel : digitalsciencefactory@gmail.com <br>
+                        Design / Rédactionnel : Lucie Crussé <br>
+                        Développement : Simon Lhoir / Sylvain Gouty
+                    </p>
+                </div>
+
+                <div class="col-md-12 text-xs-left">
+                    <h3 class="text-white">
+                        Photographie
+                    </h3>
+                    <p>
+                        Crédits photo : Mobirise <br>
+                        Stylisme / Graphisme  : Lucie Crussé
+                    </p>
+                    <br>
+
+                    <p>
+                        Nous vous souhaitons une bonne visite sur <a href="https://flashnature.digitalsciencefactory.com">https://flashnature.digitalsciencefactory.com</a>
+                    </p>
+                </div>
+
+
+
+            </div>
+        </div>
+    </section>
+
+    <h1>
+
+    </h1>
+
+
+
+
+
+
+{% endblock body %}
