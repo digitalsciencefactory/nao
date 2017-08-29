@@ -21,6 +21,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\Type\UserType;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -228,7 +229,7 @@ class ParticiperController extends Controller
 
     /**
      * @param Request $request
-     * @return JsonResponse
+     * @return Response
      *
      * @Route("/participer/autocomplete/", name="fn_participer_autocomplete")
      */
@@ -237,9 +238,10 @@ class ParticiperController extends Controller
         if($request->isXmlHttpRequest())
         {
             $search = $request->get('search');
-            $repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
+            $repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
             $results = $repository->getByAutoComplete($search);
-        return new JsonResponse($results);
+            return new JsonResponse($results);
+        
         }
         $results = Array();
 

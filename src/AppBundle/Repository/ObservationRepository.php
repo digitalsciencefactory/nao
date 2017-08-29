@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
+use AppBundle\Entity\User;
 
 /**
  * ObservationRepository
@@ -18,7 +19,7 @@ class ObservationRepository extends \Doctrine\ORM\EntityRepository
     public function getEspeceWithJoin($espece){
         $qb = $this
             ->createQueryBuilder('a')
-            ->select('a')
+            ->addselect('a')
             ->leftJoin('a.espece', 'espece')
             ->addSelect('espece')
             ->leftJoin('espece.rang', 'rang')
@@ -95,6 +96,45 @@ class ObservationRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getResult()
             ;
+    }
+
+    /**
+     * Retourne les taxons en et leur nombre dans les observations
+     *
+     * @param string $recherche
+     * @return array
+     */
+    public function getByAutoComplete($recherche){
+
+
+        /*
+        $qb = $this->createQueryBuilder('o')
+            ->select('count(o.id) as "occurence" ')
+            ->addSelect('t.lb_nom')
+            ->addSelect('t.nom_vern')
+            ->addSelect('t.nom_vern_eng')
+            ->leftJoin('o.espece_id', 't', 'WITH', 't.id = o.espece_id') // left join inversÃ© = right join
+            ->from('AppBundle:Observation', 'o')
+            ->from('AppBundle:Taxref', 't')
+            ->where('t.lb_nom like :search OR t.nom_vern like :search OR t.nom_vern like :search')
+            ->groupBy('t.id')
+            ->setParameter('search', $recherche);*/
+
+        $qb = $this->_em->createQueryBuilder();
+        $qb->addSelect('Distinct t.id')
+            ->addSelect('t.lbNom')
+            ->addSelect('t.nomVern')
+            ->addSelect('t.nomVernEng')
+            ->from('AppBundle:Taxref', 't')
+            ->andWhere('t.lbNom like :rechLbNom OR t.nomVern like :rechVern OR t.nomVernEng like :rechVernEng');
+        $qb->setParameter('rechLbNom', '%'.$recherche.'%');
+        $qb->setParameter('rechVern', '%'.$recherche.'%');
+        $qb->setParameter('rechVernEng', '%'.$recherche.'%');
+
+        $query = $qb->getQuery();
+
+        return $query->getArrayResult();
+
     }
 
 }

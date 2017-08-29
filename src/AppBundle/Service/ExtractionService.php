@@ -15,8 +15,6 @@ class ExtractionService
      */
     private $em;
 
-
-
     /**
      * ExtractionService constructor.
      */
@@ -49,7 +47,6 @@ class ExtractionService
      */
     public function generateCsv(Extraction $extraction, array $observations, $path, array $entete){
 
-
         // création d'un fichier csv
         $now = new \DateTime();
         $file =
@@ -75,6 +72,7 @@ class ExtractionService
         return $file;
 
     }
+
 }
 
 

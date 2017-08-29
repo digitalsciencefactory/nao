@@ -39,7 +39,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="text-xs-center"><a class="btn btn-white" href="{{ path('fn_dashboard_natavalid')}}" >Naturaliste en attente de validation&nbsp;</a> <a class="btn btn-white-outline btn-white" href="comptes-particuliers_en_attente.html">Particulier en attente validation&nbsp;</a></div>
+                    <div class="text-xs-center"><a class="btn btn-white" href="{{ path('fn_dashboard_natavalid')}}" >Naturaliste en attente de validation&nbsp;</a> <a class="btn btn-white-outline btn-white" href="{{ path('fn_dashboard_obsavalid')}}">Particulier en attente validation&nbsp;</a></div>
                 </div>
             </div>
         </div>
@@ -62,9 +62,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="text-xs-center">
-                        <a class="btn btn-white" href="inscrits-application.html">Application</a>
-                        <a class="btn btn-white-outline btn-white" href="inscrits-news.html">Newsletter</a></div>
+                    <div class="text-xs-center"><a class="btn btn-white" href="/dashboard/naturalistes">Naturalistes</a> <a class="btn btn-white-outline btn-white" href="/dashboard/observateurs">Observateurs</a></div>
                 </div>
             </div>
         </div>
@@ -89,7 +87,7 @@
                 <div class="col-xs-12">
 
                     <div class="text-xs-center">
-                        <a class="btn btn-white" href="comptes-bannis.html">Comptes bannis</a>
+                        <a class="btn btn-white" href="{{ path('fn_dashboard_bannis')}}">Comptes bannis</a>
                     </div>
 
                 </div>
