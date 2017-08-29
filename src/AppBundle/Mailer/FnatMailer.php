@@ -96,6 +96,37 @@ class FnatMailer
   }
 
     /**
+     * @param User $user
+     */
+    public function insValidNat(User $user){
+        $body = $this->twig->render('mail\ins.validNat.html.twig', array('user' => $user));
+
+        $message = new \Swift_Message("Votre statut Naturaliste sur Flash Nature.");
+        $message->setBody($body,'text/html');
+
+        $message->addTo($user->getMail());
+        $message->addFrom("contact-fnat@digitalsciencefactory.com");
+
+        $this->mailer->send($message);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function insRefuseNat(User $user){
+        $body = $this->twig->render('mail\ins.refuseNat.html.twig', array('user' => $user));
+
+        $message = new \Swift_Message("Votre statut Naturaliste sur Flash Nature.");
+        $message->setBody($body,'text/html');
+
+        $message->addTo($user->getMail());
+        $message->addFrom("contact-fnat@digitalsciencefactory.com");
+
+        $this->mailer->send($message);
+    }
+
+
+    /**
      * Envoie un mail au nouveau naturaliste pour vérifier son mail
      *
      * @param User $user
@@ -152,11 +183,28 @@ class FnatMailer
         $message = new \Swift_Message("Votre compte sur Flash Nature a été suspendu.");
         $message->setBody($body,'text/html');
 
-        $message->addTo($newsletter->getMail());
+        $message->addTo($user->getMail());
         $message->addFrom("contact-fnat@digitalsciencefactory.com");
 
         $this->mailer->send($message);
     }
+
+    /**
+     * Mail pour prévenir un utilisateur que son compte est supprimé
+     * @param User $user
+     */
+    public function delUser(User $user){
+        $body = $this->twig->render('mail\del.html.twig', array('user' => $user));
+
+        $message = new \Swift_Message("Votre compte sur Flash Nature a été supprimé.");
+        $message->setBody($body,'text/html');
+
+        $message->addTo($user->getMail());
+        $message->addFrom("contact-fnat@digitalsciencefactory.com");
+
+        $this->mailer->send($message);
+    }
+
     /**
      * Mail pour prévenir un utilisateur qu'il est bannis.
      * @param User $user
@@ -167,7 +215,7 @@ class FnatMailer
         $message = new \Swift_Message("Votre compte sur Flash Nature a été suspendu.");
         $message->setBody($body,'text/html');
 
-        $message->addTo($newsletter->getMail());
+        $message->addTo($user->getMail());
         $message->addFrom("contact-fnat@digitalsciencefactory.com");
 
         $this->mailer->send($message);

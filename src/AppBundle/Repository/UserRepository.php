@@ -55,7 +55,7 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
      * @param bool $naturaliste
      * @return array
      */
-    public function getUserByOffset($limit,$offset,$naturaliste){
+    public function getUsersByOffset($limit,$offset,$naturaliste){
         $qb = $this
             ->createQueryBuilder('a')
             ->select('a')
@@ -81,7 +81,7 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
      * @return array
      */
 
-    public function getUserEnAttente($naturaliste){
+    public function getUsersEnAttente($naturaliste){
         $qb = $this
             ->createQueryBuilder('a')
             ->select('a')
