@@ -12,7 +12,7 @@ namespace AppBundle\Service;
 class DashboardService
 {
     public function getPageMax($page, $nombre){
-        return $nombrePageMax = ($nombre === "0") ? 1 : (int) ceil($nombre / 10.0);
+        return ($nombre === "0") ? 1 : (int) ceil($nombre / 10.0);
 
     }
 }
