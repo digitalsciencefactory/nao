@@ -133,7 +133,7 @@ function init() {
 
         addEvent('resize', refreshSize);
 
-        // TODO: attributeFilter?
+        // attributeFilter?
         var config = {
             attributes: true,
             childList: true,

@@ -39,12 +39,8 @@
 
 <!--  menu -->
 {% block navbar %}
-
-    {% if is_granted('ROLE_ADMIN') %}
+    
         {% include('dashboard/menu/menu-administrateur.html.twig') %}
-    {%  else %}
-        {% include('dashboard/menu/menu-naturaliste.html.twig') %}
-    {% endif %}
 
 {% endblock %}
 
@@ -57,14 +53,9 @@
 {% endblock body %}
 
 {% block footer %}
-    <footer>
-        <div class="mbr-small-footer mbr-section mbr-section-nopadding" id="footer1-2" style="background-color: rgb(50, 50, 50); padding-top: 1.75rem; padding-bottom: 1.75rem;">
 
-            <div class="container">
-                <p class="text-xs-center">Copyright (c) 2016 Flash Nature - Nao</p>
-            </div>
-        </div>
-    </footer>
+    {{ include('footer.html.twig') }}
+
 {% endblock %}
 
 {% block javascripts %}

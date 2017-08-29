@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+</head>
+<body>
+<p>Observation n°{{ observation.id }} supprimée</p>
+
+{{ observation.observateur.pseudo }},
+
+<p>Votre observation {{ observation.id }} a été examinée et nous vous remercions de votre participation.</p>
+
+<p>Cependant après étude, nous ne pouvons valider votre observation.</p>
+
+Remarques du naturaliste :
+<p>{{ observation.commNat }}</p>
+
+<p>Rendez-vous sur Flash Nature pour poster de nouvelle observation :
+<a href="https://flashnature.digitalsciencefactory.com/participer/envoi-observation">Envoyer une observation</a>
+
+</body>
+
+<p>----</p>
+<p>L'équipe de FlashNature</p>

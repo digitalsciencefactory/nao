@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Utils\UtilsFiles;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -167,6 +168,7 @@ class User implements UserInterface, \Serializable
      */
     private $dcree;
 
+
     /* *** CONSTRUCTEUR *** */
 
     /**
@@ -174,7 +176,7 @@ class User implements UserInterface, \Serializable
      */
     public function __construct()
     {
-    $this->photo = "avatar1.png";
+        $this->photo = "avatar1.png";
     }
 
     /* *** METHODES *** */
@@ -622,7 +624,7 @@ class User implements UserInterface, \Serializable
      */
     public function eraseCredentials()
     {
-        // TODO: Implement eraseCredentials() method.
+        
     }
 
     /**
@@ -684,34 +686,5 @@ class User implements UserInterface, \Serializable
             ) = unserialize($serialized);
     }
 
-    /**
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
-    public function upload()
-    {
-        // Si jamais il n'y a pas de fichier (champ facultatif pour les non naturalistes), on ne fait rien
-        if (null === $this->file) {
-            return;
-        }
 
-        $name = substr(bin2hex(random_bytes(30)),0,25) . "." . $this->file->getClientOriginalExtension();
-
-        // On déplace le fichier envoyé dans le répertoire de notre choix
-        $this->file->move($this->getUploadRootDir(), $name);
-
-        // On sauvegarde le nom de fichier dans notre attribut $url
-        $this->carte = $name;
-
-    }
-
-    public function getUploadDir()
-    {
-        return 'assets/fnat/naturalistes';
-    }
-
-    protected function getUploadRootDir()
-    {
-        return __DIR__.'/../../../web/'.$this->getUploadDir();
-    }
 }

@@ -23,6 +23,14 @@ class FrontController extends Controller
     }
 
     /**
+     * @Route("/mentions-legales", name="fn_front_mentions_legales")
+     * @Route("/accueil")
+     */
+    public function mentionsAction(){
+        return $this->render('front/mentions_legales.html.twig');
+    }
+
+    /**
      * @Route("/login", name="fn_front_connexion")
      *
      * Affiche la page de connexion

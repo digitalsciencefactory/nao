@@ -1,25 +1,6 @@
 <section class="mbr-section extTable1" id="extTable1-e" style="background-color: rgb(163, 143, 132); padding-top: 40px; padding-bottom: 120px;">
 
-    {% for message in app.flashes('notice') %}
-        <div class="bg-success">
-            {{ message }}
-        </div>
-        <br />
-    {% endfor %}
-
-    {% for message in app.flashes('noticeWarning') %}
-        <div class="btn-warning">
-            {{ message }}
-        </div>
-        <br />
-    {% endfor %}
-
-    {% for message in app.flashes('noticeError') %}
-        <div class="btn-danger">
-            {{ message }}
-        </div>
-        <br />
-    {% endfor %}
+    {% include("messagesValidation.html.twig") %}
 
     <div class="container table-wrapper" data-search="true" search-text="Rechercher :" info1-text="" info2-text="" info3-text="" info4-text="">
         <p> Il y a {{ users|length }} naturaliste(s) en attente.</p>
@@ -52,7 +33,7 @@
                                         <h4 class="modal-title" id="myModalLabel">Carte professionnelle de {{ user.pseudo }}</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <img class="img-responsive" src="{{ asset('assets/fnat/naturalistes/' ~ user.carte ~ '') }}" alt="Carte professionnelle de {{ user.pseudo }}" />
+                                        <img class="img-responsive" src="{{ asset('fnat/naturalistes/' ~ user.carte ~ '') }}" alt="Carte professionnelle de {{ user.pseudo }}" />
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -65,10 +46,10 @@
                     </td>
                     <td>{{ user.mail }}</td>
                     <td>
-                        <form class="left" action="/dashboard/naturalistes/refuser/{{ user.id }}" method="POST">
+                        <form class="left" action="/dashboard/naturalistes-refus/{{ user.id }}" method="POST">
                             <button class="btn btn-danger slimbtn" type="submit" value="refuser">Refuser</button>
                         </form>
-                        <form class="right" action="/dashboard/naturalistes/valider/{{ user.id }}" method="POST">
+                        <form class="right" action="/dashboard/naturalistes-validation/{{ user.id }}" method="POST">
                             <button class="btn btn-success slimbtn" type="submit" value="valider">Valider</button>
                         </form>
                     </td>

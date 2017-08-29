@@ -10,6 +10,62 @@ namespace AppBundle\Repository;
  */
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
+    /* *** MIXTE *** */
+
+    /**
+     *  Retrouve un utilisateur actif avec son id
+     *  ou renvoi un tableau vide
+     * @param $id
+     * @return array
+     */
+    public function getUserToBan($id){
+        $qb = $this->createQueryBuilder('a')
+            ->select('a')
+            ->andWhere('a.id = :id')
+            ->setParameter('id', $id)
+            ->andWhere('a.statut = :statut')
+        ->setParameter('statut', "STATUT_ACTIF");
+
+        return $qb->getQuery()->getArrayResult();
+    }
+
+    /* *** OBSERVATEURS ***  */
+
+    /* *** NATURALISTES *** */
+
+    /**
+     * @return mixed
+     */
+    public function howManyNat(){
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('count(a.id)');
+        $qb->andWhere('a.roles = :role');
+        $qb->setParameter('role', "a:1:{i:0;s:16:\"ROLE_NATURALISTE\";}");
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+    /**
+     * Retourne $limit naturaliste en commenceant par le $offset
+     * @param $limit
+     * @param $offset
+     * @return array
+     */
+    public function getNatByOffset($limit,$offset){
+        $qb = $this
+            ->createQueryBuilder('a')
+            ->select('a')
+            ->andWhere('a.roles = :role')
+            ->setParameter('role', "a:1:{i:0;s:16:\"ROLE_NATURALISTE\";}")
+            ->setFirstResult( $offset )
+            ->setMaxResults( $limit )
+            ->orderBy("a.id","ASC")
+            ;
+
+        return $qb
+            ->getQuery()
+            ->getResult()
+            ;
+    }
     /**
      * @return array
      */

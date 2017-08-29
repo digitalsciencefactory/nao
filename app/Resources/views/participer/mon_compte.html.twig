@@ -85,16 +85,14 @@
                         <div class="col-sm-12 col-md-4 col-lg-3">
                             <label for="user_ddn" class="control-label lbl-modify">Date de naissance :</label>
                         </div>
-                        {% if app.user.ddn != null %}
-                            <div class="col-sm-12 col-md-8 col-lg-9">{{ form_widget(form.ddn, {'attr': {'disabled':'disabled','class': 'field-no-deco', 'placeholder': app.user.ddn|date("d/m/Y") } } ) }}</div>
-                        {% else %}
-                            <div class="col-sm-12 col-md-8 col-lg-9">{{ form_widget(form.ddn, {'attr': {'disabled':'disabled','class': 'field-no-deco', 'placeholder': '' } } ) }}</div>
-                        {% endif %}
+
+                            <div class="col-sm-12 col-md-8 col-lg-9">{{ form_widget(form.ddn, {'attr': {'disabled':'disabled','class': 'field-no-deco', 'placeholder': app.user.ddn|date("d/m/Y")|default("") } } ) }}</div>
+
                     </div>
 
                     {% if form_errors(form.prenom) != null %}
                         <div class="form-group">
-                            <div class="col-sm-12 bg-danger">
+                            <div class="col-sm-12 bg-danger">{{ form_errors(form.prenom) }}
                             </div>
                         </div>
                     {% endif %}
@@ -167,7 +165,7 @@
 
 
                     </div>
-                    {{ form_rest(form) }}
+                    
                     {{ form_end(form) }}
 
                 </div>
