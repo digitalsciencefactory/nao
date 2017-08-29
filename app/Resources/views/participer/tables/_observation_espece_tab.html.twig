@@ -1,7 +1,7 @@
 {# app/Resources/views/tales/_observation_espece_html.twig #}
-<section class="mbr-section" id="content5-56" style=" padding-top: 80px; padding-bottom: 40px;">
+<div class="mbr-section" id="content5-56" style=" padding-top: 10px; padding-bottom: 10px;">
     <div class="container">
-        <h3 class="mbr-section-title display-2">
+        <h3 class="mbr-section-title display-2 text-white">
             {% if obsList is defined %}
                 {% if obsList != null %}
                     Résultat(s) de recherche
@@ -13,35 +13,34 @@
             {% endif %}
         </h3>
     </div>
-</section>
+</div>
 
-<section class="mbr-section extTable1" id="extTable1-57" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 120px;">
+<div class="mbr-section extTable1" id="extTable1-57" style="background-color: rgb(255, 255, 255); padding-top: 0; padding-bottom: 0;">
     <div class="container table-wrapper">
         <table class="table" cellspacing="0" width="100%">
             <thead>
             <tr>
                 <th>Date</th>
-                <th>Observation prise par</th>
-                <th>Validé par</th>
-                <th><br></th>
+                <th>Fiche</th>
             </tr>
             </thead>
-
-            {% if obsMap is defined %}
                 <tbody>
-                {% for observation in obsMap %}
-                    {% if observation.statut == 'STATUT_VALIDE' %}
-                        <tr>
-                            <td>{{ observation.dObs|date('d/m/Y') }}</td>
-                            <td>{{ observation.observateur.pseudo }}</td>
-                            <td>{{ observation.naturaliste.pseudo }}</td>
-                            <td><a href="{{ path('fn_fiche_observation', {id: observation.id}) }}">En savoir +</a></td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-                </tbody>
-            {% endif %}
+                {% if obsMap is defined %}
+                    {% for observation in obsMap %}
+                        {% if observation.statut == 'STATUT_VALIDE' %}
+                            <tr>
+                                <td>{{ observation.dObs|date('d/m/Y') }}</td>
+                                <td><a href="{{ path('fn_fiche_observation', {id: observation.id}) }}">En savoir +</a></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
 
+                    {% else %}
+                        <tr class="text-center">
+                            <td colspan="2">Aucune observation validée </td>
+                        </tr>
+                {% endif %}
+                </tbody>
         </table>
     </div>
-</section>
+</div>

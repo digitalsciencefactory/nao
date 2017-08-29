@@ -9,7 +9,8 @@
 {% block body %}
 
 <!--  banner   -->
-    <section class="mbr-section mbr-section-hero mbr-section-full mbr-parallax-background mbr-section-with-arrow mbr-after-navbar" id="header1-b" style="background-image: url('assets/images/soleil-dans-la-foret-visuel-large-1-2000x1499.jpg');">
+    <section class="mbr-section mbr-section-hero mbr-section-full mbr-parallax-background mbr-section-with-arrow mbr-after-navbar" id="header1-b"
+             style="background-image: url('{{ asset('assets/images/soleil-dans-la-foret-visuel-large-1-2000x1499.jpg') }}');">
 
         <div class="mbr-overlay" style="opacity: 0.5; background-color: rgb(0, 0, 0);"></div>
 
@@ -27,16 +28,16 @@
 
                             <p class="mbr-section-lead lead">
                                 Déjà inscrit ?
-                                <a href="/login">
+                                <a href="{{ path('fn_front_connexion') }}">
                                     Cliquer ici
                                 </a>
                             </p>
 
-                            <a class="btn btn-lg btn-primary" href="/inscription-observateur">
+                            <a class="btn btn-lg btn-primary" href="{{ path('fn_front_inscription_obs') }}">
                                 Je suis un particulier
                             </a>
 
-                            <a class="btn btn-lg btn-white btn-white-outline" href="/inscription-naturaliste">
+                            <a class="btn btn-lg btn-white btn-white-outline" href="{{ path('fn_front_inscription_nat') }}">
                                 Je suis un naturaliste
                             </a>
                         </div>

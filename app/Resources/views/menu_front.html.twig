@@ -15,7 +15,7 @@
 
                 <div class="mbr-table-cell">
 
-                    <div class="navbar-toggler pull-xs-right hidden-md-up" data-toggle="collapse" data-target="#exCollapsingNavbar">
+                    <div class="navbar-toggler pull-xs-right hidden-md-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
                         <div class="hamburger-icon"></div>
                     </div>
 
@@ -26,17 +26,19 @@
                         </li>
 
                         <li class="nav-item dropdown">
-                            <a class="nav-link link" href="/inscription">L'application</a>
+                            <a class="nav-link link" href="{{ path('fn_front_inscription') }}">L'application</a>
                         </li>
 
                         <li class="nav-item dropdown">
-                            <a class="nav-link link dropdown-toggle" href="" data-toggle="dropdown-submenu" aria-expanded="false">Participer</a>
+                            <a class="nav-link link dropdown-toggle" href="" data-toggle="dropdown-submenu" aria-expanded="false">Espace Naturaliste</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="/participer/envoi-observation">Envoi d'observation</a>
-                                <a class="dropdown-item" href="/participer/carte-des-observations">Carte des observations validées</a>
+                                <a class="dropdown-item" href="{{ path('fn_participer_envoi_obs') }}">Envoi d'observation</a>
                                 {% if is_granted('ROLE_NATURALISTE') %}
-                                    <a class="dropdown-item" href="/participer/espace-naturaliste">Observation à valider</a>
-                                    <a class="dropdown-item" href="/participer/extraction-donnees">Extraction des données</a>
+                                    <a class="dropdown-item" href="{{ path('fn_participer_obs_attente') }}">Observations en attente</a>
+                                {% endif %}
+                                <a class="dropdown-item" href="{{ path('fn_participer_carte_obs') }}">Carte des observations</a>
+                                {% if is_granted('ROLE_NATURALISTE') %}
+                                    <a class="dropdown-item" href="{{ path('fn_participer_bdd') }}">Extraction des données</a>
                                 {% endif %}
                             </div>
                         </li>
@@ -44,26 +46,26 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link link dropdown-toggle" href="" data-toggle="dropdown-submenu" aria-expanded="false">Infos pratiques</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="/kit-observation">Kit Observation</a>
-                                <a class="dropdown-item" href="/qui-sommes-nous">Qui sommes nous ?</a>
-                                <a class="dropdown-item" href="/contact">Contact</a>
+                                <a class="dropdown-item" href="{{ path('fn_front_kit') }}">Kit Observation</a>
+                                <a class="dropdown-item" href="{{ path('fn_front_about') }}">Qui sommes nous ?</a>
+                                <a class="dropdown-item" href="{{ path('fn_front_contact') }}">Contact</a>
                             </div>
                         </li>
 
                         {% if app.user == null %}
                             <li class="nav-item nav-btn">
-                                <a class="nav-link btn btn-secondary-outline btn-secondary" href="/login">Se connecter</a>
+                                <a class="nav-link btn btn-secondary-outline btn-secondary" href="{{ path('fn_front_connexion') }}">Se connecter</a>
                             </li>
                             <li class="nav-item nav-btn">
-                                <a class="nav-link btn btn-secondary-outline btn-secondary" href="/inscription">S'inscrire</a>
+                                <a class="nav-link btn btn-secondary-outline btn-secondary" href="{{ path('fn_front_inscription')}}">S'inscrire</a>
                             </li>
                         {% else %}
                             <li class="nav-item">
-                                <a class="nav-link link" href="/participer/mon-compte">Mon compte</a>
+                                <a class="nav-link link" href="{{ path('fn_participer_profil') }}">Mon compte</a>
                             </li>
                             <li class="nav-item nav-btn">
                                 <span>{{ app.user.pseudo }} </span>
-                                <a class="nav-link link boutonlogout" href="/logout">
+                                <a class="nav-link link boutonlogout" href="{{ path('logout') }}">
                                     <img src=" {{ asset('assets/fnat/icon/bouton_deconnexion.png') }}" id="boutonLogOut" />
                                 </a>
                             </li>

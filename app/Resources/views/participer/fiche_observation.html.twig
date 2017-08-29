@@ -8,18 +8,14 @@
 
 {% block body %}
 
-    <!--  Information sur l'observation -->
-    {{ include('participer/blocks/_info_observation.html.twig') }}
 
-    <!--  Formulaire de modification -->
-    {% if is_granted('ROLE_NATURALISTE') %}
-        {% if observation.statut == 'STATUT_EN_ATTENTE'%}
-            {{ include('participer/forms/_modif_observation_form.html.twig') }}
-        {% endif %}
-    {% endif %}
+    <section class="mbr-section mbr-after-navbar" style="background-color: rgb(105, 176, 171); padding-top: 120px; padding-bottom: 0;">
+        <div class="container">
+            <h1 class="mbr-section-title text-white">Fiche observation n° {{ observation.id }}</h1>
+        </div>
 
-    <!--  Carte des observations valides par espèce -->
-    {{ include('participer/blocks/_carte_observation.html.twig') }}
+        {{ include('participer/blocks/_carte_fiche.html.twig') }}
+    </section>
 
     <!--  Blocks -->
     {{ include('front/blocks/_follow.html.twig') }}

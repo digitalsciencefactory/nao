@@ -1,20 +1,11 @@
 {# app/Resources/views/Participer/observation_base.html.twig #}
 {% extends "base.html.twig" %}
 
-
 {% block stylesheets %}
     {{ parent() }}
 
     <link rel="stylesheet" href="{{ asset('assets/fnat/css/autocomplete.css') }}" />
-
-    <style>
-        #carteObservationMap{
-            height: 100%;
-        }
-    </style>
 {% endblock stylesheets %}
-
-
 
 {% block javascripts %}
     {{ parent() }}
