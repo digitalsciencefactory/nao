@@ -16,7 +16,6 @@ class DashBoardListerController extends Controller
 {
     /**
      * @Route("/dashboard", name="fn_dashboard_index")
-     * @Route("/dashboard/")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function indexAction(){
@@ -54,7 +53,7 @@ class DashBoardListerController extends Controller
     }
 
     /**
-     * @Route("/dashboard/observateurs-a-valider", name="fn_dashboard_nobsavalid")
+     * @Route("/dashboard/observateurs-a-valider", name="fn_dashboard_obsavalid")
      * Liste les observateurs à  valider et permet de les valider
      */
     public function obsEnAttenteAction(){
