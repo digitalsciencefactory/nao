@@ -238,14 +238,14 @@ class ParticiperController extends Controller
      */
     public function autoCompletionAction(Request $request)
     {
-        //if($request->isXmlHttpRequest())
-        //{
+        if($request->isXmlHttpRequest())
+        {
             $search = $request->get('search');
             $repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
             $results = $repository->getByAutoComplete($search);
             return new JsonResponse($results);
-        //return new JsonResponse($results);
-        //}
+        
+        }
         $results = Array();
 
         return new JsonResponse($results);
