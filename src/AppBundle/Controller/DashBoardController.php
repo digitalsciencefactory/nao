@@ -77,6 +77,47 @@ class DashBoardController extends Controller
     }
 
     /**
+     * @Route("/dashboard/observateur-validation/{id}", name="fn_dashboard_validObs", requirements={"id": "\d+"})
+     * @param $id
+     * @param Request $request
+     */
+    public function obsValiderAction($id = 0, $request){
+        if($id > 0) {
+            $manager = $this
+                ->getDoctrine()
+                ->getManager();
+            $userRepository = $manager->getRepository('AppBundle:User');
+
+            $user = $userRepository->findOneBy(array(
+                'id' => $id,
+                'statut' => "STATUT_INACTIF",
+            ));
+
+            if($user === null){
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-warning');
+                $request->getSession()->getFlashBag()->add('message', 'L\'utilisateur est déjà  validé ou n\'est pas reconnu dans la base de données.');
+
+            } else {
+                $user->setToken("");
+                $user->setStatut("STATUT_ACTIF");
+
+                $manager->persist($user);
+                $manager->flush();
+
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
+                $request->getSession()->getFlashBag()->add('message', 'L\'utilisateur a été validé. Un mail vient d\'être envoyé pour le prévenir');
+
+                $mail = $this->getMailer();
+                $mail->insValidObs($user);
+            }
+        }
+
+        $redirect = ($request->server->get('HTTP_REFERER') === null) ? $this->generateUrl("fn_dashboard_observateurs") : $request->server->get('HTTP_REFERER');
+
+        return $this->redirect($redirect);
+    }
+
+    /**
      * @Route("dashboard/naturalistes-validation/{id}", name="fn_dashboard_natvalid", requirements={"id": "\d+"})
      * Valide le role naturaliste à  un user
      */
@@ -102,10 +143,90 @@ class DashBoardController extends Controller
     }
 
     /**
+     * @Route("dashboard/bannis", name="bannis")
+     */
+    public function listerBannisAction(){
+        $userRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:User');
+
+        $users = $userRepository->findBy(array(
+           'statut' => 'STATUT_BANNI',
+        ));
+
+        return $this->render('dashboard/bannis.html.twig',
+            array(
+                'users' => $users,
+            ));
+
+    }
+
+    /**
      * @Route("dashboard/bannir/{id}", name="fn_dashboard_bannir", requirements={"id": "\d+"})
      * Tente de bannir un utilisateur
      */
     public function bannirAction($id = 0, Request $request){
+
+        if($id>0){
+            $userManager = $this->getDoctrine()->getManager();
+            $userRepository = $userManager->getRepository('AppBundle:User');
+
+            $user = $userRepository->findOneBy(array(
+               'id' => $id,
+               'statut' => "STATUT_ACTIF"
+            ));
+            if($user === null){
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-warning');
+                $request->getSession()->getFlashBag()->add('message', 'L\'utilisateur est déjà bloqué, inactif ou inconnu');
+
+            } else {
+                $user->setStatut("STATUT_BANNI");
+
+                $userManager->persist($user);
+                $userManager->flush();
+
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
+                $request->getSession()->getFlashBag()->add('message', 'L\'utilisateur a été bloqué. Un mail vient d\'être envoyé pour le prévenir');
+
+                $mail = $this->getMailer();
+                //$mail->banUser($user);
+            }
+        }
+        
+        $redirect = ($request->server->get('HTTP_REFERER') === null) ? $this->generateUrl("fn_dashboard_bannis") : $request->server->get('HTTP_REFERER');
+
+        return $this->redirect($redirect);
+    }
+
+    /**
+     * @Route("dashboard/debloquer/{id}", name="fn_dashboard_debloquer", requirements={"id": "\d+"})
+     * Tente de bannir un utilisateur
+     */
+    public function debloquerAction($id = 0, Request $request){
+
+        if($id>0) {
+            $userManager = $this->getDoctrine()->getManager();
+            $userRepository = $userManager->getRepository('AppBundle:User');
+
+            $user = $userRepository->findOneBy(array(
+                'id' => $id,
+                'statut' => "STATUT_BANNI"
+            ));
+            if ($user === null) {
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-warning');
+                $request->getSession()->getFlashBag()->add('message', 'L\'utilisateur est déjà débloqué, actif  ou inconnu');
+
+            } else {
+                $user->setStatut("STATUT_ACTIF");
+
+                $userManager->persist($user);
+                $userManager->flush();
+
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
+                $request->getSession()->getFlashBag()->add('message', 'L\'utilisateur a été débloqué. Un mail vient d\'être envoyé pour le prévenir');
+
+                $mail = $this->getMailer();
+                //$mail->debanUser($user);
+            }
+        }
 
         $redirect = ($request->server->get('HTTP_REFERER') === null) ? $this->generateUrl("fn_dashboard_index") : $request->server->get('HTTP_REFERER');
 
@@ -113,7 +234,7 @@ class DashBoardController extends Controller
     }
 
     /**
-     * Factorisation des action de validation et de refus du statut de naturaliste
+     * Factorisation des action de validation et de refus
      */
     protected function validateOrRefuseNat($id, $action, $request){
         if($id > 0){
@@ -252,6 +373,17 @@ class DashBoardController extends Controller
                 'pages' => $nombrePageMax,
                 'users' => $naturalistes,
             ));
+    }
+
+    /**
+     * @return FnatMailer
+     */
+    protected function getMailer()
+    {
+        $mailer = $this->container->get('mailer');
+        $twig = $this->container->get('twig');
+        $mail = new FnatMailer($mailer, $twig);
+        return $mail;
     }
 
 }
