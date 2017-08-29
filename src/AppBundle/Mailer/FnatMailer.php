@@ -141,5 +141,36 @@ class FnatMailer
 
         $this->mailer->send($message);
     }
+
+    /**
+     * Mail pour prévenir un utilisateur qu'il est bannis.
+     * @param User $user
+     */
+    public function banUser(User $user){
+        $body = $this->twig->render('mail\ban.html.twig', array('user' => $user));
+
+        $message = new \Swift_Message("Votre compte sur Flash Nature a été suspendu.");
+        $message->setBody($body,'text/html');
+
+        $message->addTo($newsletter->getMail());
+        $message->addFrom("contact-fnat@digitalsciencefactory.com");
+
+        $this->mailer->send($message);
+    }
+    /**
+     * Mail pour prévenir un utilisateur qu'il est bannis.
+     * @param User $user
+     */
+    public function debanUser(User $user){
+        $body = $this->twig->render('mail\ban.html.twig', array('user' => $user));
+
+        $message = new \Swift_Message("Votre compte sur Flash Nature a été suspendu.");
+        $message->setBody($body,'text/html');
+
+        $message->addTo($newsletter->getMail());
+        $message->addFrom("contact-fnat@digitalsciencefactory.com");
+
+        $this->mailer->send($message);
+    }
 }
 

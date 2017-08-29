@@ -187,10 +187,10 @@ class DashBoardController extends Controller
                 $request->getSession()->getFlashBag()->add('message', 'L\'utilisateur a été bloqué. Un mail vient d\'être envoyé pour le prévenir');
 
                 $mail = $this->getMailer();
-                //$mail->banUser($user);
+                $mail->banUser($user);
             }
         }
-        
+
         $redirect = ($request->server->get('HTTP_REFERER') === null) ? $this->generateUrl("fn_dashboard_bannis") : $request->server->get('HTTP_REFERER');
 
         return $this->redirect($redirect);
@@ -224,7 +224,7 @@ class DashBoardController extends Controller
                 $request->getSession()->getFlashBag()->add('message', 'L\'utilisateur a été débloqué. Un mail vient d\'être envoyé pour le prévenir');
 
                 $mail = $this->getMailer();
-                //$mail->debanUser($user);
+                $mail->debanUser($user);
             }
         }
 
