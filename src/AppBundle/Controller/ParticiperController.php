@@ -27,34 +27,16 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class ParticiperController extends Controller
 {
     /**
-     * @Route("/participer/espace-naturaliste", name="fn_participer_espace_nat")
+     * @Route("/participer/observation-en-attente", name="fn_participer_obs_attente")
      * @Security("has_role('ROLE_NATURALISTE')")
      */
-    public function espaceNatAction (Request $request)
+    public function obsAttenteAction (Request $request)
     {
-        //Formulaire des recherche d'espèce pour la Googlemap
-        $obsForm = new Observation();
-        $form = $this->createForm(CarteType::class, $obsForm)->handleRequest($request);
-
         // Liste des observations pour les tableaux
         $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
         $obsTable = $obsManager->findAll();
 
-        // Gestion de la carte des observations (Liste)
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            //Récupère la liste des observations selon l'éspèce
-            $obsMap= $obsManager->findBy(array('espece' => $obsForm->getEspece()));
-
-            return $this->render('participer/espace_naturaliste.html.twig', array(
-                'form' => $form->createView(),
-                'obsMap' => $obsMap,
-                'obsTable' => $obsTable,
-            ));
-        }
-
-        return $this->render('participer/espace_naturaliste.html.twig', array(
-            'form' => $form->createView(),
+        return $this->render('participer/observations_attente.html.twig', array(
             'obsTable' => $obsTable,
         ));
     }

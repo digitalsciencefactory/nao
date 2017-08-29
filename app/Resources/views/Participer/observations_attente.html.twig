@@ -1,0 +1,29 @@
+{# app/Resources/views/Participer/espace_naturaliste.html.twig #}
+{% extends "participer/observation_base.html.twig" %}
+
+{% block title %}
+   Espace Naturaliste - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<!--  Intro  -->
+
+<!--  Tableaux des observations -->
+
+    {{ include('participer/tables/_observation_attente_tab.html.twig') }}
+
+<!--  Blocks -->
+
+    {{ include('front/blocks/_follow.html.twig') }}
+
+    {{ include ('front/blocks/_adresse.html.twig') }}
+
+{% endblock body %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <!-- google maps -->
+    <script src="{{ asset('assets/fnat/js/googlemaps_carte_observation.js') }}" ></script>
+
+{% endblock javascripts %}
