@@ -58,6 +58,9 @@
 
     <div class="col-xs-12" style="margin-top: 10px; text-align: center">
         {{ form_widget(form.file,{'attr':{ 'class': 'form-control' }} ) }}
+        <label class="checkbox">
+            <input type="checkbox" required=""> En envoyant ces observations j'atteste avoir pris connaissance et respecter les conditions générales d'utilisation
+        </label>
         {{ form_widget(form.envoyer,{'attr':{ 'class': 'btn btn-info' }} ) }}
         {{ form_widget(form.dcree, {'attr': {'class': 'form-control', 'placeholder': 'Date de l observation', 'hidden':'hidden', 'disabled':'disabled'}}) }}
     </div>
