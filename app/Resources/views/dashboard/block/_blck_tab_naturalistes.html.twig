@@ -14,7 +14,8 @@
                     <th>Code postal</th>
                     <th>Date de naissance</th>
                     <th>Carte naturaliste</th>
-                    <th>Bannir</th>
+                    <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -53,10 +54,14 @@
                     </td>
 
                     <td>
-                        <form class="left" action="/dashboard/bannir/{{ user.id }}" method="POST">
-                            <button class="btn btn-danger slimbtn" type="submit" value="refuser">Bannir</button>
+                        <form class="left" action="{{ path('fn_dashboard_bannir', {id: user.id}) }}" method="POST">
+                            <button class="btn btn-warning slimbtn" type="submit" value="refuser">Bannir</button>
                         </form>
-
+                    </td>
+                    <td>
+                        <form class="left" action="{{ path('fn_dashboard_supprimer', {id: user.id}) }}" method="POST">
+                            <button class="btn btn-danger slimbtn" type="submit" value="refuser">Supprimer</button>
+                        </form>
                     </td>
                 </tr>
 

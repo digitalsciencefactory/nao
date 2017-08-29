@@ -180,9 +180,9 @@ class FnatMailer
      * @param User $user
      */
     public function debanUser(User $user){
-        $body = $this->twig->render('mail\ban.html.twig', array('user' => $user));
+        $body = $this->twig->render('mail\deban.html.twig', array('user' => $user));
 
-        $message = new \Swift_Message("Votre compte sur Flash Nature a été suspendu.");
+        $message = new \Swift_Message("Votre compte sur Flash Nature a été rétabli.");
         $message->setBody($body,'text/html');
 
         $message->addTo($user->getMail());

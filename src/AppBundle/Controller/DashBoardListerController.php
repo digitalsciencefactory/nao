@@ -12,7 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-class DashBoardController extends Controller
+class DashBoardListerController extends Controller
 {
     /**
      * @Route("/dashboard", name="fn_dashboard_index")
@@ -67,7 +67,7 @@ class DashBoardController extends Controller
 
 
     /**
-     * @Route("dashboard/bannis", name="bannis")
+     * @Route("dashboard/bannis", name="fn_dashboard_bannis")
      * Liste les bannis
      */
     public function bannisAction(){
@@ -135,13 +135,13 @@ class DashBoardController extends Controller
     /**
      * @return mixed
      */
-    protected function getUserEnAttente($naturaliste)
+    protected function getUsersEnAttente($naturaliste)
     {
         $manager = $this
             ->getDoctrine()
             ->getManager();
         $userRepository = $manager->getRepository('AppBundle:User');
-        $users = $userRepository->getUserEnAttente($naturaliste);
+        $users = $userRepository->getUsersEnAttente($naturaliste);
         return $users;
     }
 
