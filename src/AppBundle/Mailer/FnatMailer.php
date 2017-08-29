@@ -190,5 +190,6 @@ class FnatMailer
 
         $this->mailer->send($message);
     }
+
 }
 

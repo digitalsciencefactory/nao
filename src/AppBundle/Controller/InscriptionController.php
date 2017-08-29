@@ -215,6 +215,7 @@ class InscriptionController extends Controller
      */
     protected function saveSignUpNat(UserPasswordEncoderInterface $encoder, $user)
     {
+
         $user->setRoles(array('ROLE_OBSERVATEUR'));
         $user->setDcree(new \DateTime());
         $user->setStatut('STATUT_INACTIF');
