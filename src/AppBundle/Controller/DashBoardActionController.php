@@ -1,10 +1,12 @@
 <?php
 namespace AppBundle\Controller;
+use AppBundle\Entity\User;
 use AppBundle\Mailer\FnatMailer;
 use AppBundle\Service\DashboardService;
 use AppBundle\Service\ExtractionService;
 use AppBundle\Entity\Observation;
 
+use AppBundle\Service\UserService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Form\FormError;
@@ -167,29 +169,16 @@ class DashBoardActionController extends Controller
      * @param int $id
      * @param Request $request
      */
-    public function supprimerAction($id = 0, Request $request){
-        if($id > 0) {
-            // on va chercher en base le user
-            $userManager = $this->getDoctrine()->getManager();
-            $userRepository = $userManager->getRepository('AppBundle:User');
+    public function supprimerAction(User $user, Request $request, UserService $userService){
 
-            $user = $userRepository->findOneBy(array(
-               "id" => $id,
-            ));
+        $resultat = $userService->remove($user);
 
-            if($user === null){
-                $this->setMessageFlashBag("warning", 'L\'utilisateur n\'existe pas ou a déjà été supprimé.', $request);
-            } else {
-                $userManager->remove($user);
-                $userManager->flush();
+        if($resultat){
+            $this->setMessageFlashBag("success", 'L\'utilisateur ainsi que l\'ensemble des ses observation ont été supprimés. Un mail vient d\'être envoyé pour le prévenir.', $request);
 
-                $this->setMessageFlashBag("success", 'L\'utilisateur ainsi que l\'ensemble des ses observation ont été supprimés. Un mail vient d\'être envoyé pour le prévenir.', $request);
-
-                $mail = $this->getMailer();
-                $mail->delUser($user);
-
-            }
+            // TODO envoyer le mail
         }
+
         $redirect = ($request->server->get('HTTP_REFERER') === null) ? $this->generateUrl("fn_dashboard_index") : $request->server->get('HTTP_REFERER');
 
         return $this->redirect($redirect);
@@ -305,9 +294,9 @@ class DashBoardActionController extends Controller
         return $mail;
     }
 
-    public function setMessageFlashBag($message, $class, Request $request){
+    public function setMessageFlashBag($class, $message, Request $request){
         $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-'.$class);
-        $request->getSession()->getFlashBag()->add('message', $message);
+        $request->getSession()->getFlashBag()->add('notice', $message);
     }
 }
 

@@ -33,25 +33,23 @@ class UserService
      */
     public function remove(User $user){
         // on modifie les observations pour les créateurs
-        $observationsObs = $this->em->findBy(array(
-            "observateur" => $user->getId()
-        ));
+        $utilisateurRepo = $this->em->getRepository("AppBundle:User");
+        $naturalistedefault = $utilisateurRepo->find(7);
 
-        foreach($observationsObs as $observation){
-            $observation->setId("1");
+        foreach($user->getObservations() as $observation){
+            $observation->setObservateur($naturalistedefault);
         }
 
         // on modifie les observation pour les valideurs
-        $observationsValid = $this->em->findBy(array(
-            "valideur" => $user->getId()
-        ));
-
-        foreach($observationsValid as $observation){
-            $observation->setId("1");
+        foreach($user->getObservationsValidees() as $observation){
+            $observation->setNaturaliste($naturalistedefault);
         }
 
-        $this->em->update($observationsObs);
-        $this->em->update($observationsValid);
+        $this->em->remove($user);
         $this->em->flush();
+
+
+
+        return true;
     }
 }

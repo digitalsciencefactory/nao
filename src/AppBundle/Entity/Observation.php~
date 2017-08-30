@@ -3,12 +3,15 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Observation
  *
  * @ORM\Table(name="fnat_observation")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ObservationRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Observation
 {
@@ -30,6 +33,7 @@ class Observation
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="observations")
      * @ORM\JoinColumn(nullable=false)
+     *
      */
     private $observateur;
 
@@ -40,16 +44,20 @@ class Observation
     private $naturaliste;
 
     /**
-     * @var decimal
+     * @var integer
      *
      * @ORM\Column(name="latitude", type="decimal", precision=16, scale=6)
+     *
+     * @Assert\NotBlank(groups={"nat"})
      */
     private $latitude;
 
     /**
-     * @var decimal
+     * @var integer
      *
      * @ORM\Column(name="longitude",type="decimal", precision=16, scale=6)
+     *
+     * @Assert\NotBlank(groups={"nat"})
      */
     private $longitude;
 
@@ -63,7 +71,9 @@ class Observation
     /**
      * @var string
      *
-     * @ORM\Column(name="comm_obs", type="text", nullable=true)
+     * @ORM\Column(name="comm_obs", type="text", nullable=true)`
+     *
+     * @Assert\Length(max=255, groups={"obs"})
      */
     private $commObs;
 
@@ -71,6 +81,8 @@ class Observation
      * @var string
      *
      * @ORM\Column(name="comm_nat", type="text", nullable=true)
+     *
+     * @Assert\Length(max=255, groups={"nat"})
      */
     private $commNat;
 
@@ -78,6 +90,8 @@ class Observation
      * @var \DateTime
      *
      * @ORM\Column(name="dobs", type="datetime")
+     *
+     * @Assert\NotNull(groups={"obs"})
      */
     private $dobs;
 
@@ -85,6 +99,8 @@ class Observation
      * @var \DateTime
      *
      * @ORM\Column(name="dcree", type="datetime")
+     *
+     * @Assert\NotNull(groups={"obs"})
      */
     private $dcree;
 
@@ -92,6 +108,8 @@ class Observation
      * @var \DateTime
      *
      * @ORM\Column(name="dvalid", type="datetime", nullable=true)
+     *
+     * @Assert\NotNull(groups={"nat"})
      */
     private $dvalid;
 
@@ -99,18 +117,24 @@ class Observation
      * @var string
      *
      * @ORM\Column(name="statut", type="string", length=17)
+     *
      */
     private $statut;
 
+    /**
+     * @var UploadedFile
+     * @Assert\NotBlank(groups={"nat"})
+     * @Assert\File(maxSize="5M", maxSizeMessage="Le fichier est trop volumineux, la limite est {{ size }} {{suffix}}.", mimeTypes={"jpeg","png","image/png","image/jpeg","image/jpg"}, mimeTypesMessage="Seuls les fichiers de type {{ types }} sont autorisés. Votre fichier est de type {{ type }}",disallowEmptyMessage="Le fichier envoyé ne peut être vide.", notFoundMessage="Le fichier ne peut être trouvé.", notReadableMessage="Le fichier n'est pas lisible", groups={"obs"})
+     */
     private $file;
 
+    private $especeTxt;
 
     /**
      * Observation constructor.
      */
     public function __construct()
     {
-        $this->dcree = new \DateTime();
         $this->statut = "STATUT_EN_ATTENTE";
     }
 
@@ -411,4 +435,46 @@ class Observation
     {
         return $this->statut;
     }
+
+    /**
+     * @return UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param UploadedFile $file
+     */
+    public function setFile(UploadedFile $file)
+    {
+        $this->file = $file;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEspeceTxt()
+    {
+        return $this->especeTxt;
+    }
+
+    /**
+     * @param mixed $especeTxt
+     */
+    public function setEspeceTxt($especeTxt)
+    {
+        $this->especeTxt = $especeTxt;
+    }
+
+    /**
+     * Retourne une partie de l'observation sous forme d'un tableau
+     *
+     * @return array
+     */
+    public function toArray(){
+        return array($this->dobs->format("d-m-Y H:i:s"),$this->espece->getLbNom(),$this->espece->getNomVern(),$this->espece->getNomVernEng(),$this->latitude,$this->longitude,$this->commObs,$this->commNat);
+    }
+
 }

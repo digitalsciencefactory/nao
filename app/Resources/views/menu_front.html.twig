@@ -52,7 +52,7 @@
                             </div>
                         </li>
 
-                        {% if app.user == null %}
+                        {% if  not is_granted("ROLE_OBSERVATEUR") %}
                             <li class="nav-item nav-btn">
                                 <a class="nav-link btn btn-secondary-outline btn-secondary" href="{{ path('fn_front_connexion') }}">Se connecter</a>
                             </li>
