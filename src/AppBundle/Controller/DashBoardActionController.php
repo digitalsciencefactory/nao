@@ -176,7 +176,7 @@ class DashBoardActionController extends Controller
         if($resultat){
             $this->setMessageFlashBag("success", 'L\'utilisateur ainsi que l\'ensemble des ses observation ont été supprimés. Un mail vient d\'être envoyé pour le prévenir.', $request);
 
-            // TODO envoyer le mail
+            // envoyer le mail
         }
 
         $redirect = ($request->server->get('HTTP_REFERER') === null) ? $this->generateUrl("fn_dashboard_index") : $request->server->get('HTTP_REFERER');
