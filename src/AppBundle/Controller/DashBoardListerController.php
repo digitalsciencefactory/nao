@@ -170,8 +170,10 @@ class DashBoardListerController extends Controller
 
         if($naturaliste){
             $pageName = 'dashboard/naturalistes.html.twig';
+            $pagination = "fn_dashboard_naturalistes";
         } else {
             $pageName = 'dashboard/observateurs.html.twig';
+            $pagination = "fn_dashboard_observateurs";
         }
 
         return $this->render($pageName,
@@ -180,6 +182,7 @@ class DashBoardListerController extends Controller
                 'page' => $page,
                 'pages' => $nombrePageMax,
                 'users' => $naturalistes,
+                'pagination' => $pagination,
             ));
     }
 

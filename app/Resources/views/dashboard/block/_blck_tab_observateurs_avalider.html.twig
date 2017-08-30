@@ -19,7 +19,7 @@
                     <td>{{ user.pseudo }}</td>
                     <td>{{ user.mail }}</td>
                     <td>
-                        <form class="right" action="/dashboard/observateur-validation/{{ user.id }}" method="POST">
+                        <form class="right" action="{{ path('fn_dashboard_obsavalider', { 'id':user.id }) }}" method="POST">
                             <button class="btn btn-success slimbtn" type="submit" value="valider">Valider</button>
                         </form>
                     </td>

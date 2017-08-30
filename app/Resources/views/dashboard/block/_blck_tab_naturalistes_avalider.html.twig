@@ -44,10 +44,10 @@
                     </td>
                     <td>{{ user.mail }}</td>
                     <td>
-                        <form class="left" action="/dashboard/naturalistes-refus/{{ user.id }}" method="POST">
+                        <form class="left" action="{{ path('fn_dashboard_natrefus', { 'id':user.id }) }}" method="POST">
                             <button class="btn btn-danger slimbtn" type="submit" value="refuser">Refuser</button>
                         </form>
-                        <form class="right" action="/dashboard/naturalistes-validation/{{ user.id }}" method="POST">
+                        <form class="right" action="{{ path('fn_dashboard_natvalid', { 'id':user.id }) }}" method="POST">
                             <button class="btn btn-success slimbtn" type="submit" value="valider">Valider</button>
                         </form>
                     </td>
