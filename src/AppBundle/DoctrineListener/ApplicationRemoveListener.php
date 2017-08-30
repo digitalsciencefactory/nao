@@ -37,3 +37,5 @@ class ApplicationRemoveListener
         $this->userService->remove($entity);
     }
 }
+
+
