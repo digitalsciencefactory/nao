@@ -6,12 +6,14 @@ use AppBundle\Entity\Observation;
 use AppBundle\Entity\Taxref;
 use AppBundle\Entity\User;
 use AppBundle\Form\Type\CarteType;
+use AppBundle\Form\Type\ModalObsType;
 use AppBundle\Form\Type\ModificationObsType;
 use AppBundle\Form\Type\NatSignType;
 use AppBundle\Form\Type\ObservationType;
 use AppBundle\Service\ExtractionService;
 use AppBundle\Extraction\Extraction;
 use AppBundle\Form\Type\ExtractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -106,7 +108,12 @@ class ParticiperController extends Controller
     {
         $obsForm = new Observation();
         $form = $this->createForm(ModificationObsType::class, $obsForm)
+        ->handleRequest($request);
+
+        $obsModal = new Observation();
+        $formModal = $this->createForm(ModalObsType::class, $obsModal)
             ->handleRequest($request);
+
 
         if ($form->isSubmitted() && $form->isValid())
         {
@@ -145,33 +152,51 @@ class ParticiperController extends Controller
 
                 return $this->redirectToRoute('fn_fiche_observation', ['id' => $observation->getId()]);
             }
-            else
-            {
-                //Sélection du message du mail
-                $message->setBody( $this->renderView(
-                    'mail/obs.suppression.html.twig',
-                    array('observation' => $observation)),
-                    'text/html');
-
-                //Suppression de l'observation
-                $obsManager = $this->getDoctrine()->getManager();
-                $obsManager->remove($observation);
-                $obsManager->flush();
-
-                //Message de confirmation
-                $mailer->send($message);
-                $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été supprimée.');
-                return $this->redirectToRoute('fn_participer_espace_nat');
-            }
 
         }
 
+        if ($formModal->isSubmitted() && $formModal->isValid()){
 
+            $observation->setCommNat($obsForm->getCommNat());
+            return $this->redirectToRoute('fn_supprimer_observation', ['id' => $observation->getId()]);
+        }
 
         return $this->render('participer/fiche_observation.html.twig', array(
             'observation' => $observation,
             'form' => $form->createView(),
+            'formModal' => $formModal->createView()
         ));
+    }
+
+    /**
+     * @Route("/participer/supprimer-observation/{id}", name="fn_supprimer_observation")
+     * @Method({"GET", "POST"})
+     */
+    public function supprimerObsAction (Request $request, Observation $observation, \Swift_Mailer $mailer)
+    {
+        //Préparation du mail de confirmation
+        $message = (new \Swift_Message('Observation examinée'))
+            ->setFrom($this->getUser()->getMail())
+            ->setTo($observation->getObservateur()->getMail())
+            ->setBody( $this->renderView(
+            'mail/obs.suppression.html.twig',
+            array('observation' => $observation,
+                'message' => $observation->getCommNat())),
+            'text/html');
+
+        //Suppression de l'observation
+        $obsManager = $this->getDoctrine()->getManager();
+        $obsManager->remove($observation);
+        $obsManager->flush();
+
+        //Envoi du mail à l'observateur
+        $mailer->send($message);
+
+        //Message de confirmation
+        $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
+        $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été supprimée.');
+
+        return $this->redirectToRoute('fn_participer_obs_attente');
     }
 
     /**
@@ -344,5 +369,7 @@ class ParticiperController extends Controller
             'form' => $form->createView(),
         ));
     }
+
+
 
 }

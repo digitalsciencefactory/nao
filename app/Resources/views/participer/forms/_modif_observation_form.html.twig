@@ -4,8 +4,6 @@
         <div class="container">
             <div class="row">
                 {{ form_start(form) }}
-
-
                     <div class="col-xs-12">
                         {{ form_errors(form.espece) }}
                         {{ form_widget(form.especeTxt, {'attr': {
@@ -37,13 +35,15 @@
                         </div>
 
                         <div class="text-xs-center">
-                            {{ form_widget(form.supprimer,{'attr':{ 'class': 'btn btn-danger' }} ) }}
                             {{ form_widget(form.valider,{'attr':{ 'class': 'btn btn-success' }} ) }}
+
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">Supprimer</button>
                         </div>
                     </div>
 
-                    {{ form_rest(form) }}
                     {{ form_end(form) }}
+
+
             </div>
         </div>
     </div>
