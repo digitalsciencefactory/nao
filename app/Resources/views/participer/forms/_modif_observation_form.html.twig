@@ -1,50 +1,38 @@
 {# app/Resources/views/forms/_modif_observation_form.html.twig #}
-<section class="mbr-section" id="form2-55" style="background-color: rgb(105, 176, 171); padding-top: 0; padding-bottom: 0;">
-    <div class="mbr-section mbr-s">
-        <div class="container">
-            <div class="row">
-                {{ form_start(form) }}
-                    <div class="col-xs-12">
-                        {{ form_errors(form.espece) }}
-                        {{ form_widget(form.especeTxt, {'attr': {
-                            'class': 'form-control',
-                            'placeholder': 'Nom de l espèce',
-                            'data-id': 'especeId',
-                            'data-url': path('fn_participer_autocomplete'),
-                            'value': observation.espece.lbNom
-                        }
-                        }
+ {{ form_start(form) }}
+    {{ form_errors(form.espece) }}
+    {{ form_widget(form.especeTxt, {'attr': {
+        'class': 'form-control',
+        'placeholder': 'Nom de l espèce',
+        'data-id': 'especeId',
+        'data-url': path('fn_participer_autocomplete'),
+        'value': observation.espece.lbNom
+    }
+    }
+    )}}
 
-                        )}}
-                        {{ form_widget(form.espece, {'attr': {
-                            'class': 'form-control',
-                            'placeholder': 'Nom de l espèce',
-                            'hidden':'hidden',
-                            'value': observation.espece.id
-                        } }
-                        )
-                        }}
-                    </div>
+    <br>
 
-                    <br>
+    {{ form_widget(form.espece, {'attr': {
+        'class': 'form-control',
+        'placeholder': 'Nom de l espèce',
+        'hidden':'hidden',
+        'value': observation.espece.id
+    } }
+    )
+    }}
 
-                    <div class="col-xs-12">
-                        <div class="text-xs-center mbr-section-sm-padding">
-                            {{ form_errors(form.comm_nat) }}
-                            {{ form_widget(form.comm_nat, {'attr': {'class': 'form-control', 'placeholder': 'Informations complémentaires'}}) }}
-                        </div>
+    <strong>Laissez un message à l'observateur: </strong>
+    {{ form_errors(form.comm_nat) }}
+    {{ form_widget(form.comm_nat, {'attr': {'class': 'form-control', 'placeholder': 'Message'}}) }}
 
-                        <div class="text-xs-center">
-                            {{ form_widget(form.valider,{'attr':{ 'class': 'btn btn-success' }} ) }}
+    <div class="col-xs-12" style="padding-top: 10px; padding-bottom: 0">
+        <div class="text-xs-center">
+            {{ form_widget(form.valider,{'attr':{ 'class': 'btn btn-success' }} ) }}
 
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">Supprimer</button>
-                        </div>
-                    </div>
-
-                    {{ form_end(form) }}
-
-
-            </div>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#supprimer">Supprimer</button>
         </div>
     </div>
-</section>
+
+{{ form_rest(form) }}
+{{ form_end(form) }}

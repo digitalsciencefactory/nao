@@ -110,16 +110,15 @@ class ParticiperController extends Controller
         $form = $this->createForm(ModificationObsType::class, $obsForm)
         ->handleRequest($request);
 
-        $obsModal = new Observation();
-        $formModal = $this->createForm(ModalObsType::class, $obsModal)
+        $obs = new Observation();
+        $formModal = $this->createForm(ModalObsType::class, $obs)
             ->handleRequest($request);
-
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            //Préparation du mail de confirmation
+            //Préparation du mail d'information
             $message = (new \Swift_Message('Observation examinée'))
-                ->setFrom($this->getUser()->getMail())
+                ->setFrom('contact-fnat@digitalsciencefactory.com')
                 ->setTo($observation->getObservateur()->getMail());
 
             //Traitement du formulaire
@@ -144,9 +143,9 @@ class ParticiperController extends Controller
                         'mail/obs.validation.html.twig',
                         array('observation' => $observation)),
                     'text/html');
+                $mailer->send($message);
 
                 //Message de confirmation
-                $mailer->send($message);
                 $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
                 $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été validée.');
 
@@ -157,8 +156,30 @@ class ParticiperController extends Controller
 
         if ($formModal->isSubmitted() && $formModal->isValid()){
 
-            $observation->setCommNat($obsForm->getCommNat());
-            return $this->redirectToRoute('fn_supprimer_observation', ['id' => $observation->getId()]);
+            $observation->setCommNat($obs->getCommNat());
+            //Préparation du mail d'information
+            $message = (new \Swift_Message('Observation examinée'))
+                ->setFrom('contact-fnat@digitalsciencefactory.com')
+                ->setTo($observation->getObservateur()->getMail())
+                ->setBody( $this->renderView(
+                    'mail/obs.suppression.html.twig',
+                    array('observation' => $observation,)
+                ),
+                    'text/html');
+
+            //Suppression de l'observation
+            $obsManager = $this->getDoctrine()->getManager();
+            $obsManager->remove($observation);
+            $obsManager->flush();
+
+            //Envoi du mail à l'observateur
+            $mailer->send($message);
+
+            //Message de confirmation
+            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
+            $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été supprimée.');
+
+            return $this->redirectToRoute('fn_participer_obs_attente');
         }
 
         return $this->render('participer/fiche_observation.html.twig', array(
@@ -166,37 +187,6 @@ class ParticiperController extends Controller
             'form' => $form->createView(),
             'formModal' => $formModal->createView()
         ));
-    }
-
-    /**
-     * @Route("/participer/supprimer-observation/{id}", name="fn_supprimer_observation")
-     * @Method({"GET", "POST"})
-     */
-    public function supprimerObsAction (Request $request, Observation $observation, \Swift_Mailer $mailer)
-    {
-        //Préparation du mail de confirmation
-        $message = (new \Swift_Message('Observation examinée'))
-            ->setFrom($this->getUser()->getMail())
-            ->setTo($observation->getObservateur()->getMail())
-            ->setBody( $this->renderView(
-            'mail/obs.suppression.html.twig',
-            array('observation' => $observation,
-                'message' => $observation->getCommNat())),
-            'text/html');
-
-        //Suppression de l'observation
-        $obsManager = $this->getDoctrine()->getManager();
-        $obsManager->remove($observation);
-        $obsManager->flush();
-
-        //Envoi du mail à l'observateur
-        $mailer->send($message);
-
-        //Message de confirmation
-        $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
-        $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été supprimée.');
-
-        return $this->redirectToRoute('fn_participer_obs_attente');
     }
 
     /**
