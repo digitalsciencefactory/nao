@@ -46,6 +46,8 @@ class InscriptionController extends Controller
 
             $contact = new Contact;
             $form = $this->createForm(ContactType::class, $contact);
+
+            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
             $request->getSession()->getFlashBag()->add('notice', 'Formulaire envoyé avec succès.');
 
             return $this->render('front/contact.html.twig', array('form' => $form->createView(),));
@@ -70,7 +72,9 @@ class InscriptionController extends Controller
             $this->saveSignUpObs($encoder, $user);
 
             // on affiche la page de connexion avec le flash bag
+            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
+
             $user = new User();
             $form = $this->createForm(ObsSignType::class, $user);
             return $this->render('front/inscription-observateur.html.twig', array(
@@ -100,7 +104,9 @@ class InscriptionController extends Controller
             $this->saveSignUpNat($encoder, $user);
 
             // on affiche la page de inscription avec le flash bag
+            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
+
             $user = new User();
             $form = $this->createForm(NatSignType::class, $user);
             return $this->render('front/inscription-naturaliste.html.twig', array(
@@ -170,6 +176,7 @@ class InscriptionController extends Controller
             $this->saveSignUpObs($encoder, $user);
 
             // on affiche la page de connexion avec le flash bag
+            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $user = new User();
             $form = $this->createForm(ObsSignType::class, $user);

@@ -140,7 +140,8 @@ class ParticiperController extends Controller
 
                 //Message de confirmation
                 $mailer->send($message);
-                $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été sauvegardée.');
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
+                $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été validée.');
 
                 return $this->redirectToRoute('fn_fiche_observation', ['id' => $observation->getId()]);
             }
@@ -160,11 +161,13 @@ class ParticiperController extends Controller
                 //Message de confirmation
                 $mailer->send($message);
                 $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été supprimée.');
-
                 return $this->redirectToRoute('fn_participer_espace_nat');
-
             }
+
         }
+
+
+
         return $this->render('participer/fiche_observation.html.twig', array(
             'observation' => $observation,
             'form' => $form->createView(),
@@ -208,7 +211,9 @@ class ParticiperController extends Controller
 
             $form = $this->createForm(UserType::class, $userDB);
 
+            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
             $request->getSession()->getFlashBag()->add('notice', 'Votre profil a été mis à jour..');
+
             return $this->render('participer/mon_compte.html.twig',
                 array(
                     'pseudonyme' => $user->getPseudo(),
@@ -291,8 +296,10 @@ class ParticiperController extends Controller
 
         // on affiche la page envoi_observation avec le flash bag
         if ($user->getRoles()[0] == ("ROLE_NATURALISTE")) {
+            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
             $request->getSession()->getFlashBag()->add('notice', 'Votre observation est bien enregistrée et validée.');
         } else {
+            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
             $request->getSession()->getFlashBag()->add('notice', 'Votre observation a bien été transmise à un naturaliste.');
         }
     }
@@ -313,6 +320,7 @@ class ParticiperController extends Controller
                 $observations = $extractionService->getObservationsDatees($extraction);
                 $file = $extractionService->generateCsv($extraction,$observations, $this->getParameter('downloads_dir'),$this->getParameter('entete_csv_extract'));
 
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
                 $request->getSession()->getFlashBag()->add('notice', 'La requête a retournée ' . count($observations) .' observation(s). Le téléchargement va commencer automatiquement.');
 
                 // création de la réponse html

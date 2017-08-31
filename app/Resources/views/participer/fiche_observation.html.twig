@@ -8,13 +8,16 @@
 
 {% block body %}
 
-
     <section class="mbr-section mbr-after-navbar" style="background-color: rgb(105, 176, 171); padding-top: 120px; padding-bottom: 0;">
+
+        {% include("messagesValidation.html.twig") %}
+
         <div class="container">
             <h1 class="mbr-section-title text-white">Fiche observation n° {{ observation.id }}</h1>
         </div>
 
         {{ include('participer/blocks/_carte_fiche.html.twig') }}
+
     </section>
 
     <!--  Blocks -->
