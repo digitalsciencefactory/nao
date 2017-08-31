@@ -226,11 +226,20 @@ class InscriptionController extends Controller
         $user->setRoles(array('ROLE_OBSERVATEUR'));
         $user->setDcree(new \DateTime());
         $user->setStatut('STATUT_INACTIF');
+
         // hash du mot de passe
         $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
+
         // création du token de vérifiction d'inscription
         $length = 65;
         $user->setToken(substr(bin2hex(random_bytes($length)), 0, 65));
+
+        // sauvegarde de la carte pro
+        $name = substr(bin2hex(random_bytes(30)),0,25) . "." . $user->getFile()->getClientOriginalExtension();
+
+        $user->getFile()->move($this->getParameter("carte_pro_dir"), $name);
+        $user->setCarte($name);
+
         // essayer d'insérer en base
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);

@@ -345,7 +345,7 @@ class ParticiperController extends Controller
                 ));
 
                 // création du refresh dans le header pour déclencher le download du fichier
-                $response->headers->set('Refresh', '2; url='.$this->generateUrl('fn_dashboard_extract', array('slug' => $file)));
+                $response->headers->set('Refresh', '2; url='.$this->generateUrl('fn_participer_extract', array('slug' => $file)));
 
                 // envoi de la double réponse
                 return $response;
@@ -360,6 +360,16 @@ class ParticiperController extends Controller
         ));
     }
 
-
+    /**
+     * @Route("/dashboard/extract/{slug}", name="fn_participer_extract")
+     * @Security("has_role('ROLE_NATURALISTE')")
+     * Déclenche le téléchargement du fichier
+     * dont le chemin est passé en paramètre
+     */
+    public function fileAction($slug)
+    {
+        $path = $this->getParameter("downloads_dir");
+        return $this->file($path.$slug);
+    }
 
 }
