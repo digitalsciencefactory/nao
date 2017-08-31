@@ -34,7 +34,9 @@ class UserService
     public function remove(User $user){
         // on modifie les observations pour les créateurs
         $utilisateurRepo = $this->em->getRepository("AppBundle:User");
-        $naturalistedefault = $utilisateurRepo->find(7);
+        $naturalistedefault = $utilisateurRepo->findOneBy(Array(
+            "mail" => "contact-fnat@digitalsciencefactory.com"
+        ));
 
         foreach($user->getObservations() as $observation){
             $observation->setObservateur($naturalistedefault);
