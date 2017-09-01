@@ -13,6 +13,9 @@ use AppBundle\Entity\User;
 use AppBundle\Service\UserService;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
+use Doctrine\ORM\Event\LifecycleEventArgs;
+
+
 class ApplicationRemoveListener
 {
     /**

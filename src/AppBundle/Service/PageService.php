@@ -32,6 +32,6 @@ class PageService
         }
         return $page;
     }
-}
 
+}
 

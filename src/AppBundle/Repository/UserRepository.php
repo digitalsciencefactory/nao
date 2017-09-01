@@ -13,6 +13,7 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
     /* *** MIXTE *** */
 
     /**
+
      * @param bool $naturaliste
      * @return int
      */
@@ -64,25 +65,25 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
         $qb->andWhere('a.statut = :statut');
         $qb->setParameter('statut', "STATUT_ACTIF");
         if($naturaliste) {
-             $qb->setParameter('role', "a:1:{i:0;s:16:\"ROLE_NATURALISTE\";}");
+            $qb->setParameter('role', "a:1:{i:0;s:16:\"ROLE_NATURALISTE\";}");
         } else {
             $qb->setParameter('role', "a:1:{i:0;s:16:\"ROLE_OBSERVATEUR\";}");
-
         }
-            $qb->setFirstResult( $offset );
-            $qb->setMaxResults( $limit );
-            $qb->orderBy("a.id","ASC");
+
+        $qb->setFirstResult( $offset );
+        $qb->setMaxResults( $limit );
+        $qb->orderBy("a.id","ASC");
 
         return $qb
             ->getQuery()
             ->getResult()
             ;
     }
+
     /**
      * @param bool $naturaliste
      * @return array
      */
-
     public function getUsersEnAttente($naturaliste){
         $qb = $this
             ->createQueryBuilder('a')
@@ -103,8 +104,9 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
         return $qb
             ->getQuery()
             ->getResult()
-            ;
+        ;
     }
+
     /**
      * Retourne un (futur) naturaliste ou null si on ne le trouve pas
      * @param $id
@@ -118,6 +120,7 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
             ->select('a')
             ->andWhere('a.carte is not null')
             ->andWhere('a.roles = :role');
+
         if ($bool) {
             $qb->setParameter('role', "a:1:{i:0;s:16:\"ROLE_NATURALISTE\";}");
         } else {

@@ -5,9 +5,7 @@
  * Date: 29/08/2017
  * Time: 19:41
  */
-
 namespace AppBundle\Service;
-
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use AppBundle\Mailer\FnatMailer;
 use Doctrine\ORM\EntityManager;
@@ -52,22 +50,16 @@ class UserService
      * @param User $user
      */
     public function validObs(User $user){
-
-            if($user->getStatut() === "STATUT_INACTIF") {
-                $user->setToken("");
-                $user->setStatut("STATUT_ACTIF");
-
-                $this->em->persist($user);
-                $this->em->flush();
-
-                $this->mailer->insValidObs($user);
-
-                $this->mfs->messageSuccess('L\'utilisateur a été validé. Un mail vient d\'être envoyé pour le prévenir');
-
-            } else {
-                $this->mfs->messageWarning('L\'utilisateur est déjà  validé ou n\'est pas reconnu dans la base de données.');
-            }
-
+        if($user->getStatut() === "STATUT_INACTIF") {
+            $user->setToken("");
+            $user->setStatut("STATUT_ACTIF");
+            $this->em->persist($user);
+            $this->em->flush();
+            $this->mailer->insValidObs($user);
+            $this->mfs->messageSuccess('L\'utilisateur a été validé. Un mail vient d\'être envoyé pour le prévenir');
+        } else {
+            $this->mfs->messageWarning('L\'utilisateur est déjà  validé ou n\'est pas reconnu dans la base de données.');
+        }
     }
 
     /**
@@ -81,9 +73,7 @@ class UserService
             $user->setRoles(array('ROLE_NATURALISTE'));
             $this->em->persist($user);
             $this->em->flush();
-
             $this->mfs->messageSuccess('L\'utilisateur a été validé');
-
             $this->mailer->insValidNat($user);
         } else {
             $this->mfs->messageWarning('L\'utilisateur est déjà validé ou n\'a pas demandé à être naturaliste');
@@ -98,7 +88,6 @@ class UserService
      * @param $carteProDir
      */
     public function refuseNat(User $user, $carteProDir){
-
         if($this->isNatEnAttente($user)){
             // on gère la carte professionnelle en la supprimant
             $fichier = $carteProDir . $user->getCarte();
@@ -106,18 +95,13 @@ class UserService
                 unlink($fichier);
             }
             $user->setCarte(null);
-
             $this->em->persist($user);
             $this->em->flush();
-
             $this->mfs->messageSuccess('L\'utilisateur a été refusé et reste observateur.');
-
             $this->mailer->insRefuseNat($user);
-
         } else {
             $this->mfs->messageWarning('L\'utilisateur est déjà  validé ou n\'a pas demandé à  être naturaliste');
         }
-
     }
 
     /**
@@ -147,12 +131,9 @@ class UserService
     {
         if ($user->getStatut() === "STATUT_ACTIF") {
             $user->setStatut("STATUT_BANNI");
-
             $this->em->persist($user);
             $this->em->flush();
-
             $this->mfs->messageSuccess('L\'utilisateur a été bloqué. Un mail vient d\'être envoyé pour le prévenir.');
-
             $this->mailer->banUser($user);
         } else {
             $this->mfs->messageWarning('L\'utilisateur est déjà bloqué, inactif ou inconnu');
@@ -165,22 +146,15 @@ class UserService
      * @param User $user
      */
     public function debanUser(User $user){
-
         if ($user->getStatut() === "STATUT_BANNI") {
             $user->setStatut("STATUT_ACTIF");
-
             $this->em->persist($user);
             $this->em->flush();
-
             $this->mfs->messageSuccess('L\'utilisateur a été débloqué. Un mail vient d\'être envoyé pour le prévenir.');
-
             $this->mailer->debanUser($user);
-
         } else {
             $this->mfs->messageWarning('L\'utilisateur est déjà débloqué, actif  ou inconnu.');
-
         }
-
     }
 
     /**
@@ -208,11 +182,8 @@ class UserService
 
         $this->em->remove($user);
         $this->em->flush();
-
         $this->mfs->messageSuccess('L\'utilisateur ainsi que l\'ensemble des ses observation ont été supprimés. Un mail vient d\'être envoyé pour le prévenir.');
-
         $this->mailer->delUser($user);
-
     }
 
     /**
@@ -229,5 +200,3 @@ class UserService
         return true;
     }
 }
-
-
