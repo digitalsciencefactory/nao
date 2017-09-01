@@ -129,7 +129,7 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
 
         $qb->andWhere('a.id = :id');
         $qb->setParameter('id', $id);
-        
+
         $result = $qb->getQuery()->getResult();
 
         if (count($result) > 0) {
