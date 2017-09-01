@@ -25,6 +25,9 @@
                         <h3 class="mbr-section-title display-2">
                             Votre profil {{ pseudonyme }}
                         </h3>
+                        <div class="col-sm-12 ">
+                            <input type="button"  id="maj_profil" class="btn btn-primary" onclick="switchForm(); window.location.hash='modifier';" value="Mettre à jour le profil" />
+                        </div>
                     </div>
 
                 </div>
@@ -32,6 +35,18 @@
         </div>
     </section>
 
+    <section class="mbr-section article mbr-section__container" id="content1-5s" style="background-color: rgb(105, 176, 171); padding-top: 20px; padding-bottom: 20px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 lead">
+                    <p>En complétant votre profil, vous permettez à NAO de mieux connaître ses utilisateurs et améliorer l'expérience d'utilisation de l'application Flash Nature.</p>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <a name="modifier"> </a>
     <section class="mbr-section" id="content5-5w" style="background-color: rgb(105, 176, 171); padding-top: 40px; padding-bottom: 0;">
         <div class="container">
             <h3 class="mbr-section-title display-2">
@@ -46,6 +61,7 @@
                 <div class="col-xs-12 lead">
 
                     {% include("messagesValidation.html.twig") %}
+
 
                     <div class="form-group">
                         <div class="col-sm-12 col-md-3">
@@ -148,27 +164,11 @@
 
                     <div class="form-group">
                         <div class="col-sm-12 col-md-4 col-md-offset-2 ">
-                            <input type="button"  id="maj_profil" class="btn btn-primary" onclick="switchForm()" value="Mettre à jour le profil" />
-                        </div>
-                        <div class="col-sm-12 col-md-4 col-md-offset-2 ">
                             {{ form_widget(form.update, {'attr': {'class': 'btn btn-default btn-no-deco', 'value': 'Sauvegarder', 'label': 'Sauvegarder'}}) }}
                         </div>
-
-
                     </div>
                     
                     {{ form_end(form) }}
-
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="mbr-section article mbr-section__container" id="content1-5s" style="background-color: rgb(105, 176, 171); padding-top: 20px; padding-bottom: 20px;">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 lead">
-                    <p>En complétant votre profil, vous permettez à NAO de mieux connaître ses utilisateurs et améliorer l'expérience d'utilisation de l'application Flash Nature.</p>
 
                 </div>
             </div>

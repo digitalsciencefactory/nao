@@ -145,6 +145,11 @@ class User implements UserInterface, \Serializable
     private $observations;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Observation", mappedBy="naturaliste")
+     */
+    private $observationsValidees;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="statut", type="string", length=14)
@@ -700,4 +705,38 @@ class User implements UserInterface, \Serializable
 
     }
 
+
+    /**
+     * Add observationsValidee
+     *
+     * @param \AppBundle\Entity\Observation $observationsValidee
+     *
+     * @return User
+     */
+    public function addObservationsValidee(\AppBundle\Entity\Observation $observationsValidee)
+    {
+        $this->observationsValidees[] = $observationsValidee;
+
+        return $this;
+    }
+
+    /**
+     * Remove observationsValidee
+     *
+     * @param \AppBundle\Entity\Observation $observationsValidee
+     */
+    public function removeObservationsValidee(\AppBundle\Entity\Observation $observationsValidee)
+    {
+        $this->observationsValidees->removeElement($observationsValidee);
+    }
+
+    /**
+     * Get observationsValidees
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getObservationsValidees()
+    {
+        return $this->observationsValidees;
+    }
 }

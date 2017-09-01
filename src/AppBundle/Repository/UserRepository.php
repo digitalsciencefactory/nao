@@ -91,13 +91,14 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
 
         $qb->setParameter('role', "a:1:{i:0;s:16:\"ROLE_OBSERVATEUR\";}");
         $qb->andWhere('a.statut = :statut');
-        $qb->setParameter('statut', "STATUT_INACTIF");
 
-            if($naturaliste) {
-                $qb->andWhere('a.carte is not null');
-            } else {
-                $qb->andWhere('a.carte is null');
-            }
+        if($naturaliste) {
+            $qb->andWhere('a.carte is not null');
+            $qb->setParameter('statut', "STATUT_ACTIF");
+        } else {
+            $qb->andWhere('a.carte is null');
+            $qb->setParameter('statut', "STATUT_INACTIF");
+        }
 
         return $qb
             ->getQuery()

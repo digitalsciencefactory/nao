@@ -23,7 +23,6 @@ class TaxrefRang
     /**
      * @var string
      * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\Id
      * @ORM\Column(name="rang", type="string", length=4, unique=true)
      */
     private $rang;

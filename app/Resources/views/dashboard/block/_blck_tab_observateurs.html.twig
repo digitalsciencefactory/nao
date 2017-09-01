@@ -30,13 +30,13 @@
 
                     <td>
                         <form class="left" action="{{ path('fn_dashboard_bannir', {id: user.id}) }}" method="POST">
-                            <button class="btn btn-warning slimbtn" type="submit" value="refuser">Bannir</button>
+                            <button class="btn btn-warning slimbtn" type="submit" value="bannir">Bannir</button>
                         </form>
 
                     </td>
                     <td>
                         <form class="left" action="{{ path('fn_dashboard_supprimer', {id: user.id}) }}" method="POST">
-                            <button class="btn btn-danger slimbtn" type="submit" value="refuser">Supprimer</button>
+                            <button class="btn btn-danger slimbtn" type="submit" value="supprimer">Supprimer</button>
                         </form>
                     </td>
                 </tr>

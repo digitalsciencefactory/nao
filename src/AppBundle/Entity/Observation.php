@@ -38,7 +38,7 @@ class Observation
     private $observateur;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="observationsValidees")
      * @ORM\JoinColumn(nullable=true)
      */
     private $naturaliste;
