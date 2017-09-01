@@ -12,29 +12,17 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use AppBundle\Entity\User;
 
-class NatSignType extends AbstractType
+class NatSignType extends ObsSignType
 {
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        parent::buildForm($builder, $options);
         $builder
-            ->add('mail', EmailType::class, array('label' => ' ', 'attr' => array(
-                'placeholder' => 'e-mail',
-            )))
-            ->add('pseudo', TextType::class, array('label' => ' ', 'attr' => array(
-                'placeholder' => 'pseudonyme',
-            )))
-            ->add('plainPassword', RepeatedType::class,  array(
-                'type' => PasswordType::class,
-                'invalid_message' => 'Les mots de passes doivent être identiques !',
-                'required' => true,
-                'first_options'  => array('label' => ''),
-                'second_options' => array('label' => ''),
-            ))
             ->add('file', FileType::class, array('label' => '',))
-            ;
+        ;
 
 
     }
@@ -50,3 +38,5 @@ class NatSignType extends AbstractType
 
 
 }
+
+
