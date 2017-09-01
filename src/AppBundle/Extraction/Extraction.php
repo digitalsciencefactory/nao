@@ -73,7 +73,7 @@ class Extraction
     /**
      * @Assert\Callback
      */
-    public function validate(ExecutionContextInterface $context, $payload)
+    public function validate(ExecutionContextInterface $context)
     {
         if($this->datedebut > $this->datefin){
             $context->buildViolation('La date de début doit être antérieur à la date de fin.')
