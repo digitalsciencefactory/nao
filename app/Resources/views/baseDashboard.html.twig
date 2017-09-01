@@ -16,21 +16,21 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic&amp;subset=latin">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
-        <link rel="stylesheet" href="{{ asset('assets/bootstrap-material-design-font/css/material.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/tether/tether.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/dropdown/css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/base/bootstrap-material-design-font/css/material.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/base/tether/tether.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/base/bootstrap/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/base/dropdown/css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/dashboard/animate.css/animate.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/theme/css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/base/theme/css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/dashboard/mobirise/css/mbr-additional.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/fnat/css/fnat.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/dataTables/dataTables.bootstrap4.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/socicon/css/styles.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/base/dataTables/dataTables.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/base/socicon/css/styles.css') }}">
 
-        <link rel="stylesheet" href="{{ asset('assets/et-line-font-plugin/style.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/web/assets/mobirise-icons/mobirise-icons.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/base/et-line-font-plugin/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/base/web/assets/mobirise-icons/mobirise-icons.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/dashboard/mobirise3-blocks-plugin/css/style.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/mobirise/css/mbr-additional.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/base/mobirise/css/mbr-additional.css') }}">
     {% endblock stylesheets %}
 
 </head>
@@ -39,8 +39,8 @@
 
 <!--  menu -->
 {% block navbar %}
-    
-        {% include('dashboard/menu/menu-administrateur.html.twig') %}
+
+    {% include('dashboard/menu/menu-administrateur.html.twig') %}
 
 {% endblock %}
 
@@ -49,7 +49,6 @@
 {% block body %}
 
     {% include('dashboard/block/_blck_espace_administrateur.html.twig') %}
-    {% include("messagesValidation.html.twig") %}
 
 {% endblock body %}
 
@@ -60,17 +59,16 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('assets/web/assets/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/tether/tether.min.js') }}"></script>
-    <script src="{{ asset('assets/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('assets/smooth-scroll/smooth-scroll.js') }}"></script>
-    <script src="{{ asset('assets/viewport-checker/jquery.viewportchecker.js') }}"></script>
-    <script src="{{ asset('assets/jarallax/jarallax.js') }}"></script>
-    <script src="{{ asset('assets/bootstrap-carousel-swipe/bootstrap-carousel-swipe.js') }}"></script>
-    <script src="{{ asset('assets/dataTables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/dropdown/js/script.min.js') }}"></script>
-    <script src="{{ asset('assets/touch-swipe/jquery.touch-swipe.min.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/theme/js/script.js') }}"></script>
+    <script src="{{ asset('assets/base/web/assets/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/base/tether/tether.min.js') }}"></script>
+    <script src="{{ asset('assets/base/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('assets/base/smooth-scroll/smooth-scroll.js') }}"></script>
+    <script src="{{ asset('assets/base/viewport-checker/jquery.viewportchecker.js') }}"></script>
+    <script src="{{ asset('assets/base/jarallax/jarallax.js') }}"></script>
+    <script src="{{ asset('assets/base/bootstrap-carousel-swipe/bootstrap-carousel-swipe.js') }}"></script>
+    <script src="{{ asset('assets/base/dataTables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/base/dropdown/js/script.min.js') }}"></script>
+    <script src="{{ asset('assets/base/touch-swipe/jquery.touch-swipe.min.js') }}"></script>
     <script src="{{ asset('assets/dashboard/mobirise3-blocks-plugin/js/script.js') }}"></script>
     <script src="{{ asset('assets/dashboard/dataTables/dataTables.bootstrap4.min.js') }}"></script>
 

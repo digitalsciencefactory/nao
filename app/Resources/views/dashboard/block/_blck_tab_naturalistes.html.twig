@@ -1,6 +1,6 @@
 <section class="mbr-section extTable1" id="extTable1-e" style="background-color: rgb(163, 143, 132); padding-top: 40px; padding-bottom: 120px;">
 
-    <div class="container table-wrapper" data-search="true" search-text="Rechercher :" info1-text="" info2-text="" info3-text="" info4-text="">
+    <div class="container table-wrapper" data-search="true" >
         <p> Il y a {{ total }} naturaliste(s) validés.</p>
         <div class="table-responsive positionne">
         <table class="table" cellspacing="0" width="100%">
@@ -64,13 +64,9 @@
                         </form>
                     </td>
                 </tr>
-
-
                 {% endfor %}
             </tbody>
         </table>
-
-
 
         </div>
         {% include("dashboard/block/_pagination.html.twig") %}

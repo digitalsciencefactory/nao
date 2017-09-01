@@ -23,18 +23,19 @@ class ExtractionService
         $this->em = $em;
     }
 
-    public function getObservationsDatees(Extraction $extraction){
+    public function getObservationsDatees(Extraction $extraction)
+    {
 
         // on récupère les observations validées et entre les 2 dates
         $manager = $this->em;
         $observationRepository = $manager->getRepository('AppBundle:Observation');
         $observations = $observationRepository->extract($extraction->getDatedebut(), $extraction->getDatefin());
 
-        if($observations !== null && count($observations) !== 0) {
+        if ($observations !== null && count($observations) !== 0) {
             return $observations;
         }
 
-        throw new RuntimeException( "La requête n'a retourné aucune observation.");
+        throw new RuntimeException("La requête n'a retourné aucune observation.");
 
     }
 
@@ -45,8 +46,9 @@ class ExtractionService
      * @param array $entete
      * @return string
      */
-    public function generateCsv(Extraction $extraction, array $observations, $path, array $entete){
 
+    public function generateCsv(Extraction $extraction, array $observations, $path, array $entete)
+    {
         // création d'un fichier csv
         $now = new \DateTime();
         $file =
@@ -72,7 +74,5 @@ class ExtractionService
         return $file;
 
     }
-
 }
-
 

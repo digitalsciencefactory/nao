@@ -157,6 +157,7 @@ class ParticiperController extends Controller
         if ($formModal->isSubmitted() && $formModal->isValid()){
 
             $observation->setCommNat($obs->getCommNat());
+
             //Préparation du mail d'information
             $message = (new \Swift_Message('Observation examinée'))
                 ->setFrom('contact-fnat@digitalsciencefactory.com')
@@ -261,12 +262,12 @@ class ParticiperController extends Controller
             $repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
             $results = $repository->getByAutoComplete($search);
             return new JsonResponse($results);
-        
         }
         $results = Array();
 
         return new JsonResponse($results);
     }
+
 
     /**
      * @param Request $request
@@ -283,13 +284,13 @@ class ParticiperController extends Controller
             $name = substr(bin2hex(random_bytes(200)),0,100) . "." . $observation->getFile()->getClientOriginalExtension();
 
             $name = Date("yyyy-mm-dd") . "_" . $name;
+
             // On déplace le fichier envoyé dans le répertoire de notre choix
             $observation->getFile()->move($this->getParameter('photos_dir'), $name);
 
             // On sauvegarde le nom de fichier dans notre attribut $url
             $observation->setPhoto($name);
         }
-
 
         // on récupère l'espèce avec son id
         $observation->setEspece($especeToSave[0]);
@@ -345,6 +346,7 @@ class ParticiperController extends Controller
                 ));
 
                 // création du refresh dans le header pour déclencher le download du fichier
+
                 $response->headers->set('Refresh', '2; url='.$this->generateUrl('fn_dashboard_extract', array('slug' => $file)));
 
                 // envoi de la double réponse
@@ -360,6 +362,16 @@ class ParticiperController extends Controller
         ));
     }
 
-
+    /**
+     * @Route("/dashboard/extract/{slug}", name="fn_participer_extract")
+     * @Security("has_role('ROLE_NATURALISTE')")
+     * Déclenche le téléchargement du fichier
+     * dont le chemin est passé en paramètre
+     */
+    public function fileAction($slug)
+    {
+        $path = $this->getParameter("downloads_dir");
+        return $this->file($path.$slug);
+    }
 
 }

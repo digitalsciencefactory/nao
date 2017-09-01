@@ -1,6 +1,6 @@
 <section class="mbr-section extTable1" id="extTable1-e" style="background-color: rgb(163, 143, 132); padding-top: 40px; padding-bottom: 120px;">
 
-    <div class="container table-wrapper" data-search="true" search-text="Rechercher :" info1-text="" info2-text="" info3-text="" info4-text="">
+    <div class="container table-wrapper" data-search="true" >
         <p> Il y a {{ total }} Observateur(s) validés.</p>
         <div class="table-responsive positionne">
         <table class="table" cellspacing="0" width="100%">
@@ -30,13 +30,13 @@
 
                     <td>
                         <form class="left" action="{{ path('fn_dashboard_bannir', {id: user.id}) }}" method="POST">
-                            <button class="btn btn-warning slimbtn" type="submit" value="refuser">Bannir</button>
+                            <button class="btn btn-warning slimbtn" type="submit" value="bannir">Bannir</button>
                         </form>
 
                     </td>
                     <td>
                         <form class="left" action="{{ path('fn_dashboard_supprimer', {id: user.id}) }}" method="POST">
-                            <button class="btn btn-danger slimbtn" type="submit" value="refuser">Supprimer</button>
+                            <button class="btn btn-danger slimbtn" type="submit" value="supprimer">Supprimer</button>
                         </form>
                     </td>
                 </tr>

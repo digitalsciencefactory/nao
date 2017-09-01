@@ -101,7 +101,7 @@ class InscriptionController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 
             // on gère l'inscription de l'observateur
-            $this->saveSignUpNat($encoder, $user);
+            $this->saveSignUpObs($encoder, $user);
 
             // on affiche la page de inscription avec le flash bag
             $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
@@ -196,19 +196,22 @@ class InscriptionController extends Controller
      */
     protected function saveSignUpobs(UserPasswordEncoderInterface $encoder, $user)
     {
-
         $user->setRoles(array('ROLE_OBSERVATEUR'));
         $user->setDcree(new \DateTime());
         $user->setStatut('STATUT_INACTIF');
+
         // hash du mot de passe
         $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
+
         // création du token de vérifiction d'inscription
         $length = 65;
         $user->setToken(substr(bin2hex(random_bytes($length)), 0, 65));
+
         // essayer d'insérer en base
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
         $em->flush();
+
         // mail de confirmation d'inscription
         $mailer = $this->container->get('mailer');
         $twig = $this->container->get('twig');
@@ -226,11 +229,20 @@ class InscriptionController extends Controller
         $user->setRoles(array('ROLE_OBSERVATEUR'));
         $user->setDcree(new \DateTime());
         $user->setStatut('STATUT_INACTIF');
+
         // hash du mot de passe
         $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
+
         // création du token de vérifiction d'inscription
         $length = 65;
         $user->setToken(substr(bin2hex(random_bytes($length)), 0, 65));
+
+        // sauvegarde de la carte pro
+        $name = substr(bin2hex(random_bytes(30)),0,25) . "." . $user->getFile()->getClientOriginalExtension();
+
+        $user->getFile()->move($this->getParameter("carte_pro_dir"), $name);
+        $user->setCarte($name);
+
         // essayer d'insérer en base
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
