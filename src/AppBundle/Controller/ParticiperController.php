@@ -196,13 +196,13 @@ class ParticiperController extends Controller
                 $messagesFlashService->messageSuccess('La requête a retournée ' . count($observations) .' observation(s). Le téléchargement va commencer automatiquement.');
 
                 // création de la réponse html
-                $response = $this->render('dashboard/extraction.html.twig', array(
+                $response = $this->render('participer/extraction.html.twig', array(
                     'fichierExtract' => $file, // file est le string du chemin du fichier
                     'form' => $form->createView(),
                 ));
 
                 // création du refresh dans le header pour déclencher le download du fichier
-                $response->headers->set('Refresh', '2; url='.$this->generateUrl('fn_dashboard_extract', array('slug' => $file)));
+                $response->headers->set('Refresh', '2; url='.$this->generateUrl('fn_participer_extract', array('fichier' => $file)));
 
                 // envoi de la double réponse
                 return $response;
@@ -216,15 +216,15 @@ class ParticiperController extends Controller
         ));
     }
     /**
-     * @Route("/dashboard/extract/{slug}", name="fn_participer_extract")
+     * @Route("/dashboard/extract/{fichier}", name="fn_participer_extract")
      * @Security("has_role('ROLE_NATURALISTE')")
      * Déclenche le téléchargement du fichier
      * dont le chemin est passé en paramètre
      */
-    public function fileAction($slug)
+    public function fileAction($fichier)
     {
         $path = $this->getParameter("downloads_dir");
-        return $this->file($path.$slug);
+        return $this->file($path.$fichier);
     }
 }
 

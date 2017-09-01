@@ -49,15 +49,9 @@
                     <div class="col-xs-12 col-lg-10 col-lg-offset-1" data-form-type="formoid">
 
                         {{ form_start(form) }}
-                        {% for message in app.flashes('notice') %}
-                            <div class="btn-success">
-                                {{ message }}
-                            </div>
-                            <br />
-                        {% endfor %}
                         {% if fichierExtract %}
                             <div class="btn-success">
-                                Si le téléchargement ne démarre pas au bout de 5 secondes, le fichier est disponible  <a href="/dashboard/extract/{{ fichierExtract }}" target="_blank">ici</a>.
+                                Si le téléchargement ne démarre pas au bout de 5 secondes, le fichier est disponible  <a href="{{ path("fn_participer_extract", {"fichier": fichierExtract }) }}" target="_blank">ici</a>.
                             </div>
                             <br />
                         {% endif %}

@@ -79,7 +79,7 @@
                             <input id="user_mail" type="text" class="form-control field-no-deco" value="{{ app.user.mail }}" disabled />
                         </div>
                     </div>
-
+                    {{ form_start(form) }}
                     {% if form_errors(form.ddn) != null %}
                     <div class="form-group">
                         <div class="col-sm-12 bg-danger">

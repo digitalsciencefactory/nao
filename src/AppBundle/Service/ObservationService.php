@@ -148,9 +148,8 @@ class ObservationService
             $observation->setDvalid(new \DateTime('NOW'));
         }
         // on essaye d'insérer en base
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($observation);
-        $em->flush();
+        $this->em->persist($observation);
+        $this->em->flush();
 
         // on affiche la page envoi_observation avec le flash bag
         if ($this->userService->hasNatRole($user)) {
