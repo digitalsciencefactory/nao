@@ -8,6 +8,7 @@
 
 namespace AppBundle\Service;
 
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use AppBundle\Mailer\FnatMailer;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\User;
@@ -17,26 +18,32 @@ class UserService
     /**
      * @var EntityManager
      */
-    private $em;
+    protected $em;
 
     /**
      * @var MessagesFlashService
      */
-    private $mfs;
+    protected $mfs;
 
     /**
      * @var FnatMailer
      */
-    private $mailer;
+    protected $mailer;
+
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    protected $authorizationChecker;
 
     /**
      * ExtractionService constructor.
      */
-    public function __construct(EntityManager $em, MessagesFlashService $mfs, FnatMailer $mailer)
+    public function __construct(EntityManager $em, MessagesFlashService $mfs, FnatMailer $mailer, AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->em = $em;
         $this->mfs = $mfs;
         $this->mailer = $mailer;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -206,6 +213,20 @@ class UserService
 
         $this->mailer->delUser($user);
 
+    }
+
+    /**
+     * Retourne true si l'utilisateur possède les rôle Naturaliste
+     * false sinon
+     *
+     * @param $user
+     * @return bool
+     */
+    public function hasNatRole($user){
+        if (!$this->authorizationChecker->isGranted('ROLE_NATURALISTE')) {
+            return false;
+        }
+        return true;
     }
 }
 

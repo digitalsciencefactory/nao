@@ -13,6 +13,8 @@ use AppBundle\Form\Type\ObservationType;
 use AppBundle\Service\ExtractionService;
 use AppBundle\Extraction\Extraction;
 use AppBundle\Form\Type\ExtractType;
+use AppBundle\Service\MessagesFlashService;
+use AppBundle\Service\UserService;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -47,7 +49,7 @@ class ParticiperController extends Controller
     /**
      * @Route("/participer/envoi-observation", name="fn_participer_envoi_obs")
      */
-    public function envoiObsAction (Request $request)
+    public function envoiObsAction (Request $request, MessagesFlashService $messagesFlashService, UserService $userService)
     {
         $observation = new Observation();
         $form = $this->createForm(ObservationType::class, $observation);
@@ -56,7 +58,7 @@ class ParticiperController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $this->saveObservationInDataBase($request, $observation);
+            $this->saveObservationInDataBase($request, $observation, $messagesFlashService, $userService);
 
             $observation = new Observation();
             $form = $this->createForm(ObservationType::class, $observation);
@@ -104,7 +106,7 @@ class ParticiperController extends Controller
      * @Route("/participer/fiche-observation/{id}", name="fn_fiche_observation")
      * @Method({"GET", "POST"})
      */
-    public function ficheObsAction (Request $request, Observation $observation, \Swift_Mailer $mailer)
+    public function ficheObsAction (Request $request, Observation $observation, \Swift_Mailer $mailer, MessagesFlashService $messagesFlashService)
     {
         $obsForm = new Observation();
         $form = $this->createForm(ModificationObsType::class, $obsForm)
@@ -146,8 +148,7 @@ class ParticiperController extends Controller
                 $mailer->send($message);
 
                 //Message de confirmation
-                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
-                $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été validée.');
+                $messagesFlashService->messageSuccess('L\'observation est bien été validée.');
 
                 return $this->redirectToRoute('fn_fiche_observation', ['id' => $observation->getId()]);
             }
@@ -176,8 +177,7 @@ class ParticiperController extends Controller
             $mailer->send($message);
 
             //Message de confirmation
-            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
-            $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été supprimée.');
+            $messagesFlashService->messageSuccess('L\'observation est bien été supprimée.');
 
             return $this->redirectToRoute('fn_participer_obs_attente');
         }
@@ -192,7 +192,7 @@ class ParticiperController extends Controller
     /**
      * @Route("/participer/mon-compte", name="fn_participer_profil")
      */
-    public function profilAction (Request $request)
+    public function profilAction (Request $request, MessagesFlashService $messagesFlashService)
     {
         $user = $this->getUser();
         $form = $this->createForm(UserType::class, $user);
@@ -226,8 +226,7 @@ class ParticiperController extends Controller
 
             $form = $this->createForm(UserType::class, $userDB);
 
-            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
-            $request->getSession()->getFlashBag()->add('notice', 'Votre profil a été mis à jour..');
+            $messagesFlashService->messageSuccess('Votre profil a été mis à jour.');
 
             return $this->render('participer/mon_compte.html.twig',
                 array(
@@ -272,7 +271,7 @@ class ParticiperController extends Controller
      * @param Request $request
      * @param $observation
      */
-    protected function saveObservationInDataBase(Request $request, $observation)
+    protected function saveObservationInDataBase(Request $request, $observation, $messagesFlashService, $userService)
     {
         $user = $this->getUser();
         $espece = $observation->getEspece();
@@ -298,7 +297,7 @@ class ParticiperController extends Controller
         $observation->setObservateur($user);
         $observation->setDcree(new \DateTime('NOW'));
 
-        if ($user->getRoles()[0] == "ROLE_NATURALISTE") {
+        if ($userService->hasNatRole($user)) {
             $observation->setStatut("STATUT_VALIDE");
             $observation->setNaturaliste($user);
             $observation->setDvalid(new \DateTime('NOW'));
@@ -311,11 +310,10 @@ class ParticiperController extends Controller
 
         // on affiche la page envoi_observation avec le flash bag
         if ($user->getRoles()[0] == ("ROLE_NATURALISTE")) {
-            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
-            $request->getSession()->getFlashBag()->add('notice', 'Votre observation est bien enregistrée et validée.');
+
+            $messagesFlashService->messageSuccess('Votre observation est bien enregistrée et validée.');
         } else {
-            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
-            $request->getSession()->getFlashBag()->add('notice', 'Votre observation a bien été transmise à un naturaliste.');
+            $messagesFlashService->messageSuccess('Votre observation a bien été transmise à un naturaliste.');
         }
     }
 
@@ -323,7 +321,7 @@ class ParticiperController extends Controller
      * @Route("/participer/extraction-donnees", name="fn_participer_bdd")
      * @Security("has_role('ROLE_NATURALISTE')")
      */
-    public function bddAction(Request $request, ExtractionService $extractionService){
+    public function bddAction(Request $request, ExtractionService $extractionService, MessagesFlashService $messagesFlashService){
         $extraction = new Extraction();
         $file = "";
         $form = $this->createForm(ExtractType::class, $extraction);
@@ -335,8 +333,7 @@ class ParticiperController extends Controller
                 $observations = $extractionService->getObservationsDatees($extraction);
                 $file = $extractionService->generateCsv($extraction,$observations, $this->getParameter('downloads_dir'),$this->getParameter('entete_csv_extract'));
 
-                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
-                $request->getSession()->getFlashBag()->add('notice', 'La requête a retournée ' . count($observations) .' observation(s). Le téléchargement va commencer automatiquement.');
+                $messagesFlashService->messageSuccess('La requête a retournée ' . count($observations) .' observation(s). Le téléchargement va commencer automatiquement.');
 
                 // création de la réponse html
                 $response = $this->render('dashboard/extraction.html.twig', array(

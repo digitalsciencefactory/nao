@@ -1,12 +1,7 @@
 <div class="form-table mbr-valign-top col-md-9  formblock" data-form-type="formoid">
 
     <form action="{{ path('login_check') }}" method="post">
-        {% for message in app.flashes('notice') %}
-            <div class="btn-success">
-                {{ message }}
-            </div>
-            <br />
-        {% endfor %}
+
         {% if error %}
             <div class="alert alert-danger">{{ error.message }}</div>
         {% endif %}
