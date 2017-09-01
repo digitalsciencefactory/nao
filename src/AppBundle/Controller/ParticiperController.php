@@ -5,42 +5,42 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Observation;
 use AppBundle\Entity\Taxref;
 use AppBundle\Entity\User;
+
 use AppBundle\Form\Type\CarteType;
 use AppBundle\Form\Type\ModalObsType;
 use AppBundle\Form\Type\ModificationObsType;
-use AppBundle\Form\Type\NatSignType;
 use AppBundle\Form\Type\ObservationType;
-use AppBundle\Service\ExtractionService;
-use AppBundle\Extraction\Extraction;
 use AppBundle\Form\Type\ExtractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use AppBundle\Form\Type\UserType;
+
+use AppBundle\Service\ExtractionService;
+
+use AppBundle\Extraction\Extraction;
+
+use AppBundle\Service\ObservationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Form\Type\UserType;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Validator\Constraints\DateTime;
 
+/**
+ * Class ParticiperController
+ * @package AppBundle\Controller
+ */
 class ParticiperController extends Controller
 {
     /**
      * @Route("/participer/observation-en-attente", name="fn_participer_obs_attente")
      * @Security("has_role('ROLE_NATURALISTE')")
      */
-    public function obsAttenteAction (Request $request)
+    public function obsAttenteAction (ObservationService $obsService)
     {
-        // Liste des observations pour les tableaux
-        $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
-        $obsTable = $obsManager->findAll();
-
         return $this->render('participer/observations_attente.html.twig', array(
-            'obsTable' => $obsTable,
+            'obsTable' => $obsService->findObsEnAttente()
         ));
     }
 
@@ -50,9 +50,8 @@ class ParticiperController extends Controller
     public function envoiObsAction (Request $request)
     {
         $observation = new Observation();
-        $form = $this->createForm(ObservationType::class, $observation);
-
-        $form->handleRequest($request);
+        $form = $this->createForm(ObservationType::class, $observation)
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -76,22 +75,18 @@ class ParticiperController extends Controller
      * @Route("/participer/carte-des-observations", name="fn_participer_carte_obs")
      * @Route("/participer")
      */
-    public function carteObsAction (Request $request)
+    public function carteObsAction (Request $request, ObservationService $obsService)
     {
         //Formulaire des recherche d'espèce pour la Googlemap
         $obsForm = new Observation();
-        $form = $this->createForm(CarteType::class, $obsForm)->handleRequest($request);
+        $form = $this->createForm(CarteType::class, $obsForm)
+            ->handleRequest($request);
 
-        // Gestion de la carte des observations (Liste)
         if ($form->isSubmitted() && $form->isValid()) {
-
-            //Récupère la liste des observationspour la Map
-            $obsManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
-            $obsMap= $obsManager->findBy(array('espece' => $obsForm->getEspece()));
 
             return $this->render('participer/carte_observations.html.twig', array(
                 'form' => $form->createView(),
-                'obsMap' => $obsMap,
+                'obsMap' => $obsService->findObsByEspece($obsForm->getEspece()),
             ));
         }
 
@@ -100,93 +95,44 @@ class ParticiperController extends Controller
         ));
     }
 
-    /**
-     * @Route("/participer/fiche-observation/{id}", name="fn_fiche_observation")
-     * @Method({"GET", "POST"})
-     */
-    public function ficheObsAction (Request $request, Observation $observation, \Swift_Mailer $mailer)
-    {
-        $obsForm = new Observation();
-        $form = $this->createForm(ModificationObsType::class, $obsForm)
-        ->handleRequest($request);
 
-        $obs = new Observation();
-        $formModal = $this->createForm(ModalObsType::class, $obs)
+    /**
+     * @Route("/participer/fiche-observation/{id}", name="fn_fiche_observation", requirements={"id": "\d+"})
+     * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param Observation $observation
+     * @param ObservationService $obsService
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function ficheObsAction (Request $request, Observation $observation, ObservationService $obsService)
+    {
+        //Formulaire de validation
+        $obsValid = new Observation();
+        $formValid = $this->createForm(ModificationObsType::class, $obsValid)
             ->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid())
+        //Formulaire de confirmation de suppression
+        $obsDel = new Observation();
+        $formDel = $this->createForm(ModalObsType::class, $obsDel)
+            ->handleRequest($request);
+
+        if ($formValid->isSubmitted() && $formValid->isValid())
         {
-            //Préparation du mail d'information
-            $message = (new \Swift_Message('Observation examinée'))
-                ->setFrom('contact-fnat@digitalsciencefactory.com')
-                ->setTo($observation->getObservateur()->getMail());
-
-            //Traitement du formulaire
-            if ($form->get('valider')->isClicked()) {
-
-                // Récupère l'epèce selon son id pour la mise à jour
-                $taxrefManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
-                $especeToSave = $taxrefManager->find($obsForm->getEspece());
-
-                //Mise à jour des données
-                $observation
-                    ->setEspece($taxrefManager->find($especeToSave))
-                    ->setCommNat($obsForm->getCommNat())
-                    ->setDvalid(new \DateTime('NOW'))
-                    ->setStatut('STATUT_VALIDE')
-                    ->setNaturaliste($this->getUser());
-
-                $this->getDoctrine()->getManager()->flush();
-
-                //Sélection du message du mail
-                $message->setBody( $this->renderView(
-                        'mail/obs.validation.html.twig',
-                        array('observation' => $observation)),
-                    'text/html');
-                $mailer->send($message);
-
-                //Message de confirmation
-                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
-                $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été validée.');
-
-                return $this->redirectToRoute('fn_fiche_observation', ['id' => $observation->getId()]);
-            }
-
+            $obsService->valideObservation($observation, $obsValid, $this->getUser() );
+            return $this->redirectToRoute('fn_fiche_observation', ['id' => $observation->getId()]);
         }
 
-        if ($formModal->isSubmitted() && $formModal->isValid()){
-
-            $observation->setCommNat($obs->getCommNat());
-
-            //Préparation du mail d'information
-            $message = (new \Swift_Message('Observation examinée'))
-                ->setFrom('contact-fnat@digitalsciencefactory.com')
-                ->setTo($observation->getObservateur()->getMail())
-                ->setBody( $this->renderView(
-                    'mail/obs.suppression.html.twig',
-                    array('observation' => $observation,)
-                ),
-                    'text/html');
-
-            //Suppression de l'observation
-            $obsManager = $this->getDoctrine()->getManager();
-            $obsManager->remove($observation);
-            $obsManager->flush();
-
-            //Envoi du mail à l'observateur
-            $mailer->send($message);
-
-            //Message de confirmation
-            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
-            $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été supprimée.');
-
+        if ($formDel->isSubmitted() && $formDel->isValid())
+        {
+            $obsService->deleteObservation($observation, $obsDel);
             return $this->redirectToRoute('fn_participer_obs_attente');
         }
 
         return $this->render('participer/fiche_observation.html.twig', array(
             'observation' => $observation,
-            'form' => $form->createView(),
-            'formModal' => $formModal->createView()
+            'form' => $formValid->createView(),
+            'formModal' => $formDel->createView()
         ));
     }
 

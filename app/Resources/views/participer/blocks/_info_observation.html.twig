@@ -15,6 +15,10 @@
                         {% if is_granted('ROLE_NATURALISTE') %}
                             {% if observation.statut == 'STATUT_EN_ATTENTE'%}
                                 {{ include('participer/forms/_modif_observation_form.html.twig') }}
+                                <br>
+                            {% else %}
+                                {{ observation.espece.lbNom }}
+                                <br>
                             {% endif %}
                         {% else %}
                             {{ observation.espece.lbNom }}
