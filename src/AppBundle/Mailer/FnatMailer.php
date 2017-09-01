@@ -4,6 +4,7 @@
 namespace AppBundle\Mailer;
 
 use AppBundle\Entity\Newsletter;
+use AppBundle\Entity\Observation;
 use AppBundle\Entity\User;
 use Twig\Environment;
 use AppBundle\Contact\Contact;
@@ -192,5 +193,34 @@ class FnatMailer
         $this->mailer->send($message);
     }
 
+    /**
+     * Mail pour prévenir qu'une observation a été validée
+     * @param Observation $observation
+     */
+    public function validObs(Observation $observation){
+        $body = $this->twig->render('mail\obs.validation.html.twig', array('observation' => $observation));
+
+        $message = new \Swift_Message("Votre observation a été validée.");
+        $message->setBody($body,'text/html');
+        $message->addTo($observation->getObservateur()->getMail());
+        $message->addFrom("contact-fnat@digitalsciencefactory.com");
+
+        $this->mailer->send($message);
+    }
+
+    /**
+     * Mail pour prévenir qu'une observation a été supprimée
+     * @param User $user
+     */
+    public function deleteObs(Observation $observation){
+        $body = $this->twig->render('mail\obs.suppression.html.twig', array('observation' => $observation));
+
+        $message = new \Swift_Message("Votre observation a été supprimée.");
+        $message->setBody($body,'text/html');
+        $message->addTo($observation->getObservateur()->getMail());
+        $message->addFrom("contact-fnat@digitalsciencefactory.com");
+
+        $this->mailer->send($message);
+    }
 }
 

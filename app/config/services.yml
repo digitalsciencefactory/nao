@@ -40,5 +40,4 @@ services:
     # AppBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
-    utils.files:
-        class: AppBundle\Utils\FilesUtils
+
