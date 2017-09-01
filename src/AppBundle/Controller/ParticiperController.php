@@ -14,6 +14,7 @@ use AppBundle\Service\ExtractionService;
 use AppBundle\Extraction\Extraction;
 use AppBundle\Form\Type\ExtractType;
 use AppBundle\Service\MessagesFlashService;
+use AppBundle\Service\UserService;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -48,7 +49,7 @@ class ParticiperController extends Controller
     /**
      * @Route("/participer/envoi-observation", name="fn_participer_envoi_obs")
      */
-    public function envoiObsAction (Request $request)
+    public function envoiObsAction (Request $request, MessagesFlashService $messagesFlashService, UserService $userService)
     {
         $observation = new Observation();
         $form = $this->createForm(ObservationType::class, $observation);
@@ -57,7 +58,7 @@ class ParticiperController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $this->saveObservationInDataBase($request, $observation);
+            $this->saveObservationInDataBase($request, $observation, $messagesFlashService, $userService);
 
             $observation = new Observation();
             $form = $this->createForm(ObservationType::class, $observation);
@@ -270,7 +271,7 @@ class ParticiperController extends Controller
      * @param Request $request
      * @param $observation
      */
-    protected function saveObservationInDataBase(Request $request, $observation, MessagesFlashService $messagesFlashService)
+    protected function saveObservationInDataBase(Request $request, $observation, $messagesFlashService, $userService)
     {
         $user = $this->getUser();
         $espece = $observation->getEspece();
@@ -296,7 +297,7 @@ class ParticiperController extends Controller
         $observation->setObservateur($user);
         $observation->setDcree(new \DateTime('NOW'));
 
-        if ($user->getRoles()[0] == "ROLE_NATURALISTE") {
+        if ($userService->hasNatRole($user)) {
             $observation->setStatut("STATUT_VALIDE");
             $observation->setNaturaliste($user);
             $observation->setDvalid(new \DateTime('NOW'));
