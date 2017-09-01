@@ -8,6 +8,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\User;
 use AppBundle\Mailer\FnatMailer;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Observation;
@@ -19,26 +20,32 @@ class ObservationService
     /**
      * @var EntityManager
      */
-    private $em;
+    protected $em;
 
     /**
      * @var MessagesFlashService
      */
-    private $mfs;
+    protected $mfs;
 
     /**
      * @var FnatMailer
      */
-    private $mailer;
+    protected $mailer;
+
+    /**
+     * @var UserService
+     */
+    protected $userService;
 
     /**
      * ExtractionService constructor.
      */
-    public function __construct(EntityManager $em, MessagesFlashService $mfs, FnatMailer $mailer)
+    public function __construct(EntityManager $em, MessagesFlashService $mfs, FnatMailer $mailer, UserService $userService)
     {
         $this->em = $em;
         $this->mfs = $mfs;
         $this->mailer = $mailer;
+        $this->userService = $userService;
     }
 
 
@@ -76,7 +83,12 @@ class ObservationService
             ->findBy(array('espece' => $espece));
     }
 
-    public function valideObservation(Observation $observation, $form, $user)
+    /**
+     * @param Observation $observation
+     * @param Observation $form
+     * @param User $user
+     */
+    public function valideObservation(Observation $observation, Observation $form, User $user)
     {
         // Récupère l'epèce selon son id pour la mise à jour
         $especeToSave = $this->em->getRepository('AppBundle:Taxref')
@@ -99,7 +111,11 @@ class ObservationService
         $this->mailer->validObs($observation);
     }
 
-    public function deleteObservation(Observation $observation, $form)
+    /**
+     * @param Observation $observation
+     * @param Observation $form
+     */
+    public function deleteObservation(Observation $observation, Observation $form)
     {
         //Permet de garder les info pour le mail
         $observation->setCommNat($form->getCommNat());
@@ -112,5 +128,66 @@ class ObservationService
         $this->mfs->messageSuccess('L\'observation a bien été supprimée');
     }
 
+    /**
+     * @param Observation $observation
+     */
+    public function saveObservation(User $user, Observation $observation, $espece, $photoDir){
+
+        $observation = $this->dealWithPhoto($observation, $photoDir);
+
+        // on récupère l'espèce avec son id
+        $observation->setEspece($espece);
+
+        // On complète l'entité
+        $observation->setObservateur($user);
+        $observation->setDcree(new \DateTime('NOW'));
+
+        if ($this->userService->hasNatRole($user)) {
+            $observation->setStatut("STATUT_VALIDE");
+            $observation->setNaturaliste($user);
+            $observation->setDvalid(new \DateTime('NOW'));
+        }
+        // on essaye d'insérer en base
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($observation);
+        $em->flush();
+
+        // on affiche la page envoi_observation avec le flash bag
+        if ($this->userService->hasNatRole($user)) {
+            $this->mfs->messageSuccess('Votre observation est bien enregistrée et validée.');
+        } else {
+            $this->mfs->messageSuccess('Votre observation a bien été transmise à un naturaliste.');
+        }
+
+    }
+
+    /**
+     * Gère la photo de l'observation si il y en a une.
+     *
+     * @param Observation $observation
+     * @param $photoDir
+     * @return Observation
+     */
+    protected function dealWithPhoto(Observation $observation, $photoDir){
+        if (null !== $observation->getFile()) {
+            $name = $this->randomizePhotoNameFile($observation);
+            // On déplace le fichier envoyé dans le répertoire de notre choix
+            $observation->getFile()->move($photoDir, $name);
+            // On sauvegarde le nom de fichier dans notre attribut $url
+            $observation->setPhoto($name);
+        }
+        return $observation;
+    }
+
+    /**
+     * Retourne un nom random de la photo avec la bonne extension
+     *
+     * @param Observation $observation
+     * @return string newNameRandomized
+     */
+    protected function randomizePhotoNameFile(Observation $observation){
+        $name = substr(bin2hex(random_bytes(200)),0,100) . "." . $observation->getFile()->getClientOriginalExtension();
+        return Date("yyyy-mm-dd") . "_" . $name;
+    }
 }
 

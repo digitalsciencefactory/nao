@@ -181,7 +181,7 @@ class InscriptionController extends Controller
      * @param UserPasswordEncoderInterface $encoder
      * @param $user
      */
-    protected function saveSignUpobs(UserPasswordEncoderInterface $encoder, $user)
+    protected function saveSignUpobs(UserPasswordEncoderInterface $encoder, User $user)
     {
         $user->setRoles(array('ROLE_OBSERVATEUR'));
         $user->setDcree(new \DateTime());
@@ -210,7 +210,7 @@ class InscriptionController extends Controller
      * @param UserPasswordEncoderInterface $encoder
      * @param $user
      */
-    protected function saveSignUpNat(UserPasswordEncoderInterface $encoder, $user)
+    protected function saveSignUpNat(UserPasswordEncoderInterface $encoder, User $user)
     {
 
         $user->setRoles(array('ROLE_OBSERVATEUR'));

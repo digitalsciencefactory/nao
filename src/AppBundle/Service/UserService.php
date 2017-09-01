@@ -187,16 +187,20 @@ class UserService
     }
 
     /**
-     * Retourne true si l'utilisateur possède les rôle Naturaliste
+     * Retourne true si l'utilisateur possède le rôle Naturaliste
      * false sinon
      *
      * @param $user
      * @return bool
      */
-    public function hasNatRole($user){
-        if (!$this->authorizationChecker->isGranted('ROLE_NATURALISTE')) {
-            return false;
+    public function hasNatRole(User $user)
+    {
+        foreach($user->getRoles() as $role){
+            if($role === "ROLE_NATURALISTE"){
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 }
+

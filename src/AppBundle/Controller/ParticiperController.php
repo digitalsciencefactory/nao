@@ -11,6 +11,7 @@ use AppBundle\Form\Type\ExtractType;
 use AppBundle\Form\Type\UserType;
 use AppBundle\Service\ExtractionService;
 use AppBundle\Extraction\Extraction;
+use AppBundle\Service\MessagesFlashService;
 use AppBundle\Service\ObservationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -38,19 +39,22 @@ class ParticiperController extends Controller
     /**
      * @Route("/participer/envoi-observation", name="fn_participer_envoi_obs")
      */
-    public function envoiObsAction (Request $request)
+    public function envoiObsAction (Request $request, ObservationService $observationService)
     {
         $observation = new Observation();
         $form = $this->createForm(ObservationType::class, $observation)
             ->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->saveObservationInDataBase($request, $observation);
-            $observation = new Observation();
-            $form = $this->createForm(ObservationType::class, $observation);
-            return $this->render('participer/envoi_observation.html.twig', array(
-                'form' => $form->createView(),
-            ));
+            $user = $this->getUser();
+            $espece = $observation->getEspece();
+            $taxrefManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
+            $especeToSave = $taxrefManager->getOneWithJoin($espece);
+
+            $observationService->saveObservation($user, $observation, $especeToSave[0],  $this->getParameter('photos_dir'));
+
+            $form = $this->createForm(ObservationType::class, new Observation());
         }
+
         return $this->render('participer/envoi_observation.html.twig', array(
             'form' => $form->createView(),
         ));
@@ -175,52 +179,12 @@ class ParticiperController extends Controller
         $results = Array();
         return new JsonResponse($results);
     }
-    /**
-     * @param Request $request
-     * @param $observation
-     */
-    protected function saveObservationInDataBase(Request $request, $observation)
-    {
-        $user = $this->getUser();
-        $espece = $observation->getEspece();
-        $taxrefManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
-        $especeToSave = $taxrefManager->getOneWithJoin($espece);
-        if (null !== $observation->getFile()) {
-            $name = substr(bin2hex(random_bytes(200)),0,100) . "." . $observation->getFile()->getClientOriginalExtension();
-            $name = Date("yyyy-mm-dd") . "_" . $name;
-            // On déplace le fichier envoyé dans le répertoire de notre choix
-            $observation->getFile()->move($this->getParameter('photos_dir'), $name);
-            // On sauvegarde le nom de fichier dans notre attribut $url
-            $observation->setPhoto($name);
-        }
-        // on récupère l'espèce avec son id
-        $observation->setEspece($especeToSave[0]);
-        // On complète l'entité
-        $observation->setObservateur($user);
-        $observation->setDcree(new \DateTime('NOW'));
-        if ($user->getRoles()[0] == "ROLE_NATURALISTE") {
-            $observation->setStatut("STATUT_VALIDE");
-            $observation->setNaturaliste($user);
-            $observation->setDvalid(new \DateTime('NOW'));
-        }
-        // on essaye d'insérer en base
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($observation);
-        $em->flush();
-        // on affiche la page envoi_observation avec le flash bag
-        if ($user->getRoles()[0] == ("ROLE_NATURALISTE")) {
-            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
-            $request->getSession()->getFlashBag()->add('notice', 'Votre observation est bien enregistrée et validée.');
-        } else {
-            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
-            $request->getSession()->getFlashBag()->add('notice', 'Votre observation a bien été transmise à un naturaliste.');
-        }
-    }
+
     /**
      * @Route("/participer/extraction-donnees", name="fn_participer_bdd")
      * @Security("has_role('ROLE_NATURALISTE')")
      */
-    public function bddAction(Request $request, ExtractionService $extractionService){
+    public function bddAction(Request $request, ExtractionService $extractionService, MessagesFlashService $messagesFlashService){
         $extraction = new Extraction();
         $file = "";
         $form = $this->createForm(ExtractType::class, $extraction);
@@ -229,19 +193,21 @@ class ParticiperController extends Controller
             try {
                 $observations = $extractionService->getObservationsDatees($extraction);
                 $file = $extractionService->generateCsv($extraction,$observations, $this->getParameter('downloads_dir'),$this->getParameter('entete_csv_extract'));
-                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
-                $request->getSession()->getFlashBag()->add('notice', 'La requête a retournée ' . count($observations) .' observation(s). Le téléchargement va commencer automatiquement.');
+                $messagesFlashService->messageSuccess('La requête a retournée ' . count($observations) .' observation(s). Le téléchargement va commencer automatiquement.');
+
                 // création de la réponse html
                 $response = $this->render('dashboard/extraction.html.twig', array(
                     'fichierExtract' => $file, // file est le string du chemin du fichier
                     'form' => $form->createView(),
                 ));
+
                 // création du refresh dans le header pour déclencher le download du fichier
                 $response->headers->set('Refresh', '2; url='.$this->generateUrl('fn_dashboard_extract', array('slug' => $file)));
+
                 // envoi de la double réponse
                 return $response;
             } catch(\RuntimeException $re){
-                $request->getSession()->getFlashBag()->add('notice', $re->getMessage());
+                $messagesFlashService->messageError($re->getMessage());
             }
         }
         return $this->render('participer/extraction.html.twig', array(
@@ -261,3 +227,5 @@ class ParticiperController extends Controller
         return $this->file($path.$slug);
     }
 }
+
+
