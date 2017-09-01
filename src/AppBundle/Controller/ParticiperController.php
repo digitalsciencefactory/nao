@@ -21,6 +21,10 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\Type\UserType;
+<<<<<<< HEAD
+=======
+use Symfony\Component\HttpFoundation\Response;
+>>>>>>> silh
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -150,6 +154,7 @@ class ParticiperController extends Controller
                     'mail/obs.suppression.html.twig',
                     array('observation' => $observation)),
                     'text/html');
+<<<<<<< HEAD
 
                 //Suppression de l'observation
                 $obsManager = $this->getDoctrine()->getManager();
@@ -160,6 +165,18 @@ class ParticiperController extends Controller
                 $mailer->send($message);
                 $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été supprimée.');
 
+=======
+
+                //Suppression de l'observation
+                $obsManager = $this->getDoctrine()->getManager();
+                $obsManager->remove($observation);
+                $obsManager->flush();
+
+                //Message de confirmation
+                $mailer->send($message);
+                $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été supprimée.');
+
+>>>>>>> silh
                 return $this->redirectToRoute('fn_participer_espace_nat');
 
             }
@@ -228,7 +245,7 @@ class ParticiperController extends Controller
 
     /**
      * @param Request $request
-     * @return JsonResponse
+     * @return Response
      *
      * @Route("/participer/autocomplete/", name="fn_participer_autocomplete")
      */
@@ -237,6 +254,7 @@ class ParticiperController extends Controller
         if($request->isXmlHttpRequest())
         {
             $search = $request->get('search');
+<<<<<<< HEAD
             $repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
             $results = $repository->getByAutoComplete($search);
         return new JsonResponse($results);
@@ -264,6 +282,36 @@ class ParticiperController extends Controller
             // On déplace le fichier envoyé dans le répertoire de notre choix
             $observation->getFile()->move($this->getParameter('photos_dir'), $name);
 
+=======
+            $repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
+            $results = $repository->getByAutoComplete($search);
+            return new JsonResponse($results);
+        
+        }
+        $results = Array();
+
+        return new JsonResponse($results);
+    }
+
+    /**
+     * @param Request $request
+     * @param $observation
+     */
+    protected function saveObservationInDataBase(Request $request, $observation)
+    {
+        $user = $this->getUser();
+        $espece = $observation->getEspece();
+
+        $taxrefManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
+        $especeToSave = $taxrefManager->getOneWithJoin($espece);
+        if (null !== $observation->getFile()) {
+            $name = substr(bin2hex(random_bytes(200)),0,100) . "." . $observation->getFile()->getClientOriginalExtension();
+
+            $name = Date("yyyy-mm-dd") . "_" . $name;
+            // On déplace le fichier envoyé dans le répertoire de notre choix
+            $observation->getFile()->move($this->getParameter('photos_dir'), $name);
+
+>>>>>>> silh
             // On sauvegarde le nom de fichier dans notre attribut $url
             $observation->setPhoto($name);
         }
@@ -320,7 +368,11 @@ class ParticiperController extends Controller
                 ));
 
                 // création du refresh dans le header pour déclencher le download du fichier
+<<<<<<< HEAD
                 $response->headers->set('Refresh', '2; url='.$this->generateUrl('fn_dashboard_extract', array('slug' => $file)));
+=======
+                $response->headers->set('Refresh', '2; url='.$this->generateUrl('fn_participer_extract', array('slug' => $file)));
+>>>>>>> silh
 
                 // envoi de la double réponse
                 return $response;
@@ -333,6 +385,21 @@ class ParticiperController extends Controller
             'fichierExtract' => $file,
             'form' => $form->createView(),
         ));
+<<<<<<< HEAD
+=======
+    }
+
+    /**
+     * @Route("/dashboard/extract/{slug}", name="fn_participer_extract")
+     * @Security("has_role('ROLE_NATURALISTE')")
+     * Déclenche le téléchargement du fichier
+     * dont le chemin est passé en paramètre
+     */
+    public function fileAction($slug)
+    {
+        $path = $this->getParameter("downloads_dir");
+        return $this->file($path.$slug);
+>>>>>>> silh
     }
 
 }

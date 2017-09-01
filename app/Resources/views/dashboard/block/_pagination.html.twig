@@ -1,7 +1,11 @@
 <div class="container">
     <div class="col-xs-12 col-md-2">
         {% if(page - 1) > 0 %}
+<<<<<<< HEAD
             <form action="/dashboard/naturalistes/{{ page - 1 }}" method="POST">
+=======
+            <form action="{{ path( pagination, { 'page':page - 1 }) }}" method="POST">
+>>>>>>> silh
                 <button type="submit" class="btn btn-info">Précédents</button>
             </form>
         {% else %}
@@ -17,7 +21,11 @@
     </div>
     <div class="col-xs-12 col-md-2">
         {% if(page + 1) <= pages %}
+<<<<<<< HEAD
             <form action="/dashboard/naturalistes/{{ page + 1 }}" method="POST">
+=======
+            <form action="{{ path(pagination, { 'page':page + 1 }) }}" method="POST">
+>>>>>>> silh
                 <button type="submit" class="btn btn-info">Suivants</button>
             </form>
         {% else %}

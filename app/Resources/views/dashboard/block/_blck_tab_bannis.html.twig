@@ -1,0 +1,76 @@
+<section class="mbr-section extTable1" id="extTable1-e" style="background-color: rgb(163, 143, 132); padding-top: 40px; padding-bottom: 120px;">
+
+    <div class="container table-wrapper" data-search="true" search-text="Rechercher :" info1-text="" info2-text="" info3-text="" info4-text="">
+        <p> Il y a {{ users|length() }} utilisateur(s) bannis.</p>
+        <div class="table-responsive positionne">
+        <table class="table" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Date d'inscription</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Pseudo</th>
+                    <th>Email</th>
+                    <th>Code postal</th>
+                    <th>Date de naissance</th>
+                    <th>Rôle</th>
+                    <th>Débloquer</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.dcree|date("d/m/Y H:i:s") }}</td>
+                    <td>{{ user.nom }}</td>
+                    <td>{{ user.prenom }}</td>
+                    <td>{{ user.pseudo }}</td>
+                    <td>{{ user.mail }}</td>
+                    <td>{{ user.codePostal }}</td>
+                    <td>{{ user.ddn }}</td>
+                    <td>
+                        {% if user.carte is not null %}
+                            <button type="button" class="btn btn-primary btn-lg slimbtn" data-toggle="modal" data-target="#{{ user.pseudo }}">Naturaliste
+                            </button>
+                            {# MODAL #}
+
+                            <div class="modal fade" id="{{ user.pseudo }}" tabindex="-1" role="dialog" aria-labelledby="{{ user.pseudo }}Label">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Carte professionnelle de {{ user.pseudo }}</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <img class="img-responsive" src="{{ asset('fnat/naturalistes/' ~ user.carte ~ '') }}" alt="Carte professionnelle de {{ user.pseudo }}" />
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {# FIN MODAL #}
+                        {% else %}
+                            Particulier
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <form  action="{{ path('fn_dashboard_debloquer', { 'id':user.id }) }}" method="POST">
+                            <button class="btn btn-success slimbtn" type="submit" value="refuser">Débloquer</button>
+                        </form>
+
+                    </td>
+                </tr>
+
+
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+
+        </div>
+    </div>
+</section>
