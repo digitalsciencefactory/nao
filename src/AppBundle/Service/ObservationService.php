@@ -59,7 +59,7 @@ class ObservationService
         $result = $this->em->getRepository('AppBundle:Observation')
             ->findBy(array('statut' => 'STATUT_EN_ATTENTE'));
 
-        if ($result == null)
+        if ($result === null)
         {
             $this->mfs->messageInfo('Aucune observation en attente de validation');
             return $result;
