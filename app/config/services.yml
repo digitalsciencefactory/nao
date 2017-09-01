@@ -6,6 +6,8 @@ parameters:
     carte_pro_dir: "%web_dir%/fnat/naturalistes/"
     downloads_dir: "%web_dir%/fnat/downloads/"
     photos_dir: "%web_dir%/fnat/photos/"
+    entete_csv_extract: ["Lb nom", "Nom vern", "Nom vern eng", "Latitude", "Longitude", "Commentaire particulier", "Commentaire naturaliste"]
+
 
 services:
     # default configuration for services in *this* file
@@ -40,5 +42,4 @@ services:
     # AppBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
-    utils.files:
-        class: AppBundle\Utils\FilesUtils
+

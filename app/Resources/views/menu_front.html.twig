@@ -15,7 +15,7 @@
 
                 <div class="mbr-table-cell">
 
-                    <div class="navbar-toggler pull-xs-right hidden-md-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
+                    <div class="navbar-toggler pull-xs-right hidden-md-up" data-toggle="collapse" data-target="#exCollapsingNavbar">
                         <div class="hamburger-icon"></div>
                     </div>
 
@@ -52,7 +52,7 @@
                             </div>
                         </li>
 
-                        {% if app.user == null %}
+                        {% if  not is_granted("ROLE_OBSERVATEUR") %}
                             <li class="nav-item nav-btn">
                                 <a class="nav-link btn btn-secondary-outline btn-secondary" href="{{ path('fn_front_connexion') }}">Se connecter</a>
                             </li>
@@ -70,10 +70,9 @@
                                 </a>
                             </li>
                         {% endif %}
-
                     </ul>
 
-                    <div hidden="" class="navbar-toggler navbar-close" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
+                    <div hidden="" class="navbar-toggler navbar-close" data-toggle="collapse" data-target="#exCollapsingNavbar">
                         <div class="close-icon"></div>
                     </div>
 

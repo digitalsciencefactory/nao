@@ -50,6 +50,10 @@ class User implements UserInterface, \Serializable
      *     max        = 20,
      *     minMessage = "Votre pseudonyme doit faire au moins { min } caractères",
      *     maxMessage = "Votre psudonyme ne peut exéder { max } caractères.")
+     * @Assert\Regex(
+     *     pattern    = "/^[azAZ0-9_]{4,20}$/",
+     *     message    = "Votre pseudo ne peut contenir que des lettres, des chiffres et des '_'."
+     * )
      */
     private $pseudo;
 
@@ -139,6 +143,11 @@ class User implements UserInterface, \Serializable
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Observation", mappedBy="observateur")
      */
     private $observations;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Observation", mappedBy="naturaliste")
+     */
+    private $observationsValidees;
 
     /**
      * @var string
@@ -686,5 +695,48 @@ class User implements UserInterface, \Serializable
             ) = unserialize($serialized);
     }
 
+    /**
+     * @ORM\PreRemove
+     */
+    protected function delAllDatas(){
+        foreach ($this->observations as $observation){
 
+        }
+
+    }
+
+
+    /**
+     * Add observationsValidee
+     *
+     * @param \AppBundle\Entity\Observation $observationsValidee
+     *
+     * @return User
+     */
+    public function addObservationsValidee(\AppBundle\Entity\Observation $observationsValidee)
+    {
+        $this->observationsValidees[] = $observationsValidee;
+
+        return $this;
+    }
+
+    /**
+     * Remove observationsValidee
+     *
+     * @param \AppBundle\Entity\Observation $observationsValidee
+     */
+    public function removeObservationsValidee(\AppBundle\Entity\Observation $observationsValidee)
+    {
+        $this->observationsValidees->removeElement($observationsValidee);
+    }
+
+    /**
+     * Get observationsValidees
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getObservationsValidees()
+    {
+        return $this->observationsValidees;
+    }
 }

@@ -1,8 +1,6 @@
 <section class="mbr-section extTable1" id="extTable1-e" style="background-color: rgb(163, 143, 132); padding-top: 40px; padding-bottom: 120px;">
 
-    {% include("messagesValidation.html.twig") %}
-
-    <div class="container table-wrapper" data-search="true" search-text="Rechercher :" info1-text="" info2-text="" info3-text="" info4-text="">
+    <div class="container table-wrapper" data-search="true" >
         <p> Il y a {{ users|length }} naturaliste(s) en attente.</p>
         <div class="table-responsive positionne">
         <table class="table" cellspacing="0" width="100%">
@@ -46,16 +44,14 @@
                     </td>
                     <td>{{ user.mail }}</td>
                     <td>
-                        <form class="left" action="/dashboard/naturalistes-refus/{{ user.id }}" method="POST">
+                        <form class="left" action="{{ path('fn_dashboard_natrefus', { 'id':user.id }) }}" method="POST">
                             <button class="btn btn-danger slimbtn" type="submit" value="refuser">Refuser</button>
                         </form>
-                        <form class="right" action="/dashboard/naturalistes-validation/{{ user.id }}" method="POST">
+                        <form class="right" action="{{ path('fn_dashboard_natvalid', { 'id':user.id }) }}" method="POST">
                             <button class="btn btn-success slimbtn" type="submit" value="valider">Valider</button>
                         </form>
                     </td>
                 </tr>
-
-
                 {% endfor %}
             </tbody>
         </table>

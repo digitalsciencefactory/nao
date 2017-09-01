@@ -25,6 +25,9 @@
                         <h3 class="mbr-section-title display-2">
                             Votre profil {{ pseudonyme }}
                         </h3>
+                        <div class="col-sm-12 ">
+                            <input type="button"  id="maj_profil" class="btn btn-primary" onclick="switchForm(); window.location.hash='modifier';" value="Mettre à jour le profil" />
+                        </div>
                     </div>
 
                 </div>
@@ -32,6 +35,18 @@
         </div>
     </section>
 
+    <section class="mbr-section article mbr-section__container" id="content1-5s" style="background-color: rgb(105, 176, 171); padding-top: 20px; padding-bottom: 20px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 lead">
+                    <p>En complétant votre profil, vous permettez à NAO de mieux connaître ses utilisateurs et améliorer l'expérience d'utilisation de l'application Flash Nature.</p>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <a name="modifier"> </a>
     <section class="mbr-section" id="content5-5w" style="background-color: rgb(105, 176, 171); padding-top: 40px; padding-bottom: 0;">
         <div class="container">
             <h3 class="mbr-section-title display-2">
@@ -44,18 +59,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 lead">
-                    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
-                    {% for message in app.flashes('notice') %}
-                        <div class="btn-success">
-                            {{ message }}
-                        </div>
-                        <br />
-                    {% endfor %}
-                    {% if form_errors(form) != null %}
-                        <div class="alert alert-danger">
-                            {{ form_errors(form) }}
-                        </div>
-                    {% endif %}
+
+                    {% include("messagesValidation.html.twig") %}
+
                     <div class="form-group">
                         <div class="col-sm-12 col-md-3">
                             <label for="p-mp-dcree" class="control-label lbl-modify">Date d'inscription :</label>
@@ -73,7 +79,7 @@
                             <input id="user_mail" type="text" class="form-control field-no-deco" value="{{ app.user.mail }}" disabled />
                         </div>
                     </div>
-
+                    {{ form_start(form) }}
                     {% if form_errors(form.ddn) != null %}
                     <div class="form-group">
                         <div class="col-sm-12 bg-danger">
@@ -157,27 +163,11 @@
 
                     <div class="form-group">
                         <div class="col-sm-12 col-md-4 col-md-offset-2 ">
-                            <input type="button"  id="maj_profil" class="btn btn-primary" onclick="switchForm()" value="Mettre à jour le profil" />
-                        </div>
-                        <div class="col-sm-12 col-md-4 col-md-offset-2 ">
                             {{ form_widget(form.update, {'attr': {'class': 'btn btn-default btn-no-deco', 'value': 'Sauvegarder', 'label': 'Sauvegarder'}}) }}
                         </div>
-
-
                     </div>
                     
                     {{ form_end(form) }}
-
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="mbr-section article mbr-section__container" id="content1-5s" style="background-color: rgb(105, 176, 171); padding-top: 20px; padding-bottom: 20px;">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 lead">
-                    <p>En complétant votre profil, vous permettez à NAO de mieux connaître ses utilisateurs et améliorer l'expérience d'utilisation de l'application Flash Nature.</p>
 
                 </div>
             </div>
@@ -275,7 +265,7 @@
                 $modifier.value = "annuler les modifications";
                 $modifier.className = "btn btn-danger";
             }
-        };
+        }
 </script>
     <script>
         function changeAvatar() {
@@ -283,6 +273,6 @@
             var $avatar = document.getElementById("user_photo");
             $imgavatar.src = $avatar.dataset.urlAsset  + $avatar.value;
 
-        };
+        }
         </script>
 {% endblock javascripts %}

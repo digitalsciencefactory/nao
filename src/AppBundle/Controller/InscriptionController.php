@@ -8,6 +8,7 @@ use AppBundle\Form\Type\NatSignType;
 use AppBundle\Form\Type\ObsSignType;
 use AppBundle\Form\Type\ContactType;
 use AppBundle\Contact\Contact;
+use AppBundle\Service\MessagesFlashService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -29,7 +30,7 @@ class InscriptionController extends Controller
     /**
      * @Route("/contact", name="fn_front_contact")
      */
-    public function contactAction(Request $request)
+    public function contactAction(Request $request, MessagesFlashService $messagesFlashService)
     {
         $contact = new Contact();
 
@@ -46,9 +47,9 @@ class InscriptionController extends Controller
 
             $contact = new Contact;
             $form = $this->createForm(ContactType::class, $contact);
-            $request->getSession()->getFlashBag()->add('notice', 'Formulaire envoyé avec succès.');
 
-            return $this->render('front/contact.html.twig', array('form' => $form->createView(),));
+            $messagesFlashService->messageSuccess('Formulaire envoyé avec succès.');
+
         }
 
         return $this->render('front/contact.html.twig', array('form' => $form->createView(),));
@@ -57,7 +58,7 @@ class InscriptionController extends Controller
     /**
      * @Route("/inscription-observateur", name="fn_front_inscription_obs")
      */
-    public function inscriptionObsAction (Request $request,UserPasswordEncoderInterface $encoder)
+    public function inscriptionObsAction (Request $request,UserPasswordEncoderInterface $encoder, MessagesFlashService $messagesFlashService)
     {
         $user = new User();
         $form = $this->createForm(ObsSignType::class, $user);
@@ -70,12 +71,10 @@ class InscriptionController extends Controller
             $this->saveSignUpObs($encoder, $user);
 
             // on affiche la page de connexion avec le flash bag
-            $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
+            $messagesFlashService->messageSuccess('Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
+
             $user = new User();
             $form = $this->createForm(ObsSignType::class, $user);
-            return $this->render('front/inscription-observateur.html.twig', array(
-                'form' => $form->createView(),
-            ));
         }
 
         return $this->render('front/inscription-observateur.html.twig', array(
@@ -87,7 +86,7 @@ class InscriptionController extends Controller
     /**
      * @Route("/inscription-naturaliste", name="fn_front_inscription_nat")
      */
-    public function inscriptionNatAction (Request $request, UserPasswordEncoderInterface $encoder)
+    public function inscriptionNatAction (Request $request, UserPasswordEncoderInterface $encoder, MessagesFlashService $messagesFlashService)
     {
         $user = new User();
         $form = $this->createForm(NatSignType::class, $user);
@@ -100,12 +99,10 @@ class InscriptionController extends Controller
             $this->saveSignUpObs($encoder, $user);
 
             // on affiche la page de inscription avec le flash bag
-            $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
+            $messagesFlashService->messageSuccess('Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
+
             $user = new User();
             $form = $this->createForm(NatSignType::class, $user);
-            return $this->render('front/inscription-naturaliste.html.twig', array(
-                'form' => $form->createView(),
-            ));
         }
 
         return $this->render('front/inscription-naturaliste.html.twig', array(
@@ -117,7 +114,7 @@ class InscriptionController extends Controller
      * @param Request $request
      * @Route("/activate")
      */
-    public function validerInscriptionAction(Request $request){
+    public function validerInscriptionAction(Request $request, MessagesFlashService $messagesFlashService){
         // récupérer les valeurs de l'url
         $mail = $request->query->get('mail');
         $token = $request->query->get('token');
@@ -140,13 +137,13 @@ class InscriptionController extends Controller
                 $manager->flush();
 
                 // on crée le message à afficher
-                $this->addMessageBag($request,"success","inscription");
+                $messagesFlashService->messageSuccess('Votre compte est validé. Vous pouvez vous identifier sur le site.');
 
             } else {
-                $this->addMessageBag($request,"warning","inscription");
+                $messagesFlashService->messageWarning('L\'adresse email est inconnue ou votre compte est déjà validé.');
             }
         } else {
-            $this->addMessageBag($request,"error","inscription");
+            $messagesFlashService->messageError('Le lien de vérification est érroné.');
 
         }
 
@@ -157,7 +154,7 @@ class InscriptionController extends Controller
     /**
      * @Route("/kit-observation", name="fn_front_kit")
      */
-    public function kitObservationAction (Request $request,UserPasswordEncoderInterface $encoder)
+    public function kitObservationAction (Request $request,UserPasswordEncoderInterface $encoder,MessagesFlashService $messagesFlashService)
     {
         $user = new User();
         $form = $this->createForm(ObsSignType::class, $user);
@@ -170,12 +167,9 @@ class InscriptionController extends Controller
             $this->saveSignUpObs($encoder, $user);
 
             // on affiche la page de connexion avec le flash bag
-            $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
+            $messagesFlashService->messageSuccess('Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $user = new User();
             $form = $this->createForm(ObsSignType::class, $user);
-            return $this->render('front/kit_observation.html.twig', array(
-                'form' => $form->createView(),
-            ));
         }
 
         return $this->render('front/kit_observation.html.twig', array(
@@ -187,16 +181,55 @@ class InscriptionController extends Controller
      * @param UserPasswordEncoderInterface $encoder
      * @param $user
      */
-    protected function saveSignUpObs(UserPasswordEncoderInterface $encoder, $user)
+    protected function saveSignUpobs(UserPasswordEncoderInterface $encoder, User $user)
     {
         $user->setRoles(array('ROLE_OBSERVATEUR'));
         $user->setDcree(new \DateTime());
         $user->setStatut('STATUT_INACTIF');
+
         // hash du mot de passe
         $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
+
         // création du token de vérifiction d'inscription
         $length = 65;
         $user->setToken(substr(bin2hex(random_bytes($length)), 0, 65));
+
+        // essayer d'insérer en base
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
+
+        // mail de confirmation d'inscription
+        $mailer = $this->container->get('mailer');
+        $twig = $this->container->get('twig');
+        $mail = new FnatMailer($mailer, $twig);
+        $mail->insVerifObs($user);
+    }
+
+    /**
+     * @param UserPasswordEncoderInterface $encoder
+     * @param $user
+     */
+    protected function saveSignUpNat(UserPasswordEncoderInterface $encoder, User $user)
+    {
+
+        $user->setRoles(array('ROLE_OBSERVATEUR'));
+        $user->setDcree(new \DateTime());
+        $user->setStatut('STATUT_INACTIF');
+
+        // hash du mot de passe
+        $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
+
+        // création du token de vérifiction d'inscription
+        $length = 65;
+        $user->setToken(substr(bin2hex(random_bytes($length)), 0, 65));
+
+        // sauvegarde de la carte pro
+        $name = substr(bin2hex(random_bytes(30)),0,25) . "." . $user->getFile()->getClientOriginalExtension();
+
+        $user->getFile()->move($this->getParameter("carte_pro_dir"), $name);
+        $user->setCarte($name);
+
         // essayer d'insérer en base
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
@@ -206,48 +239,5 @@ class InscriptionController extends Controller
         $twig = $this->container->get('twig');
         $mail = new FnatMailer($mailer, $twig);
         $mail->insVerifObs($user);
-    }
-
-    protected function addMessageBag($request, $etat, $sujet){
-        switch($etat){
-            case "success":
-                // tous les messages de réussites
-                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
-
-                switch($sujet){
-                    case "inscription":
-                        $request->getSession()->getFlashBag()->add('notice', 'Votre compte est validé. Vous pouvez vous identifier sur le site.');
-                        break;
-
-                    case "newsletter":
-                        $request->getSession()->getFlashBag()->add('notice', 'Votre abonnement à notre newsletter est validé. Vous pouvez continuer sur le site.');
-                        break;
-                }
-
-                break;
-            case "warning":
-                // tous les messages de warning
-                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-warning');
-
-                switch($sujet){
-                    case "inscription":
-                    case "newsletter":
-                        $request->getSession()->getFlashBag()->add('notice', 'L\'adresse email est inconnue ou votre compte est déjà validé.');
-                        break;
-                }
-                break;
-
-            case "error":
-                // tous les messages d'erreur
-                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-danger');
-
-                switch($sujet){
-                    case "inscription":
-                    case "newsletter":
-                        $request->getSession()->getFlashBag()->add('notice', 'Le lien de vérification est érroné.');
-                        break;
-                }
-                break;
-        }
     }
 }

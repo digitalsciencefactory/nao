@@ -1,0 +1,54 @@
+<section class="mbr-section extTable1" id="extTable1-e" style="background-color: rgb(163, 143, 132); padding-top: 40px; padding-bottom: 120px;">
+
+    <div class="container table-wrapper" data-search="true" >
+        <p> Il y a {{ total }} Observateur(s) validés.</p>
+        <div class="table-responsive positionne">
+        <table class="table" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Date d'inscription</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Pseudo</th>
+                    <th>Email</th>
+                    <th>Code postal</th>
+                    <th>Date de naissance</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.dcree|date("d/m/Y H:i:s") }}</td>
+                    <td>{{ user.nom }}</td>
+                    <td>{{ user.prenom }}</td>
+                    <td>{{ user.pseudo }}</td>
+                    <td>{{ user.mail }}</td>
+                    <td>{{ user.codePostal }}</td>
+                    <td>{{ user.ddn }}</td>
+
+                    <td>
+                        <form class="left" action="{{ path('fn_dashboard_bannir', {id: user.id}) }}" method="POST">
+                            <button class="btn btn-warning slimbtn" type="submit" value="bannir">Bannir</button>
+                        </form>
+
+                    </td>
+                    <td>
+                        <form class="left" action="{{ path('fn_dashboard_supprimer', {id: user.id}) }}" method="POST">
+                            <button class="btn btn-danger slimbtn" type="submit" value="supprimer">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+
+
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+
+        </div>
+        {% include("dashboard/block/_pagination.html.twig") %}
+    </div>
+</section>

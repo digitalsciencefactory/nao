@@ -1,0 +1,34 @@
+<section class="mbr-section extTable1" id="extTable1-e" style="background-color: rgb(163, 143, 132); padding-top: 40px; padding-bottom: 120px;">
+
+    <div class="container table-wrapper" data-search="true" >
+        <p> Il y a {{ users|length }} particulier(s) en attente.</p>
+        <div class="table-responsive positionne">
+        <table class="table" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Date d'inscription</th>
+                    <th>Pseudo</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.dcree|date("d/m/Y H:i:s") }}</td>
+                    <td>{{ user.pseudo }}</td>
+                    <td>{{ user.mail }}</td>
+                    <td>
+                        <form class="right" action="{{ path('fn_dashboard_obsavalid', { 'id':user.id }) }}" method="POST">
+                            <button class="btn btn-success slimbtn" type="submit" value="valider">Valider</button>
+                        </form>
+                    </td>
+                </tr>
+
+
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+</section>

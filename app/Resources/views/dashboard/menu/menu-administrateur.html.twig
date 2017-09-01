@@ -7,47 +7,47 @@
                 <div class="mbr-table-cell">
 
                     <div class="navbar-brand">
-                        <a href="index.html" class="navbar-logo"><img src="{{  asset('assets/images/logo-rectangle-185x128-13.png') }}" alt="Mobirise"></a>
-                        <a class="navbar-caption text-primary" href="/dashboard">Administration</a>
+
+                        <a href="{{ path('fn_front_index') }}" class="navbar-logo"><img src="{{  asset('assets/images/logo-rectangle-185x128-13.png') }}" alt="Flash Nature"></a>
+                        <a class="navbar-caption text-primary" href="{{ path('fn_dashboard_index') }}">Administration</a>
                     </div>
 
                 </div>
                 <div class="mbr-table-cell">
 
                     <button class="navbar-toggler pull-xs-right hidden-md-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
-                        <div class="hamburger-icon"></div>
+                        <span class="hamburger-icon"></span>
                     </button>
 
                     <ul class="nav-dropdown collapse pull-xs-right nav navbar-nav navbar-toggleable-sm" id="exCollapsingNavbar">
 
                         <li class="nav-item dropdown">
-                            <a class="nav-link link dropdown-toggle" href="/dashboard/" data-toggle="dropdown-submenu" aria-expanded="false">Membres en attente</a>
+                            <a class="nav-link link dropdown-toggle" href="#" data-toggle="dropdown-submenu" aria-expanded="false">Membres en attente</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="/dashboard/naturalistes-a-valider">Naturalistes</a>
-                                <a class="dropdown-item" href="/dashboard/observateurs/avalider">Particuliers</a>
+                                <a class="dropdown-item" href="{{ path('fn_dashboard_natavalid') }}">Naturalistes</a>
+                                <a class="dropdown-item" href="{{ path('fn_dashboard_obsavalid') }}">Particuliers</a>
                             </div>
                         </li>
 
                         <li class="nav-item dropdown">
-                            <a class="nav-link link dropdown-toggle" data-toggle="dropdown-submenu" href="/dashboard/" aria-expanded="false">Inscrits</a>
+                            <a class="nav-link link dropdown-toggle" data-toggle="dropdown-submenu" href="#" aria-expanded="false">Inscrits</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="/dashboard/observateurs/1">Particuliers</a>
-                                <a class="dropdown-item" href="/dashboard/naturalistes/1">Naturalistes</a>
-                                <a class="dropdown-item" href="/dashboard/news/1">Newletters</a>
+                                <a class="dropdown-item" href="{{ path('fn_dashboard_observateurs', {'id': 1}) }}">Particuliers</a>
+                                <a class="dropdown-item" href="{{ path('fn_dashboard_naturalistes', {'id': 1}) }}">Naturalistes</a>
                             </div>
                         </li>
 
                         <li class="nav-item dropdown">
-                            <a class="nav-link link" href="comptes-bannis.html" aria-expanded="false">Comptes bannis</a>
+                            <a class="nav-link link" href="{{ path('fn_dashboard_bannis') }}" aria-expanded="false">Comptes bannis</a>
                         </li>
 
                         <li class="nav-item nav-btn">
-                            <a class="nav-link btn btn-primary-outline btn-primary" href="/">Accéder au site</a>
+                            <a class="nav-link btn btn-primary-outline btn-primary" href="{{ path('fn_front_index') }}">Accéder au site</a>
                         </li>
 
                         <li class="nav-item nav-btn">
                             <span>{{ app.user.pseudo }} </span>
-                            <a class="nav-link link boutonlogout" href="/logout" aria-expanded="false">
+                            <a class="nav-link link boutonlogout" href="{{ path('logout') }}" aria-expanded="false">
                                 <img src=" {{ asset('assets/fnat/icon/bouton_deconnexion.png') }}" id="boutonLogOut" />
                             </a>
                         </li>
@@ -55,7 +55,7 @@
                     </ul>
 
                     <button hidden="" class="navbar-toggler navbar-close" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
-                        <div class="close-icon"></div>
+                        <span class="close-icon"></span>
                     </button>
 
                 </div>

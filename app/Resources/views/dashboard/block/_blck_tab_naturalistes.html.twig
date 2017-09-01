@@ -1,27 +1,6 @@
 <section class="mbr-section extTable1" id="extTable1-e" style="background-color: rgb(163, 143, 132); padding-top: 40px; padding-bottom: 120px;">
 
-    {% for message in app.flashes('notice') %}
-        <div class="bg-success">
-            {{ message }}
-        </div>
-        <br />
-    {% endfor %}
-
-    {% for message in app.flashes('noticeWarning') %}
-        <div class="btn-warning">
-            {{ message }}
-        </div>
-        <br />
-    {% endfor %}
-
-    {% for message in app.flashes('noticeError') %}
-        <div class="btn-danger">
-            {{ message }}
-        </div>
-        <br />
-    {% endfor %}
-
-    <div class="container table-wrapper" data-search="true" search-text="Rechercher :" info1-text="" info2-text="" info3-text="" info4-text="">
+    <div class="container table-wrapper" data-search="true" >
         <p> Il y a {{ total }} naturaliste(s) validés.</p>
         <div class="table-responsive positionne">
         <table class="table" cellspacing="0" width="100%">
@@ -35,7 +14,8 @@
                     <th>Code postal</th>
                     <th>Date de naissance</th>
                     <th>Carte naturaliste</th>
-                    <th>Bannir</th>
+                    <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -74,19 +54,21 @@
                     </td>
 
                     <td>
-                        <form class="left" action="/dashboard/bannir/{{ user.id }}" method="POST">
-                            <button class="btn btn-danger slimbtn" type="submit" value="refuser">Bannir</button>
+                        <form class="left" action="{{ path('fn_dashboard_bannir', {id: user.id}) }}" method="POST">
+                            <button class="btn btn-warning slimbtn" type="submit" value="refuser">Bannir</button>
                         </form>
+                    </td>
+                    <td>
+                        <form class="left" action="{{ path('fn_dashboard_supprimer', {id: user.id}) }}" method="POST">
 
+                                            <button class="btn btn-danger slimbtn" type="submit" value="refuser">Supprimer</button>
+
+                        </form>
                     </td>
                 </tr>
-
-
                 {% endfor %}
             </tbody>
         </table>
-
-
 
         </div>
         {% include("dashboard/block/_pagination.html.twig") %}

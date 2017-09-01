@@ -4,6 +4,7 @@
 namespace AppBundle\Mailer;
 
 use AppBundle\Entity\Newsletter;
+use AppBundle\Entity\Observation;
 use AppBundle\Entity\User;
 use Twig\Environment;
 use AppBundle\Contact\Contact;
@@ -96,6 +97,37 @@ class FnatMailer
   }
 
     /**
+     * @param User $user
+     */
+    public function insValidNat(User $user){
+        $body = $this->twig->render('mail\ins.validNat.html.twig', array('user' => $user));
+
+        $message = new \Swift_Message("Votre statut Naturaliste sur Flash Nature.");
+        $message->setBody($body,'text/html');
+
+        $message->addTo($user->getMail());
+        $message->addFrom("contact-fnat@digitalsciencefactory.com");
+
+        $this->mailer->send($message);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function insRefuseNat(User $user){
+        $body = $this->twig->render('mail\ins.refuseNat.html.twig', array('user' => $user));
+
+        $message = new \Swift_Message("Votre statut Naturaliste sur Flash Nature.");
+        $message->setBody($body,'text/html');
+
+        $message->addTo($user->getMail());
+        $message->addFrom("contact-fnat@digitalsciencefactory.com");
+
+        $this->mailer->send($message);
+    }
+
+
+    /**
      * Envoie un mail au nouveau naturaliste pour vérifier son mail
      *
      * @param User $user
@@ -112,5 +144,83 @@ class FnatMailer
         $this->mailer->send($message);
     }
 
+
+    /**
+     * Mail pour prévenir un utilisateur qu'il est bannis.
+     * @param User $user
+     */
+    public function banUser(User $user){
+        $body = $this->twig->render('mail\ban.html.twig', array('user' => $user));
+
+        $message = new \Swift_Message("Votre compte sur Flash Nature a été suspendu.");
+        $message->setBody($body,'text/html');
+
+        $message->addTo($user->getMail());
+        $message->addFrom("contact-fnat@digitalsciencefactory.com");
+
+        $this->mailer->send($message);
+    }
+
+    /**
+     * Mail pour prévenir un utilisateur que son compte est supprimé
+     * @param User $user
+     */
+    public function delUser(User $user){
+        $body = $this->twig->render('mail\del.html.twig', array('user' => $user));
+
+        $message = new \Swift_Message("Votre compte sur Flash Nature a été supprimé.");
+        $message->setBody($body,'text/html');
+
+        $message->addTo($user->getMail());
+        $message->addFrom("contact-fnat@digitalsciencefactory.com");
+
+        $this->mailer->send($message);
+    }
+
+    /**
+     * Mail pour prévenir un utilisateur qu'il est bannis.
+     * @param User $user
+     */
+    public function debanUser(User $user){
+        $body = $this->twig->render('mail\deban.html.twig', array('user' => $user));
+
+        $message = new \Swift_Message("Votre compte sur Flash Nature a été rétabli.");
+        $message->setBody($body,'text/html');
+
+        $message->addTo($user->getMail());
+        $message->addFrom("contact-fnat@digitalsciencefactory.com");
+
+        $this->mailer->send($message);
+    }
+
+    /**
+     * Mail pour prévenir qu'une observation a été validée
+     * @param Observation $observation
+     */
+    public function validObs(Observation $observation){
+        $body = $this->twig->render('mail\obs.validation.html.twig', array('observation' => $observation));
+
+        $message = new \Swift_Message("Votre observation a été validée.");
+        $message->setBody($body,'text/html');
+        $message->addTo($observation->getObservateur()->getMail());
+        $message->addFrom("contact-fnat@digitalsciencefactory.com");
+
+        $this->mailer->send($message);
+    }
+
+    /**
+     * Mail pour prévenir qu'une observation a été supprimée
+     * @param User $user
+     */
+    public function deleteObs(Observation $observation){
+        $body = $this->twig->render('mail\obs.suppression.html.twig', array('observation' => $observation));
+
+        $message = new \Swift_Message("Votre observation a été supprimée.");
+        $message->setBody($body,'text/html');
+        $message->addTo($observation->getObservateur()->getMail());
+        $message->addFrom("contact-fnat@digitalsciencefactory.com");
+
+        $this->mailer->send($message);
+    }
 }
 

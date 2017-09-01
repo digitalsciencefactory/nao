@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: darkchyper
- * Date: 07/08/2017
- * Time: 21:59
- */
+
 
 namespace AppBundle\Form\Type;
 
@@ -26,7 +21,6 @@ class ModificationObsType extends AbstractType
             ->add('especeTxt',      TextType::class, array('label' => ' '))
             ->add('comm_nat', TextareaType::class, array('label' => '', 'required' => false))
             ->add('valider',      SubmitType::class)
-            ->add('supprimer',      SubmitType::class)
         ;
 
     }

@@ -1,0 +1,56 @@
+{# app/Resources/views/front/accueil.html.twig #}
+
+{% extends "baseDashboard.html.twig" %}
+
+
+{% block title %}
+    Observateurs en attente de validation - {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .img-responsive{
+            max-width: 400px !important;
+            max-height: 400px !important;
+        }
+        .slimbtn {
+            padding: .375rem 1.6rem !important;
+            font-size: 0.75rem !important;
+        }
+        .left{
+            float: left !important;
+        }
+        .right{
+            float: right !important;
+        }
+    </style>
+{% endblock stylesheets %}
+
+{% block body %}
+    {{  parent() }}
+
+    {# bloc explications de la page #}
+    <section class="mbr-section" id="content5-n" style="background-color: rgb(255, 255, 255); padding-top: 40px; padding-bottom: 0;">
+
+        <div class="container">
+            <h3 class="mbr-section-title display-2">Inscrits application Flash Nature&nbsp;</h3>
+            <div class="lead">
+                <p>
+                    <strong>
+                        Les comptes &nbsp;ci-dessous sont l'ensemble des observateurs de l'application Flash Nature. Via ce tableau vous pouvez bannir un utilisateur si ce dernier ne respecte pas les conditions d'utilisation de l'application.&nbsp;</strong></p><p><strong>Une fois le compte banni, l'utilisateur n'a plus accès à son compte et ne peut recréer un compte avec l'adresse mail renseignée dans le compte banni.&nbsp;</strong></p><p><strong>En cas de problématique technique : assistance@digitalsciencefactory.com</strong></p></div>
+        </div>
+
+    </section>
+    {# fin bloc explications de la page #}
+
+    {# bloc affichage des natularistes en attente #}
+    {% include("dashboard/block/_blck_tab_observateurs.html.twig") %}
+    {# fin bloc affichage des naturalistes#}
+{% endblock body %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+
+{% endblock javascripts %}
