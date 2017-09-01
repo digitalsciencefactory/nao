@@ -1,29 +1,5 @@
 <section class="mbr-section extTable1" id="extTable1-e" style="background-color: rgb(163, 143, 132); padding-top: 40px; padding-bottom: 120px;">
 
-<<<<<<< HEAD
-    {% for message in app.flashes('notice') %}
-        <div class="bg-success">
-            {{ message }}
-        </div>
-        <br />
-    {% endfor %}
-
-    {% for message in app.flashes('noticeWarning') %}
-        <div class="btn-warning">
-            {{ message }}
-        </div>
-        <br />
-    {% endfor %}
-
-    {% for message in app.flashes('noticeError') %}
-        <div class="btn-danger">
-            {{ message }}
-        </div>
-        <br />
-    {% endfor %}
-
-=======
->>>>>>> silh
     <div class="container table-wrapper" data-search="true" search-text="Rechercher :" info1-text="" info2-text="" info3-text="" info4-text="">
         <p> Il y a {{ total }} naturaliste(s) validés.</p>
         <div class="table-responsive positionne">
@@ -38,12 +14,8 @@
                     <th>Code postal</th>
                     <th>Date de naissance</th>
                     <th>Carte naturaliste</th>
-<<<<<<< HEAD
-                    <th>Bannir</th>
-=======
                     <th></th>
                     <th></th>
->>>>>>> silh
                 </tr>
             </thead>
             <tbody>
@@ -82,32 +54,19 @@
                     </td>
 
                     <td>
-<<<<<<< HEAD
-                        <form class="left" action="/dashboard/bannir/{{ user.id }}" method="POST">
-                            <button class="btn btn-danger slimbtn" type="submit" value="refuser">Bannir</button>
-                        </form>
-
-=======
                         <form class="left" action="{{ path('fn_dashboard_bannir', {id: user.id}) }}" method="POST">
                             <button class="btn btn-warning slimbtn" type="submit" value="refuser">Bannir</button>
                         </form>
                     </td>
                     <td>
                         <form class="left" action="{{ path('fn_dashboard_supprimer', {id: user.id}) }}" method="POST">
-
-                                            <button class="btn btn-danger slimbtn" type="submit" value="refuser">Supprimer</button>
-
+                            <button class="btn btn-danger slimbtn" type="submit" value="refuser">Supprimer</button>
                         </form>
->>>>>>> silh
                     </td>
                 </tr>
-
-
                 {% endfor %}
             </tbody>
         </table>
-
-
 
         </div>
         {% include("dashboard/block/_pagination.html.twig") %}

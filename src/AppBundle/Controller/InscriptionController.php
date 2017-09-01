@@ -46,6 +46,8 @@ class InscriptionController extends Controller
 
             $contact = new Contact;
             $form = $this->createForm(ContactType::class, $contact);
+
+            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
             $request->getSession()->getFlashBag()->add('notice', 'Formulaire envoyé avec succès.');
 
             return $this->render('front/contact.html.twig', array('form' => $form->createView(),));
@@ -70,7 +72,9 @@ class InscriptionController extends Controller
             $this->saveSignUpObs($encoder, $user);
 
             // on affiche la page de connexion avec le flash bag
+            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
+
             $user = new User();
             $form = $this->createForm(ObsSignType::class, $user);
             return $this->render('front/inscription-observateur.html.twig', array(
@@ -97,14 +101,12 @@ class InscriptionController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 
             // on gère l'inscription de l'observateur
-<<<<<<< HEAD
             $this->saveSignUpObs($encoder, $user);
-=======
-            $this->saveSignUpNat($encoder, $user);
->>>>>>> silh
 
             // on affiche la page de inscription avec le flash bag
+            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
+
             $user = new User();
             $form = $this->createForm(NatSignType::class, $user);
             return $this->render('front/inscription-naturaliste.html.twig', array(
@@ -174,6 +176,7 @@ class InscriptionController extends Controller
             $this->saveSignUpObs($encoder, $user);
 
             // on affiche la page de connexion avec le flash bag
+            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
             $request->getSession()->getFlashBag()->add('notice', 'Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
             $user = new User();
             $form = $this->createForm(ObsSignType::class, $user);
@@ -187,27 +190,28 @@ class InscriptionController extends Controller
         ));
     }
 
-<<<<<<< HEAD
-=======
     /**
      * @param UserPasswordEncoderInterface $encoder
      * @param $user
      */
     protected function saveSignUpobs(UserPasswordEncoderInterface $encoder, $user)
     {
-
         $user->setRoles(array('ROLE_OBSERVATEUR'));
         $user->setDcree(new \DateTime());
         $user->setStatut('STATUT_INACTIF');
+
         // hash du mot de passe
         $user->setMdp($encoder->encodePassword($user, $user->getPlainPassword()));
+
         // création du token de vérifiction d'inscription
         $length = 65;
         $user->setToken(substr(bin2hex(random_bytes($length)), 0, 65));
+
         // essayer d'insérer en base
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
         $em->flush();
+
         // mail de confirmation d'inscription
         $mailer = $this->container->get('mailer');
         $twig = $this->container->get('twig');
@@ -215,7 +219,6 @@ class InscriptionController extends Controller
         $mail->insVerifObs($user);
     }
 
->>>>>>> silh
     /**
      * @param UserPasswordEncoderInterface $encoder
      * @param $user

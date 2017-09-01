@@ -10,22 +10,38 @@
                         <h4 class="text-white">Informations sur l'observation</h4>
                         <strong>Date: </strong> {{ observation.dobs|date('d/m/Y') }}
                         <br>
-                        <strong>Espèce observée: </strong> {{ observation.espece.lbNom }}
-                        <br>
+                        <strong>Espèce observée: </strong>
+
+                        {% if is_granted('ROLE_NATURALISTE') %}
+                            {% if observation.statut == 'STATUT_EN_ATTENTE'%}
+                                {{ include('participer/forms/_modif_observation_form.html.twig') }}
+                            {% endif %}
+                        {% else %}
+                            {{ observation.espece.lbNom }}
+                            <br>
+                        {% endif %}
+
                         <strong>Latitude / Longitude : </strong> {{ observation.latitude }} / {{ observation.longitude }}
                         <br>
                         <strong>Message de l'observateur: </strong>
                         {{ observation.commObs }}
-
                         <br>
+                        <strong>Photo :</strong>
+                        {% if observation.photo != null %}
+                            {{ include('participer/blocks/_photo_observation.html.twig') }}
+                        {% else %}
+                            Photo indisponible
+                        {% endif %}
                     </div>
 
                     <br>
 
-                    <div class="lead">
+                    <div class="lead" style="padding-bottom: 10px">
                         <h5 class="text-white">Informations complémentaires</h5>
-                        <strong> Statut : </strong> <br>
+
                         {% if observation.statut == 'STATUT_VALIDE' %}
+                            <strong> Statut : </strong> {{ observation.statut }}
+                            <br>
                             <strong>Observation validée par: </strong> {{ observation.observateur.pseudo }}
                             <br>
                             <strong>Observation validée le: </strong>  {{ observation.dvalid|date('d/m/Y') }}
@@ -34,7 +50,7 @@
                             {{ observation.commNat|default("") }}
                             <br>
                         {% else %}
-                            Observation en attente de validation
+                            <strong> Statut : </strong> Observation en attente de validation
                             <br>
                         {% endif %}
 
@@ -61,15 +77,7 @@
                         <br>
                         <strong>Auteur:</strong>
                             {{ observation.espece.lbauteur|default("") }}
-
                     </div>
-
-                    <!--  Formulaire de modification -->
-                    {% if is_granted('ROLE_NATURALISTE') %}
-                        {% if observation.statut == 'STATUT_EN_ATTENTE'%}
-                            {{ include('participer/forms/_modif_observation_form.html.twig') }}
-                        {% endif %}
-                    {% endif %}
 
 
                 </div>

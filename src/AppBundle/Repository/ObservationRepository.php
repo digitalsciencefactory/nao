@@ -19,11 +19,7 @@ class ObservationRepository extends \Doctrine\ORM\EntityRepository
     public function getEspeceWithJoin($espece){
         $qb = $this
             ->createQueryBuilder('a')
-<<<<<<< HEAD
-            ->select('a')
-=======
             ->addselect('a')
->>>>>>> silh
             ->leftJoin('a.espece', 'espece')
             ->addSelect('espece')
             ->leftJoin('espece.rang', 'rang')
@@ -101,8 +97,6 @@ class ObservationRepository extends \Doctrine\ORM\EntityRepository
             ->getResult()
             ;
     }
-<<<<<<< HEAD
-=======
 
     /**
      * Retourne les taxons en et leur nombre dans les observations
@@ -142,6 +136,5 @@ class ObservationRepository extends \Doctrine\ORM\EntityRepository
         return $query->getArrayResult();
 
     }
->>>>>>> silh
 
 }

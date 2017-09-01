@@ -143,8 +143,7 @@ class FnatMailer
         $this->mailer->send($message);
     }
 
-<<<<<<< HEAD
-=======
+
     /**
      * Mail pour prévenir un utilisateur qu'il est bannis.
      * @param User $user
@@ -193,6 +192,5 @@ class FnatMailer
         $this->mailer->send($message);
     }
 
->>>>>>> silh
 }
 

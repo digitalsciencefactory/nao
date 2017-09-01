@@ -6,6 +6,8 @@
                 <div class="mbr-section row">
                     <div class="mbr-table-md-up">
 
+                        {% include("messagesValidation.html.twig") %}
+
                         <div class="mbr-table-cell mbr-right-padding-md-up mbr-valign-top col-md-6 image-size">
                             <div class="mbr-figure">
                                 <img src="{{ asset('assets/images/kit-observation-illustration-479x479.png') }}">
@@ -23,7 +25,7 @@
                                 </p>
                             </div>
                             <div class="left-button">
-                                <a type="submit" class="btn btn-white" href="{{ asset('assets/fnat/pdf/Kit-observation.pdf') }}" target="_blank()">
+                                <a type="submit" class="btn btn-white" href="{{ asset('fnat/pdf/Kit-observation.pdf') }}" target="_blank()">
                                     Télécharger
                                 </a>
                             </div>

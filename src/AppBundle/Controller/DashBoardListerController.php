@@ -5,7 +5,6 @@ use AppBundle\Service\DashboardService;
 use AppBundle\Service\ExtractionService;
 use AppBundle\Entity\Observation;
 
-use AppBundle\Service\PageService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Form\FormError;
@@ -27,57 +26,18 @@ class DashBoardListerController extends Controller
      * @Route("dashboard/naturalistes/{page}", name="fn_dashboard_naturalistes", requirements={"page": "\d+"})
      * Liste les naturalistes par page
      */
-    public function naturalistesAction($page = 1, PageService $pageService ){
+    public function naturalistesAction($page = 1, DashboardService $dashboardService){
 
-        $userManager = $this->getDoctrine()->getManager();
-        $userRepository = $userManager->getRepository('AppBundle:User');
-
-        // on compte le nombre de naturaliste
-        $nombre = $userRepository->howMany(true);
-
-        $nombrePageMax = $pageService->getPageMax($nombre);
-
-        $page = $pageService->verifPage($page,$nombrePageMax);
-
-        // on récupère le bon nombre de naturaliste
-        $naturalistes = $userRepository->getUsersByOffset(10, (10 * ($page - 1)), true);
-
-        return $this->render('dashboard/naturalistes.html.twig',
-            array(
-                'total' => $nombre,
-                'page' => $page,
-                'pages' => $nombrePageMax,
-                'users' => $naturalistes,
-                'pagination' => "fn_dashboard_naturalistes",
-            ));
+        return $this->listerUser($page, $dashboardService, true);
     }
 
     /**
      * @Route("dashboard/observateurs/{page}", name="fn_dashboard_observateurs", requirements={"page": "\d+"})
      * Liste les observateurs par page
      */
-    public function observateursAction($page = 1,  PageService $pageService ){
-        $userManager = $this->getDoctrine()->getManager();
-        $userRepository = $userManager->getRepository('AppBundle:User');
+    public function observateursAction($page = 1, DashboardService $dashboardService){
 
-        // on compte le nombre de naturaliste
-        $nombre = $userRepository->howMany(false);
-
-        $nombrePageMax = $pageService->getPageMax($nombre);
-
-        $page = $pageService->verifPage($page,$nombrePageMax);
-
-        // on récupère le bon nombre de naturaliste
-        $naturalistes = $userRepository->getUsersByOffset(10, (10 * ($page - 1)), false);
-
-        return $this->render('dashboard/observateurs.html.twig',
-            array(
-                'total' => $nombre,
-                'page' => $page,
-                'pages' => $nombrePageMax,
-                'users' => $naturalistes,
-                'pagination' => "fn_dashboard_observateurs",
-            ));
+        return $this->listerUser($page, $dashboardService, false);
     }
 
     /**
@@ -123,7 +83,54 @@ class DashBoardListerController extends Controller
 
     }
 
+    /**
+     * Factorisation des messages à  enregistrer en session
+     * lors de la validation et le refus d'un naturaliste
+     */
+    protected function getMessageNatValidation($level, $action,Request $request){
 
+        if($level === "error") {
+            $request->getSession()->getFlashBag()->add('notice', 'Une erreur est survenue.');
+            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-danger');
+            return;
+        }
+
+        switch($level) {
+
+            case "success":
+                // tous les messages de réussite
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
+
+                switch ($action) {
+
+                    case "refus":
+                        $request->getSession()->getFlashBag()->add('notice', 'L\'utilisateur a été refusé et reste observateur.');
+                        break;
+
+                    case "validation":
+                        $request->getSession()->getFlashBag()->add('notice', 'L\'utilisateur a été validé');
+                        break;
+                }
+
+                break;
+
+            case "warning":
+                // tous les messages de warning
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-warning');
+
+                switch ($action) {
+
+                    case "refus":
+                        $request->getSession()->getFlashBag()->add('message', 'L\'utilisateur est déjà  refusé ou n\'a pas demandé à être naturaliste');
+                        break;
+
+                    case "validation":
+                        $request->getSession()->getFlashBag()->add('noticeWarning', 'L\'utilisateur est déjà  validé ou n\'a pas demandé à  être naturaliste');
+                        break;
+                }
+
+        }
+    }
     /**
      * @return mixed
      */
@@ -137,6 +144,44 @@ class DashBoardListerController extends Controller
         return $users;
     }
 
+    /**
+     * @param $page
+     * @param DashboardService $dashboardService
+     * @return Response
+     */
+    protected function listerUser($page, DashboardService $dashboardService, $naturaliste)
+    {
+        $userManager = $this->getDoctrine()->getManager();
+        $userRepository = $userManager->getRepository('AppBundle:User');
+
+        // on compte le nombre de naturaliste
+        $nombre = $userRepository->howMany($naturaliste);
+
+        // on compte la pagination nécessaire
+        $nombrePageMax = $dashboardService->getPageMax($page, $nombre);
+
+        if ($page > $nombrePageMax) {
+            $page = $nombrePageMax;
+        }
+
+        // on récupère le bon nombre de naturaliste
+        $calcul = (10 * ($page - 1));
+        $naturalistes = $userRepository->getUsersByOffset(10, $calcul, $naturaliste);
+
+        if($naturaliste){
+            $pageName = 'dashboard/naturalistes.html.twig';
+        } else {
+            $pageName = 'dashboard/observateurs.html.twig';
+        }
+
+        return $this->render($pageName,
+            array(
+                'total' => $nombre,
+                'page' => $page,
+                'pages' => $nombrePageMax,
+                'users' => $naturalistes,
+            ));
+    }
 
 
 }

@@ -46,9 +46,9 @@ class ExtractionService
      * @param array $entete
      * @return string
      */
+
     public function generateCsv(Extraction $extraction, array $observations, $path, array $entete)
     {
-
         // création d'un fichier csv
         $now = new \DateTime();
         $file =
@@ -75,3 +75,4 @@ class ExtractionService
 
     }
 }
+

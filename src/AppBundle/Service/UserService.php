@@ -157,7 +157,8 @@ class UserService
      * Envoi un mail pour prévenir l'utilisateur.
      * @param User $user
      */
-    public function debanUser(User $user){
+    public function debanUser(User $user)
+    {
 
         if ($user->getStatut() === "STATUT_BANNI") {
             $user->setStatut("STATUT_ACTIF");
@@ -173,40 +174,6 @@ class UserService
             $this->mfs->messageWarning('L\'utilisateur est déjà débloqué, actif  ou inconnu.');
 
         }
-
-    }
-
-    /**
-     * Attribue les observations d'un utilisateur en cours de suppression
-     * à un utilisateur standard
-     * Envoi un mail pour prévenir l'utilisateur que son compte est supprimé.
-     *
-     * @param User $user
-     */
-    public function remove(User $user){
-        // on modifie les observations pour les créateurs
-        $utilisateurRepo = $this->em->getRepository("AppBundle:User");
-        $naturalistedefault = $utilisateurRepo->findOneBy(Array(
-            "mail" => "contact-fnat@digitalsciencefactory.com"
-        ));
-
-        foreach($user->getObservations() as $observation){
-            $observation->setObservateur($naturalistedefault);
-        }
-
-        // on modifie les observation pour les valideurs
-        foreach($user->getObservationsValidees() as $observation){
-            $observation->setNaturaliste($naturalistedefault);
-        }
-
-        $this->em->remove($user);
-        $this->em->flush();
-
-        $this->mfs->messageSuccess('L\'utilisateur ainsi que l\'ensemble des ses observation ont été supprimés. Un mail vient d\'être envoyé pour le prévenir.');
-
-        $this->mailer->delUser($user);
-
     }
 }
-
 

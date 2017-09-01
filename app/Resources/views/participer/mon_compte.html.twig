@@ -60,19 +60,6 @@
             <div class="row">
                 <div class="col-xs-12 lead">
 
-                    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
-                    {% for message in app.flashes('notice') %}
-                        <div class="btn-success">
-                            {{ message }}
-                        </div>
-                        <br />
-                    {% endfor %}
-                    {% if form_errors(form) != null %}
-                        <div class="alert alert-danger">
-                            {{ form_errors(form) }}
-                        </div>
-                    {% endif %}
-
                     <div class="form-group">
                         <div class="col-sm-12 col-md-3">
                             <label for="p-mp-dcree" class="control-label lbl-modify">Date d'inscription :</label>
@@ -276,7 +263,7 @@
                 $modifier.value = "annuler les modifications";
                 $modifier.className = "btn btn-danger";
             }
-        };
+        }
 </script>
     <script>
         function changeAvatar() {
@@ -284,6 +271,6 @@
             var $avatar = document.getElementById("user_photo");
             $imgavatar.src = $avatar.dataset.urlAsset  + $avatar.value;
 
-        };
+        }
         </script>
 {% endblock javascripts %}

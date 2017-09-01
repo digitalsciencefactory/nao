@@ -28,18 +28,8 @@
                             </h4>
 
                             {{ form_start(form) }}
-                            {% for message in app.flashes('notice') %}
-                                <div class="btn-success">
-                                    {{ message }}
-                                </div>
-                                <br />
-                            {% endfor %}
 
-                            {% if form_errors(form) %}
-                                <div class="bg-danger">
-                                    {{ form_errors(form) }}
-                                </div>
-                            {% endif %}
+                            {% include("messagesValidation.html.twig") %}
 
                             <!-- MAIL -->
                             <div class="col-xs-12">

@@ -6,12 +6,14 @@ use AppBundle\Entity\Observation;
 use AppBundle\Entity\Taxref;
 use AppBundle\Entity\User;
 use AppBundle\Form\Type\CarteType;
+use AppBundle\Form\Type\ModalObsType;
 use AppBundle\Form\Type\ModificationObsType;
 use AppBundle\Form\Type\NatSignType;
 use AppBundle\Form\Type\ObservationType;
 use AppBundle\Service\ExtractionService;
 use AppBundle\Extraction\Extraction;
 use AppBundle\Form\Type\ExtractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -21,10 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\Type\UserType;
-<<<<<<< HEAD
-=======
 use Symfony\Component\HttpFoundation\Response;
->>>>>>> silh
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -109,13 +108,17 @@ class ParticiperController extends Controller
     {
         $obsForm = new Observation();
         $form = $this->createForm(ModificationObsType::class, $obsForm)
+        ->handleRequest($request);
+
+        $obs = new Observation();
+        $formModal = $this->createForm(ModalObsType::class, $obs)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            //Préparation du mail de confirmation
+            //Préparation du mail d'information
             $message = (new \Swift_Message('Observation examinée'))
-                ->setFrom($this->getUser()->getMail())
+                ->setFrom('contact-fnat@digitalsciencefactory.com')
                 ->setTo($observation->getObservateur()->getMail());
 
             //Traitement du formulaire
@@ -140,50 +143,50 @@ class ParticiperController extends Controller
                         'mail/obs.validation.html.twig',
                         array('observation' => $observation)),
                     'text/html');
+                $mailer->send($message);
 
                 //Message de confirmation
-                $mailer->send($message);
-                $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été sauvegardée.');
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
+                $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été validée.');
 
                 return $this->redirectToRoute('fn_fiche_observation', ['id' => $observation->getId()]);
             }
-            else
-            {
-                //Sélection du message du mail
-                $message->setBody( $this->renderView(
-                    'mail/obs.suppression.html.twig',
-                    array('observation' => $observation)),
-                    'text/html');
-<<<<<<< HEAD
 
-                //Suppression de l'observation
-                $obsManager = $this->getDoctrine()->getManager();
-                $obsManager->remove($observation);
-                $obsManager->flush();
-
-                //Message de confirmation
-                $mailer->send($message);
-                $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été supprimée.');
-
-=======
-
-                //Suppression de l'observation
-                $obsManager = $this->getDoctrine()->getManager();
-                $obsManager->remove($observation);
-                $obsManager->flush();
-
-                //Message de confirmation
-                $mailer->send($message);
-                $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été supprimée.');
-
->>>>>>> silh
-                return $this->redirectToRoute('fn_participer_espace_nat');
-
-            }
         }
+
+        if ($formModal->isSubmitted() && $formModal->isValid()){
+
+            $observation->setCommNat($obs->getCommNat());
+
+            //Préparation du mail d'information
+            $message = (new \Swift_Message('Observation examinée'))
+                ->setFrom('contact-fnat@digitalsciencefactory.com')
+                ->setTo($observation->getObservateur()->getMail())
+                ->setBody( $this->renderView(
+                    'mail/obs.suppression.html.twig',
+                    array('observation' => $observation,)
+                ),
+                    'text/html');
+
+            //Suppression de l'observation
+            $obsManager = $this->getDoctrine()->getManager();
+            $obsManager->remove($observation);
+            $obsManager->flush();
+
+            //Envoi du mail à l'observateur
+            $mailer->send($message);
+
+            //Message de confirmation
+            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
+            $request->getSession()->getFlashBag()->add('notice', 'L\'observation est bien été supprimée.');
+
+            return $this->redirectToRoute('fn_participer_obs_attente');
+        }
+
         return $this->render('participer/fiche_observation.html.twig', array(
             'observation' => $observation,
             'form' => $form->createView(),
+            'formModal' => $formModal->createView()
         ));
     }
 
@@ -224,7 +227,9 @@ class ParticiperController extends Controller
 
             $form = $this->createForm(UserType::class, $userDB);
 
+            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
             $request->getSession()->getFlashBag()->add('notice', 'Votre profil a été mis à jour..');
+
             return $this->render('participer/mon_compte.html.twig',
                 array(
                     'pseudonyme' => $user->getPseudo(),
@@ -254,44 +259,15 @@ class ParticiperController extends Controller
         if($request->isXmlHttpRequest())
         {
             $search = $request->get('search');
-<<<<<<< HEAD
-            $repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
-            $results = $repository->getByAutoComplete($search);
-        return new JsonResponse($results);
-        }
-        $results = Array();
-
-        return new JsonResponse($results);
-    }
-
-    /**
-     * @param Request $request
-     * @param $observation
-     */
-    protected function saveObservationInDataBase(Request $request, $observation)
-    {
-        $user = $this->getUser();
-        $espece = $observation->getEspece();
-
-        $taxrefManager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Taxref');
-        $especeToSave = $taxrefManager->getOneWithJoin($espece);
-        if (null !== $observation->getFile()) {
-            $name = substr(bin2hex(random_bytes(200)),0,100) . "." . $observation->getFile()->getClientOriginalExtension();
-
-            $name = Date("yyyy-mm-dd") . "_" . $name;
-            // On déplace le fichier envoyé dans le répertoire de notre choix
-            $observation->getFile()->move($this->getParameter('photos_dir'), $name);
-
-=======
             $repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Observation');
             $results = $repository->getByAutoComplete($search);
             return new JsonResponse($results);
-        
         }
         $results = Array();
 
         return new JsonResponse($results);
     }
+
 
     /**
      * @param Request $request
@@ -308,14 +284,13 @@ class ParticiperController extends Controller
             $name = substr(bin2hex(random_bytes(200)),0,100) . "." . $observation->getFile()->getClientOriginalExtension();
 
             $name = Date("yyyy-mm-dd") . "_" . $name;
+
             // On déplace le fichier envoyé dans le répertoire de notre choix
             $observation->getFile()->move($this->getParameter('photos_dir'), $name);
 
->>>>>>> silh
             // On sauvegarde le nom de fichier dans notre attribut $url
             $observation->setPhoto($name);
         }
-
 
         // on récupère l'espèce avec son id
         $observation->setEspece($especeToSave[0]);
@@ -337,8 +312,10 @@ class ParticiperController extends Controller
 
         // on affiche la page envoi_observation avec le flash bag
         if ($user->getRoles()[0] == ("ROLE_NATURALISTE")) {
+            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
             $request->getSession()->getFlashBag()->add('notice', 'Votre observation est bien enregistrée et validée.');
         } else {
+            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
             $request->getSession()->getFlashBag()->add('notice', 'Votre observation a bien été transmise à un naturaliste.');
         }
     }
@@ -359,6 +336,7 @@ class ParticiperController extends Controller
                 $observations = $extractionService->getObservationsDatees($extraction);
                 $file = $extractionService->generateCsv($extraction,$observations, $this->getParameter('downloads_dir'),$this->getParameter('entete_csv_extract'));
 
+                $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
                 $request->getSession()->getFlashBag()->add('notice', 'La requête a retournée ' . count($observations) .' observation(s). Le téléchargement va commencer automatiquement.');
 
                 // création de la réponse html
@@ -368,11 +346,8 @@ class ParticiperController extends Controller
                 ));
 
                 // création du refresh dans le header pour déclencher le download du fichier
-<<<<<<< HEAD
+
                 $response->headers->set('Refresh', '2; url='.$this->generateUrl('fn_dashboard_extract', array('slug' => $file)));
-=======
-                $response->headers->set('Refresh', '2; url='.$this->generateUrl('fn_participer_extract', array('slug' => $file)));
->>>>>>> silh
 
                 // envoi de la double réponse
                 return $response;
@@ -385,8 +360,6 @@ class ParticiperController extends Controller
             'fichierExtract' => $file,
             'form' => $form->createView(),
         ));
-<<<<<<< HEAD
-=======
     }
 
     /**
@@ -399,7 +372,6 @@ class ParticiperController extends Controller
     {
         $path = $this->getParameter("downloads_dir");
         return $this->file($path.$slug);
->>>>>>> silh
     }
 
 }
