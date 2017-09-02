@@ -16,7 +16,7 @@
 
     {# Formulaire de contact #}
     <form action="" method="post" data-form-title="Laisser nous votre message">
-
+        {% include("messagesValidation.html.twig") %}
         <div class="col-xs-6">
             {{ form_errors(form.prenom) }}
             {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'placeholder': 'Votre prénom'}}) }}
