@@ -1,11 +1,6 @@
 <div class="well">
     {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
-    {% for message in app.flashes('notice') %}
-        <div class="btn-success">
-            {{ message }}
-        </div>
-        <br />
-    {% endfor %}
+
     {% if form_errors(form) != null %}
     <div class="alert alert-danger">
         {{ form_errors(form) }}
@@ -16,7 +11,7 @@
 
     {# Formulaire de contact #}
     <form action="" method="post" data-form-title="Laisser nous votre message">
-
+        {% include("messagesValidation.html.twig") %}
         <div class="col-xs-6">
             {{ form_errors(form.prenom) }}
             {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'placeholder': 'Votre prénom'}}) }}
