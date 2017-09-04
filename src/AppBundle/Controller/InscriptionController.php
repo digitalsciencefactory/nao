@@ -96,7 +96,7 @@ class InscriptionController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 
             // on gère l'inscription de l'observateur
-            $this->saveSignUpObs($encoder, $user);
+            $this->saveSignUpNat($encoder, $user);
 
             // on affiche la page de inscription avec le flash bag
             $messagesFlashService->messageSuccess('Votre inscription a été prise en compte. Vous aller recevoir un mail contenant un lien d\'activation.');
