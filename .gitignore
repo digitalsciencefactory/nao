@@ -19,4 +19,5 @@
 
 composer.phar
 web/fnat/
+.htaccess
 
