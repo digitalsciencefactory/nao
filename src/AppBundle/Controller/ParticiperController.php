@@ -117,7 +117,7 @@ class ParticiperController extends Controller
     /**
      * @Route("/participer/mon-compte", name="fn_participer_profil")
      */
-    public function profilAction (Request $request)
+    public function profilAction (Request $request, MessagesFlashService $messagesFlashService)
     {
         $user = $this->getUser();
         $form = $this->createForm(UserType::class, $user);
@@ -143,8 +143,9 @@ class ParticiperController extends Controller
             $userManager->persist($userDB);
             $userManager->flush();
             $form = $this->createForm(UserType::class, $userDB);
-            $request->getSession()->getFlashBag()->add('noticeClass', 'alert alert-success');
-            $request->getSession()->getFlashBag()->add('notice', 'Votre profil a été mis à jour..');
+            
+            $messagesFlashService->messageSuccess('Votre profil a été mis à jour.');
+            
             return $this->render('participer/mon_compte.html.twig',
                 array(
                     'pseudonyme' => $user->getPseudo(),
