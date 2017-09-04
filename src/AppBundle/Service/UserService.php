@@ -111,12 +111,11 @@ class UserService
      * @return bool
      */
     protected function isNatEnAttente(User $user){
-        $role = $user->getRoles();
         $carte = $user->getCarte();
         $statut = $user->getStatut();
 
-        if($statut === "STATUT_ACTIF" && $carte !== null && $role === "a:1:{i:0;s:16:\"ROLE_OBSERVATEUR\";}"){
-            return true;
+    if($statut === "STATUT_ACTIF" && $carte !== null && !$this->hasNatRole($user)){
+        return true;
         }
         return false;
     }
